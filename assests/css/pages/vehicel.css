@@ -1,0 +1,33 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f8f9fa;
+}
+
+.table th,
+.table td {
+    vertical-align: middle;
+    text-align: center;
+}
+
+.table .progress {
+    height: 8px;
+}
+
+.table .progress-bar {
+    background-color: #28a745;
+}
+
+.dropdown-menu {
+    min-width: 200px;
+}
+
+/* Add section */
+.img-thumbnail {
+    max-height: 100px;
+    max-width: 100px;
+    object-fit: cover;
+    display: block;
+    /* Ensures images are not inline */
+    margin: 0 auto;
+    /* Centers the image */
+}
