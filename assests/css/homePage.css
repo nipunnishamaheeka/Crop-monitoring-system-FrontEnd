@@ -1,0 +1,11 @@
+.main-content {
+    flex-grow: 1;
+    padding: 20px;
+}
+
+.nav i{
+    margin: 10px;
+}
+a i{
+    margin: 10px;
+}
