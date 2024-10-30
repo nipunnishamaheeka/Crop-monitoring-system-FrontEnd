@@ -1,5 +1,5 @@
-function addField() {
-  alert("Add Field functionality coming soon!");
+function addEquipment() {
+  alert("Add Equipment functionality coming soon!");
 }
 
 function updateData() {
@@ -9,11 +9,11 @@ function updateData() {
 function deleteData() {
   alert("Delete Data functionality coming soon!");
 }
-function showAddFieldModal() {
-  const addFieldModal = new bootstrap.Modal(
-    document.getElementById("addFieldModal")
+function showAddEquipmentModal() {
+  const addEquipmentModal = new bootstrap.Modal(
+    document.getElementById("addEquipmentModal")
   );
-  addFieldModal.show();
+  addEquipmentModal.show();
 }
 
 // show images
@@ -28,15 +28,15 @@ function previewImage(event, previewId) {
 }
 
 document
-  .getElementById("addFieldForm")
+  .getElementById("addEquipmentForm")
   .addEventListener("submit", function (event) {
     event.preventDefault();
-    alert("Field added successfully!");
-    document.getElementById("addFieldForm").reset();
+    alert("Equipment added successfully!");
+    document.getElementById("addEquipmentForm").reset();
     document.getElementById("preview1").style.display = "none";
     document.getElementById("preview2").style.display = "none";
     bootstrap.Modal.getInstance(
-      document.getElementById("addFieldModal")
+      document.getElementById("addEquipmentModal")
     ).hide();
   });
 // filter
