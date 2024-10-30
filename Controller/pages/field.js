@@ -45,9 +45,9 @@ document.getElementById("searchInput").addEventListener("input", function () {
   const rows = document.querySelectorAll("#dataTable tr");
 
   rows.forEach((row) => {
-    const name = row.cells[1].textContent.toLowerCase();
-    const email = row.cells[2].textContent.toLowerCase();
+    const code = row.cells[1].textContent.toLowerCase();
+    const name = row.cells[2].textContent.toLowerCase();
     row.style.display =
-      name.includes(searchValue) || email.includes(searchValue) ? "" : "none";
+      code.includes(searchValue) || name.includes(searchValue) ? "" : "none";
   });
 });

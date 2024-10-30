@@ -6,6 +6,7 @@ body {
 .table th,
 .table td {
     vertical-align: middle;
+    text-align: center;
 }
 
 .table .progress {
@@ -24,4 +25,8 @@ body {
     max-height: 100px;
     max-width: 100px;
     object-fit: cover;
+    display: block;
+    /* Ensures images are not inline */
+    margin: 0 auto;
+    /* Centers the image */
 }
