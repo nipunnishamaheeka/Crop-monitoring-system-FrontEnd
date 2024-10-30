@@ -26,7 +26,12 @@ body {
     font-weight: 500;
 }
 
-.sidebar .nav-link.active {
+/* .sidebar .nav-link.active {
+    background-color: #28a745;
+    color: white;
+    border-radius: 5px;
+} */
+.sidebar .nav-link:hover {
     background-color: #28a745;
     color: white;
     border-radius: 5px;
