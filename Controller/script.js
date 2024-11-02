@@ -1,14 +1,21 @@
+const hamBurger = document.querySelector(".toggle-btn");
+
+hamBurger.addEventListener("click", function () {
+  document.querySelector("#sidebar").classList.toggle("expand");
+});
+
 function loadPage(page) {
   const frame = document.getElementById("main-frame");
   frame.src = `./pages/${page}.html`;
   document
-    .querySelectorAll(".nav-link")
+    .querySelectorAll(".sidebar-link")
     .forEach((nav) => nav.classList.remove("active"));
   const activeLink = document.getElementById(`${page}-btn`);
   if (activeLink) {
     activeLink.classList.add("active");
   }
 }
+
 document
   .getElementById("dashboard-btn")
   .addEventListener("click", function (event) {
