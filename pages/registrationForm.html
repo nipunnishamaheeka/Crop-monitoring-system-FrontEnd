@@ -14,20 +14,22 @@
   </head>
   <body>
     <div
-      class="container-fluid vh-100 d-flex align-items-center justify-content-center bg-light"
+      class="container-fluid vh-100 d-flex align-items-center justify-content-center bg-success bg-gradient-to-b from-success to-light"
     >
       <div class="row w-75 shadow-lg">
         <div
           class="col-lg-6 d-flex flex-column justify-content-center align-items-start p-5 bg-white"
         >
-          <h1 class="display-6 fw-bold">Welcome to</h1>
-          <h2 class="text-success fw-bold">Green Shadow (Pvt) Ltd</h2>
+          <h1 class="display-6 fw-bold" id="heading">Welcome to</h1>
+          <h2 class="text-success fw-bold" id="heading">
+            Green Shadow (Pvt) Ltd
+          </h2>
           <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
           <p>
             We are delighted to offer a modern and user-friendly service to
             ensure you have the best experience.
           </p>
-          <a href="#" class="text-success fw-bold">Join Now!</a>
+          <a href="#" class="text-success fw-bold" id="link">Join Now!</a>
           <div class="mt-4">
             <img
             src=https://img.freepik.com/premium-vector/farmer-supplying-beans-coffee-plantation_1334819-12798.jpg?
@@ -38,20 +40,23 @@
         <div
           class="col-lg-6 d-flex flex-column justify-content-center align-items-center p-5 bg-light"
         >
-          <div class="w-75">
-            <div class="d-flex justify-content-end mb-3">
-              <a href="#" class="text-dark">English</a>
-              <a href="signInForm.html" class="ms-4 text-success fw-bold"
+          <div id="formRegi" class="w-75">
+            <div id="buttons" class="d-flex justify-content-end mb-3">
+              <a
+                href="signInForm.html"
+                class="btn btn-outline-success"
+                id="signInButton"
                 >Sign in</a
               >
               <a
                 href="registrationForm.html"
-                class="ms-4 btn btn-outline-success"
+                class="ms-4 btn fw-bold btn btn-success"
+                id="registerButton"
                 >Register</a
               >
             </div>
 
-            <h3 class="fw-bold mt-5 mb-4">Register</h3>
+            <h3 class="fw-bold mt-5 mb-4" id="heading">Register</h3>
             <form>
               <div class="mb-3">
                 <input

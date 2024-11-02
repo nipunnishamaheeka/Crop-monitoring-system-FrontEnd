@@ -1,0 +1,131 @@
+@media screen and (max-width: 1240px) {
+    #heading {
+        font-size: 1.5rem;
+    }
+
+    p {
+        font-size: .8rem;
+    }
+
+    #link {
+        font-size: .8rem;
+    }
+
+    label {
+        font-size: .8rem;
+    }
+}
+
+@media screen and (max-width: 992px) {
+    .container-fluid {
+        height: 50vh;
+
+    }
+
+    .img-fluid {
+        display: none;
+    }
+
+    #formRegi {
+        margin-top: -100px;
+    }
+
+    #heading {
+        font-size: 2rem;
+    }
+
+    p {
+        display: none;
+    }
+
+    #link {
+        display: none;
+    }
+
+    label {
+        font-size: .8rem;
+    }
+}
+
+
+@media screen and (max-width: 625px) {
+
+    h1,
+    h2 {
+        display: none;
+    }
+
+    .img-fluid {
+        display: none;
+    }
+
+    #registerButton,
+    #signInButton {
+        font-size: .7rem;
+    }
+
+    #formRegi {
+        margin-top: -100px;
+    }
+
+    #heading {
+        font-size: 2rem;
+    }
+
+    p {
+        display: none;
+    }
+
+    #link {
+        display: none;
+    }
+
+    label {
+        font-size: .8rem;
+    }
+
+
+}
+
+@media screen and (max-width: 416px) {
+
+    h1,
+    h2 {
+        /* display: block; */
+    }
+
+    #buttons {
+        display: none;
+    }
+
+    .img-fluid {
+        display: none;
+    }
+
+    #registerButton,
+    #signInButton {
+        font-size: .7rem;
+    }
+
+    #formRegi {
+        margin-top: -100px;
+    }
+
+    #heading {
+        font-size: 2rem;
+    }
+
+    p {
+        display: none;
+    }
+
+    #link {
+        display: none;
+    }
+
+    label {
+        font-size: .8rem;
+    }
+
+
+}
