@@ -1,223 +1,112 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Management System</title>
-    <link rel="stylesheet" href="/assests/css/pages/crops.css" />
-    <link
-      href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
-      rel="stylesheet"
-    />
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
-      crossorigin="anonymous"
-    />
-  </head>
-  <body>
-     <div class="container">
-      <h2 class="text-center">Crops Management</h2>
-      <hr />
-      <br />
-      <div class="d-flex justify-content-between align-items-center my-3">
-        <input
-          type="text"
-          class="form-control w-50"
-          placeholder="Search Data"
-          id="searchInput"
-        />
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Management System</title>
+  
+  <link
+    href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
+    rel="stylesheet"
+  />
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+    crossorigin="anonymous"
+  />
+</head>
+<body>
+  <div class="container">
+    <h2 class="text-center">Crops Management</h2>
+    <hr />
+    <br />
+    <div class="d-flex justify-content-between align-items-center my-3">
+      <input
+        type="text"
+        class="form-control w-50"
+        placeholder="Search Data"
+        id="searchInput"
+      />
 
-        <button class="btn btn-primary" onclick="showAddCropsModal()">
-          Add Crops
-        </button>
+      <button class="btn btn-primary" id="addCropPopup">Add Crops</button>
 
-        <!-- Add Data -->
-        <div
-          class="modal fade"
-          id="addCropsModal"
-          tabindex="-1"
-          aria-labelledby="addCropsModalLabel"
-          aria-hidden="true"
-        >
-          <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="addCropsModalLabel">
-                  Add New Crops
-                </h5>
-                <button
-                  type="button"
-                  class="btn-close"
-                  data-bs-dismiss="modal"
-                  aria-label="Close"
-                ></button>
-              </div>
-              <div class="modal-body">
-                <form id="addCropsForm">
-                  <div class="row mb-3">
-                    <div class="col-md-6">
-                      <label for="cropsCode" class="form-label">CropCode</label>
-                      <input
-                        type="text"
-                        class="form-control"
-                        id="cropsCode"
-                        name="code"
-                        required
-                      />
-                    </div>
-                    <div class="col-md-6">
-                      <label for="cropsName" class="form-label">Common Name</label>
-                      <input
-                        type="text"
-                        class="form-control"
-                        id="cropsName"
-                        name="name"
-                        required
-                      />
-                    </div>
+      <!-- Add Crops Modal -->
+      <div class="modal fade" id="addCropsModal" tabindex="-1" aria-labelledby="addCropsModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="addCropsModalLabel">Add New Crop</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <form id="addCropsForm">
+                <div class="row mb-3">
+                  <div class="col-md-6">
+                    <label for="cropCode" class="form-label">Crop Code</label>
+                    <input type="text" class="form-control cropCode" id="cropCode" required />
                   </div>
-                  <div class="row mb-3">
-                    <div class="col-md-6">
-                      <label for="cropsLocation" class="form-label"
-                        >Scientific Name</label
-                      >
-                      <input
-                        type="text"
-                        class="form-control"
-                        id="cropsLocation"
-                        name="location"
-                        required
-                      />
-                    </div>
-                    <div class="col-md-6">
-                      <label for="image1" class="form-label"
-                        >Crop Image</label
-                      >
-                      <input
-                        type="file"
-                        class="form-control"
-                        id="image1"
-                        name="image1"
-                        accept="image/*"
-                        onchange="previewImage(event, 'preview1')"
-                      />
-                      <img
-                        id="preview1"
-                        class="img-thumbnail mt-2"
-                        style="display: none; max-width: 100px"
-                      />
-                    </div>
-                    <!-- <div class="col-md-6">
-                      <label for="cropsSize" class="form-label"
-                        >Crop Image</label
-                      >
-                      <input
-                        type="text"
-                        class="form-control"
-                        id="cropsSize"
-                        name="size"
-                        required
-                      />
-                    </div> -->
-                
+                  <div class="col-md-6">
+                    <label for="cropsName" class="form-label">Common Name</label>
+                    <input type="text" class="form-control cropsName" id="cropsName" required />
                   </div>
-                  <div class="row mb-3">
-                    <div class="col-md-6">
-                      <label for="crops" class="form-label">Category</label>
-                      <input
-                        type="text"
-                        class="form-control"
-                        id="crops"
-                        name="crops"
-                        required
-                      />
-                    </div>
-                    <div class="col-md-6">
-                      <label for="crops" class="form-label">Crops Season</label>
-                      <input
-                        type="text"
-                        class="form-control"
-                        id="crops"
-                        name="crops"
-                        required
-                      />
-                    </div>
-          
+                </div>
+                <div class="row mb-3">
+                  <div class="col-md-6">
+                    <label for="scientificName" class="form-label">Scientific Name</label>
+                    <input type="text" class="form-control scientificName" id="scientificName" required />
                   </div>
-                  
-                  <div class="modal-footer">
-                    <button
-                      type="button"
-                      class="btn btn-secondary"
-                      data-bs-dismiss="modal"
-                    >
-                      Close
-                    </button>
-                    <button type="submit" class="btn btn-primary">
-                      Save Crops
-                    </button>
+                  <div class="col-md-6">
+                    <label for="c_image" class="form-label">Crop Image</label>
+                    <input type="file" class="form-control" id="c_image" accept="image/*" />
+                    <img id="preview1" class="img-thumbnail mt-2" style="display: none; max-width: 100px;" />
                   </div>
-                </form>
-              </div>
+                </div>
+                <div class="row mb-3">
+                  <div class="col-md-6">
+                    <label for="category" class="form-label">Category</label>
+                    <input type="text" class="form-control category" id="category" required />
+                  </div>
+                  <div class="col-md-6">
+                    <label for="season" class="form-label">Crop Season</label>
+                    <input type="text" class="form-control season" id="season" required />
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                  <button type="submit" class="btn btn-primary" id="saveCropsBtn">Save Crop</button>
+                </div>
+              </form>
             </div>
           </div>
         </div>
-        <!-- End Add data section -->
       </div>
-
-      <!-- Data Table -->
-      <table class="table table-hover">
-        <thead>
-          <tr>
-            <th scope="col"><input type="checkbox" /></th>
-            <th scope="col">Crop Code</th>
-            <th scope="col">Common Name</th>
-            <th scope="col">Scientific Name</th>
-            <th scope="col">image</th>
-            <th scope="col">Category</th>
-            <th scope="col">Crop Season</th>
-            <th scope="col">Field</th>
-            <th scope="col">Action</th>
-          </tr>
-        </thead>
-        <tbody id="dataTable">
-          <tr>
-            <td><input type="checkbox" /></td>
-            <td>F001</td>
-            <td>PlantDEmo</td>
-            <td>C001 site</td>
-            <td>250</td>
-            <!-- <td><div class="progress"><div class="progress-bar" style="width: 75%;"></div></div></td> -->
-            <td>lorem</td>
-            <td>Manager</td>
-            <td>Manager</td>
-
-            <td>
-              <button
-                class="btn btn-outline-primary btn-sm"
-                onclick="updateData()"
-              >
-                Update
-              </button>
-              <button
-                class="btn btn-outline-danger btn-sm"
-                onclick="deleteData()"
-              >
-                Delete
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
     </div>
 
-    <script src="/Controller/pages/crops.js"></script>
-    <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-      integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-      crossorigin="anonymous"
-    ></script>
-  </body>
+    <!-- Data Table -->
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th scope="col"><input type="checkbox" /></th>
+          <th scope="col">Crop Code</th>
+          <th scope="col">Common Name</th>
+          <th scope="col">Scientific Name</th>
+          <th scope="col">Image</th>
+          <th scope="col">Category</th>
+          <th scope="col">Crop Season</th>
+          <th scope="col">Action</th>
+        </tr>
+      </thead>
+      <tbody id="dataTable"></tbody>
+    </table>
+  </div>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <script type="module" src="/Controller/pages/crops.js"></script>
+  <script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+    crossorigin="anonymous"
+  ></script>
+</body>
 </html>
