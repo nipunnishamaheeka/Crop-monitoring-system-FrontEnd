@@ -1,4 +1,5 @@
 export const saveCrops = (cropsData) => {
+  
   $.ajax({
     url: "http://localhost:5055/cropcontroller/api/v1/crops",
     type: "POST",
@@ -7,8 +8,8 @@ export const saveCrops = (cropsData) => {
     success: function (response) {
       console.log("Crops saved successfully:", response);
       alert("Crops saved successfully!");
-      $("#addCropsForm")[0].reset();
-      $("#addCropsModal").modal("hide");
+      $("#addCropsForm")[0].reset(); 
+      $("#addCropsModal").modal("hide"); 
     },
     error: function (xhr, status, error) {
       console.error("Error saving crops:", xhr, status, error);
@@ -30,7 +31,7 @@ export const getAllCrops = () => {
       error: function (xhr, status, error) {
         console.error("Error retrieving crops:", xhr, status, error);
         alert("Failed to retrieve crops!");
-        reject([]);
+        reject([]); 
       },
     });
   });
@@ -38,8 +39,8 @@ export const getAllCrops = () => {
 
 export const updateCrops = (cropCode, updatedCropData) => {
   $.ajax({
-    url: `http://localhost:5055/cropcontroller/api/v1/crops?id=${cropCode}`,
-    type: "PUT",
+    url: `http://localhost:5055/cropcontroller/api/v1/crops/` + cropCode,
+    type: "PATCH",
     contentType: "application/json",
     data: JSON.stringify(updatedCropData),
     success: function (response) {
@@ -58,7 +59,8 @@ export const updateCrops = (cropCode, updatedCropData) => {
 
 export const deleteCrops = (cropCode) => {
   $.ajax({
-    url: `http://localhost:5055/cropcontroller/api/v1/crops/` + cropCode,
+    url:
+      `http://localhost:5055/cropcontroller/api/v1/crops/`+ cropCode,
     type: "DELETE",
     contentType: "application/json",
     success: function (response) {
@@ -71,3 +73,4 @@ export const deleteCrops = (cropCode) => {
     },
   });
 };
+

@@ -1,9 +1,19 @@
-import { deleteCrops, getAllCrops, saveCrops } from "../../model/cropsModel.js";
+import {
+  deleteCrops,
+  getAllCrops,
+  saveCrops,
+  updateCrops,
+} from "../../model/cropsModel.js";
 
 $(document).ready(function () {
+  let editingCropCode = null;
+
   $("#addCropPopup").click(function () {
     const addCropsModal = new bootstrap.Modal($("#addCropsModal")[0]);
     addCropsModal.show();
+    $("#addCropsForm")[0].reset();
+    $("#preview1").hide();
+    editingCropCode = null;
   });
 
   // Preview image
@@ -37,15 +47,20 @@ $(document).ready(function () {
     };
 
     try {
-      await saveCrops(cropData);
-      alert("Crop added successfully!");
+      if (editingCropCode) {
+        await updateCrops(editingCropCode, cropData);
+        alert("Crop updated successfully!");
+      } else {
+        await saveCrops(cropData);
+        alert("Crop added successfully!");
+      }
       $("#addCropsForm")[0].reset();
       $("#preview1").hide();
       bootstrap.Modal.getInstance($("#addCropsModal")[0]).hide();
       reloadTable();
     } catch (error) {
-      console.error("Error saving crop:", error);
-      alert("Failed to save crop!");
+      console.error("Error saving or updating crop:", error);
+      alert("Failed to save or update crop!");
     }
   });
 
@@ -61,7 +76,6 @@ $(document).ready(function () {
       console.error("Error loading crops:", error);
     }
   }
-
   function loadTable(cropData) {
     const rowHtml = `
       <tr>
@@ -73,16 +87,14 @@ $(document).ready(function () {
         <td>${cropData.category}</td>
         <td>${cropData.cropSeason}</td>
         <td>
-          <button class="btn btn-sm btn-warning" id="editBtn">Edit</button>
-          <button class="btn btn-sm btn-danger removeBtn" data-id="${cropData.crop_code}">Delete</button>
+          <button class="btn btn-sm btn-warning editBtn" data-id="${cropData.cropCode}">Edit</button>
+          <button class="btn btn-sm btn-danger removeBtn" data-id="${cropData.cropCode}">Delete</button>
         </td>
       </tr>
     `;
     $("tbody.tableRow").append(rowHtml);
   }
-
   reloadTable();
-
   $(document).on("click", ".removeBtn", async function () {
     const cropCode = $(this).data("id");
 
@@ -93,6 +105,27 @@ $(document).ready(function () {
     } catch (error) {
       console.error("Error deleting crop:", error);
       alert("Failed to delete crop!");
+    }
+  });
+  $(document).on("click", ".editBtn", async function () {
+    const cropCode = $(this).data("id");
+    try {
+      const crop = await getAllCrops().then((crops) =>
+        crops.find((crop) => crop.cropCode === cropCode)
+      );
+      if (crop) {
+        $("#cropCode").val(crop.cropCode);
+        $("#category").val(crop.category);
+        $("#cropsName").val(crop.cropCommonName);
+        $("#scientificName").val(crop.cropScientificName);
+        $("#season").val(crop.cropSeason);
+        $("#preview1").attr("src", crop.cropImage).show();
+        const addCropsModal = new bootstrap.Modal($("#addCropsModal")[0]);
+        addCropsModal.show();
+        editingCropCode = cropCode;
+      }
+    } catch (error) {
+      console.error("Error fetching crop data:", error);
     }
   });
 });
