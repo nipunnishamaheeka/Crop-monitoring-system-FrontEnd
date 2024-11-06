@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Management System</title>
-  
+
   <link
     href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
     rel="stylesheet"
@@ -28,7 +28,6 @@
         placeholder="Search Data"
         id="searchInput"
       />
-
       <button class="btn btn-primary" id="addCropPopup">Add Crops</button>
 
       <!-- Add Crops Modal -->
@@ -44,7 +43,7 @@
                 <div class="row mb-3">
                   <div class="col-md-6">
                     <label for="cropCode" class="form-label">Crop Code</label>
-                    <input type="text" class="form-control cropCode" id="cropCode" required />
+                    <input type="text" class="form-control cropCode" id="cropCode" required readonly />
                   </div>
                   <div class="col-md-6">
                     <label for="cropsName" class="form-label">Common Name</label>
@@ -97,7 +96,7 @@
           <th scope="col">Action</th>
         </tr>
       </thead>
-      <tbody id="dataTable"></tbody>
+      <tbody class="tableRow"></tbody>
     </table>
   </div>
 
