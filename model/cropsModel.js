@@ -1,5 +1,5 @@
 export const saveCrops = (cropsData) => {
-  // Make AJAX request to save crops
+  
   $.ajax({
     url: "http://localhost:5055/cropcontroller/api/v1/crops",
     type: "POST",
@@ -8,8 +8,8 @@ export const saveCrops = (cropsData) => {
     success: function (response) {
       console.log("Crops saved successfully:", response);
       alert("Crops saved successfully!");
-      $("#addCropsForm")[0].reset(); // Reset the form
-      $("#addCropsModal").modal("hide"); // Hide the modal
+      $("#addCropsForm")[0].reset(); 
+      $("#addCropsModal").modal("hide"); 
     },
     error: function (xhr, status, error) {
       console.error("Error saving crops:", xhr, status, error);
@@ -26,28 +26,46 @@ export const getAllCrops = () => {
       contentType: "application/json",
       success: function (cropsList) {
         console.log("Crops retrieved successfully:", cropsList);
-        resolve(cropsList); // Resolve the Promise with the crops list
+        resolve(cropsList);
       },
       error: function (xhr, status, error) {
         console.error("Error retrieving crops:", xhr, status, error);
         alert("Failed to retrieve crops!");
-        reject([]); // Reject with an empty array in case of an error
+        reject([]); 
       },
     });
   });
 };
 
-export const deleteCrops = (cropCode) => {
-  // Make AJAX request to delete crops
+export const updateCrops = (cropCode, updatedCropData) => {
   $.ajax({
     url: `http://localhost:5055/cropcontroller/api/v1/crops?id=${cropCode}`,
+    type: "PUT",
+    contentType: "application/json",
+    data: JSON.stringify(updatedCropData),
+    success: function (response) {
+      console.log("Crops updated successfully:", response);
+      alert("Crops updated successfully!");
+      $("#updateCropsForm")[0].reset();
+      $("#updateCropsModal").modal("hide");
+      reloadTable();
+    },
+    error: function (xhr, status, error) {
+      console.error("Error updating crops:", xhr, status, error);
+      alert("Failed to update crops!");
+    },
+  });
+};
+
+export const deleteCrops = (cropCode) => {
+  $.ajax({
+    url:
+      `http://localhost:5055/cropcontroller/api/v1/crops/`+cropCode,
     type: "DELETE",
     contentType: "application/json",
     success: function (response) {
       console.log("Crops deleted successfully:", response);
       alert("Crops deleted successfully!");
-      // Optionally, refresh the crops list or update the UI
-      // For example, you can call getAllCrops() to refresh the crop list
     },
     error: function (xhr, status, error) {
       console.error("Error deleting crops:", xhr, status, error);
