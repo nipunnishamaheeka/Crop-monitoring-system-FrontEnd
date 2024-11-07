@@ -16,7 +16,6 @@ $(document).ready(function () {
     editingCropCode = null;
   });
 
-  // Preview image
   function previewImage(event, previewId) {
     const reader = new FileReader();
     reader.onload = function () {
@@ -36,7 +35,6 @@ $(document).ready(function () {
     event.preventDefault();
 
     const cropImage = $("#c_image")[0].files[0];
-
     const cropData = {
       crop_code: $("#cropCode").val(),
       category: $("#category").val(),
@@ -64,7 +62,6 @@ $(document).ready(function () {
     }
   });
 
-  // Load data into the table
   async function reloadTable() {
     try {
       const crops = await getAllCrops();
@@ -97,7 +94,6 @@ $(document).ready(function () {
   reloadTable();
   $(document).on("click", ".removeBtn", async function () {
     const cropCode = $(this).data("id");
-
     try {
       await deleteCrops(cropCode);
       alert("Crops Deleted");
@@ -126,6 +122,42 @@ $(document).ready(function () {
       }
     } catch (error) {
       console.error("Error fetching crop data:", error);
+    }
+  });
+  function searchCrops(query) {
+    getAllCrops()
+      .then((crops) => {
+        const filteredCrops = crops.filter((crop) => {
+          return (
+            crop.cropCode.toLowerCase().includes(query.toLowerCase()) ||
+            crop.cropCommonName.toLowerCase().includes(query.toLowerCase())
+          );
+        });
+        $("tbody.tableRow").empty();
+        filteredCrops.forEach((crop) => {
+          loadTable(crop);
+        });
+      })
+      .catch((error) => {
+        console.error("Error searching crops:", error);
+        alert("Failed to search crops!");
+      });
+  }
+  $("#searchInput").on("input", function () {
+    const query = $(this).val().trim();
+    if (query) {
+      searchCrops(query);
+    } else {
+      reloadTable();
+    }
+  });
+
+  $("#searchButton").on("click", function () {
+    const query = $("#searchInput").val().trim();
+    if (query) {
+      searchCrops(query);
+    } else {
+      reloadTable();
     }
   });
 });
