@@ -26,7 +26,7 @@ export const getAllCrops = () => {
       contentType: "application/json",
       success: function (cropsList) {
         console.log("Crops retrieved successfully:", cropsList);
-        resolve(cropsList);
+        resolve(cropsList); 
       },
       error: function (xhr, status, error) {
         console.error("Error retrieving crops:", xhr, status, error);
@@ -40,7 +40,7 @@ export const getAllCrops = () => {
 export const updateCrops = (cropCode, updatedCropData) => {
   $.ajax({
     url: `http://localhost:5055/cropcontroller/api/v1/crops/` + cropCode,
-    type: "PATCH",
+    type: "PUT",
     contentType: "application/json",
     data: JSON.stringify(updatedCropData),
     success: function (response) {

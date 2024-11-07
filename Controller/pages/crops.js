@@ -37,6 +37,7 @@ $(document).ready(function () {
     const cropImage = $("#c_image")[0].files[0];
     const cropData = {
       crop_code: $("#cropCode").val(),
+      field_code: $("#fieldCode").val(),
       category: $("#category").val(),
       cropCommonName: $("#cropsName").val(),
       cropScientificName: $("#scientificName").val(),
@@ -78,14 +79,16 @@ $(document).ready(function () {
       <tr>
         <td><input type="checkbox" /></td>
         <td>${cropData.cropCode}</td>
+        <td>${cropData.field}</td>
         <td>${cropData.cropCommonName}</td>
         <td>${cropData.cropScientificName}</td>
         <td><img src="${cropData.cropImage}" class="img-thumbnail" style="max-width: 50px;" /></td>
         <td>${cropData.category}</td>
         <td>${cropData.cropSeason}</td>
         <td>
-          <button class="btn btn-sm btn-warning editBtn" data-id="${cropData.cropCode}">Edit</button>
-          <button class="btn btn-sm btn-danger removeBtn" data-id="${cropData.cropCode}">Delete</button>
+          <button class="btn btn-outline-primary btn-sm editBtn" data-id="${cropData.cropCode}">Edit</button>
+          <button class="btn btn-outline-danger btn-sm removeBtn" data-id="${cropData.cropCode}">Delete</button>
+          
         </td>
       </tr>
     `;
@@ -111,6 +114,7 @@ $(document).ready(function () {
       );
       if (crop) {
         $("#cropCode").val(crop.cropCode);
+        $("#fieldCode").val(crop.field);
         $("#category").val(crop.category);
         $("#cropsName").val(crop.cropCommonName);
         $("#scientificName").val(crop.cropScientificName);
