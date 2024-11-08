@@ -21,17 +21,16 @@
       <h2 class="text-center">Vehicle Management</h2>
       <hr />
       <br />
- <div class="d-flex justify-content-between align-items-center my-3">
+  <div class="d-flex justify-content-between align-items-center my-3">
         <input
           type="text"
-          class="form-control w-50"
-          placeholder="Search Data"
           id="searchInput"
+          class="form-control w-50"
+          placeholder="Search by Vehicle Code or Common Name"
+          aria-label="Search"
         />
 
-        <button class="btn btn-primary" onclick="showAddVehicleModal()">
-          Add Vehicle
-        </button>
+         <button class="btn btn-primary" id="addVehiclePopup">Add Vehicles</button>
 
         <!-- Add Data -->
         <div
@@ -61,17 +60,17 @@
                       <label for="vehicleCode" class="form-label">Id</label>
                       <input
                         type="text"
-                        class="form-control"
+                        class="form-control vehicleCode"
                         id="vehicleCode"
-                        name="code"
-                        required
+                          required
+                        readonly
                       />
                     </div>
                     <div class="col-md-6">
                       <label for="vehicleName" class="form-label">Name</label>
                       <input
                         type="text"
-                        class="form-control"
+                        class="form-control vehicleName"
                         id="vehicleName"
                         name="name"
                         required
@@ -85,7 +84,7 @@
                       >
                       <input
                         type="text"
-                        class="form-control"
+                        class="form-control vehicleLocation"
                         id="vehicleLocation"
                         name="location"
                         required
@@ -97,7 +96,7 @@
                       >
                       <input
                         type="text"
-                        class="form-control"
+                        class="form-control vehicleSize"
                         id="vehicleSize"
                         name="size"
                         required
@@ -106,22 +105,22 @@
                   </div>
                   <div class="row mb-3">
                     <div class="col-md-6">
-                      <label for="crops" class="form-label">Staff Details</label>
+                      <label for="staffdetails" class="form-label">Staff Details</label>
                       <input
                         type="text"
-                        class="form-control"
-                        id="crops"
-                        name="crops"
+                        class="form-control staffdetails"
+                        id="staffdetails"
+                        name="details"
                         required
                       />
                     </div>
                     <div class="col-md-6">
-                      <label for="crops" class="form-label">Vehicle Details</label>
+                      <label for="vehicleDetails" class="form-label">Vehicle Details</label>
                       <input
                         type="text"
-                        class="form-control"
-                        id="crops"
-                        name="crops"
+                        class="form-control vehicleDetails"
+                        id="vehicleDetails"
+                        name="vehicleDetails"
                         required
                       />
                     </div>
@@ -136,7 +135,9 @@
                     >
                       Close
                     </button>
-                    <button type="submit" class="btn btn-primary">
+                    <button type="submit" class="btn btn-primary" 
+                      id="saveVehicleBtn">
+                      
                       Save Vehicle
                     </button>
                   </div>
@@ -162,42 +163,16 @@
             <th scope="col">Action</th>
           </tr>
         </thead>
-        <tbody id="dataTable">
-          <tr>
-            <td><input type="checkbox" /></td>
-            <td>F001</td>
-            <td>PlantDEmo</td>
-            <td>C001 site</td>
-            <td>250</td>
-            <!-- <td><div class="progress"><div class="progress-bar" style="width: 75%;"></div></div></td> -->
-            <td>lorem</td>
-            <td>Manager</td>
-
-            <td>
-              <button
-                class="btn btn-outline-primary btn-sm"
-                onclick="updateData()"
-              >
-                Update
-              </button>
-              <button
-                class="btn btn-outline-danger btn-sm"
-                onclick="deleteData()"
-              >
-                Delete
-              </button>
-            </td>
-          </tr>
-        </tbody>
+        <tbody class="tableRow"></tbody>
       </table>
     </div>
-
+ <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
       crossorigin="anonymous"
     ></script>
 
-    <script src="/Controller/pages/vehicle.js"></script>
+    <script type="module" src="/Controller/pages/vehicle.js"></script>
   </body>
 </html>
