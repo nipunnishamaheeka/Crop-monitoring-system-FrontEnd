@@ -21,7 +21,7 @@
       <h2 class="text-center">Vehicle Management</h2>
       <hr />
       <br />
-  <div class="d-flex justify-content-between align-items-center my-3">
+      <div class="d-flex justify-content-between align-items-center my-3">
         <input
           type="text"
           id="searchInput"
@@ -30,7 +30,9 @@
           aria-label="Search"
         />
 
-         <button class="btn btn-primary" id="addVehiclePopup">Add Vehicles</button>
+        <button class="btn btn-primary" id="addVehiclePopup">
+          Add Vehicles
+        </button>
 
         <!-- Add Data -->
         <div
@@ -62,16 +64,18 @@
                         type="text"
                         class="form-control vehicleCode"
                         id="vehicleCode"
-                          required
+                        required
                         readonly
                       />
                     </div>
                     <div class="col-md-6">
-                      <label for="vehicleName" class="form-label">Name</label>
+                      <label for="vehiclePlateNumber" class="form-label"
+                        >License plate number</label
+                      >
                       <input
                         type="text"
-                        class="form-control vehicleName"
-                        id="vehicleName"
+                        class="form-control vehiclePlateNumber"
+                        id="vehiclePlateNumber"
                         name="name"
                         required
                       />
@@ -79,54 +83,63 @@
                   </div>
                   <div class="row mb-3">
                     <div class="col-md-6">
-                      <label for="vehicleLocation" class="form-label"
-                        >Type</label
+                      <label for="vehicleCategory" class="form-label"
+                        >Vehicle category</label
                       >
                       <input
                         type="text"
-                        class="form-control vehicleLocation"
-                        id="vehicleLocation"
-                        name="location"
+                        class="form-control vehicleCategory"
+                        id="vehicleCategory"
+                        name="category"
                         required
                       />
                     </div>
                     <div class="col-md-6">
-                      <label for="vehicleSize" class="form-label"
-                        >Status</label
-                      >
+                      <label for="fuelType" class="form-label">Fuel type</label>
                       <input
                         type="text"
-                        class="form-control vehicleSize"
-                        id="vehicleSize"
-                        name="size"
+                        class="form-control fuelType"
+                        id="fuelType"
+                        name="type"
                         required
                       />
                     </div>
                   </div>
                   <div class="row mb-3">
                     <div class="col-md-6">
-                      <label for="staffdetails" class="form-label">Staff Details</label>
+                      <label for="status" class="form-label">Status</label>
                       <input
                         type="text"
-                        class="form-control staffdetails"
-                        id="staffdetails"
-                        name="details"
+                        class="form-control status"
+                        id="status"
+                        name="status"
                         required
                       />
                     </div>
                     <div class="col-md-6">
-                      <label for="vehicleDetails" class="form-label">Vehicle Details</label>
+                      <label for="staffDetails" class="form-label"
+                        >Allocated Staff Member Details</label
+                      >
                       <input
                         type="text"
-                        class="form-control vehicleDetails"
-                        id="vehicleDetails"
-                        name="vehicleDetails"
+                        class="form-control staffDetails"
+                        id="staffDetails"
+                        name="staffDetails"
                         required
                       />
                     </div>
-          
+                    <div class="col-md-6">
+                      <label for="remarks" class="form-label">Remarks</label>
+                      <input
+                        type="text"
+                        class="form-control remarks"
+                        id="remarks"
+                        name="remarks"
+                        required
+                      />
+                    </div>
                   </div>
-                  
+
                   <div class="modal-footer">
                     <button
                       type="button"
@@ -135,9 +148,11 @@
                     >
                       Close
                     </button>
-                    <button type="submit" class="btn btn-primary" 
-                      id="saveVehicleBtn">
-                      
+                    <button
+                      type="submit"
+                      class="btn btn-primary"
+                      id="saveVehicleBtn"
+                    >
                       Save Vehicle
                     </button>
                   </div>
@@ -155,24 +170,24 @@
           <tr>
             <th scope="col"><input type="checkbox" /></th>
             <th scope="col">Id</th>
-            <th scope="col">Name</th>
-            <th scope="col">Type</th>
+            <th scope="col">License Plate number</th>
+            <th scope="col">Category</th>
+            <th scope="col">Fuel Type</th>
             <th scope="col">Status</th>
-            <th scope="col">Staff Details</th>
-            <th scope="col">Vehicle Details</th>
+            <th scope="col">Allocated Staff</th>
+            <th scope="col">Remarks</th>
             <th scope="col">Action</th>
           </tr>
         </thead>
         <tbody class="tableRow"></tbody>
       </table>
     </div>
- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script type="module" src="/Controller/pages/vehicle.js"></script>
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
       crossorigin="anonymous"
     ></script>
-
-    <script type="module" src="/Controller/pages/vehicle.js"></script>
   </body>
 </html>
