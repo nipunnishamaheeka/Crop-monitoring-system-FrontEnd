@@ -17,7 +17,7 @@
     />
   </head>
   <body>
-     <div class="container">
+    <div class="container">
       <h2 class="text-center">Equipment Management</h2>
       <hr />
       <br />
@@ -29,7 +29,7 @@
           id="searchInput"
         />
 
-        <button class="btn btn-primary" onclick="showAddEquipmentModal()">
+        <button class="btn btn-primary" id="addEquipmentPopup">
           Add Equipment
         </button>
 
@@ -65,6 +65,7 @@
                         id="equipmentCode"
                         name="code"
                         required
+                        readonly
                       />
                     </div>
                     <div class="col-md-6">
@@ -80,25 +81,23 @@
                   </div>
                   <div class="row mb-3">
                     <div class="col-md-6">
-                      <label for="equipmentLocation" class="form-label"
-                        >Type</label
-                      >
+                      <label for="equipmentType" class="form-label">Type</label>
                       <input
                         type="text"
                         class="form-control"
-                        id="equipmentLocation"
+                        id="equipmentType"
                         name="location"
                         required
                       />
                     </div>
                     <div class="col-md-6">
-                      <label for="equipmentSize" class="form-label"
+                      <label for="equipmentStatus" class="form-label"
                         >Status</label
                       >
                       <input
                         type="text"
                         class="form-control"
-                        id="equipmentSize"
+                        id="equipmentStatus"
                         name="size"
                         required
                       />
@@ -106,28 +105,31 @@
                   </div>
                   <div class="row mb-3">
                     <div class="col-md-6">
-                      <label for="crops" class="form-label">Staff Details</label>
+                      <label for="staffDetails" class="form-label"
+                        >Staff Details</label
+                      >
                       <input
                         type="text"
                         class="form-control"
-                        id="crops"
-                        name="crops"
+                        id="staffDetails"
+                        name="staffDetails"
                         required
                       />
                     </div>
                     <div class="col-md-6">
-                      <label for="crops" class="form-label">Equipment Details</label>
+                      <label for="fieldDetails" class="form-label"
+                        >Field Details</label
+                      >
                       <input
                         type="text"
                         class="form-control"
-                        id="crops"
-                        name="crops"
+                        id="fieldDetails"
+                        name="fieldDetails"
                         required
                       />
                     </div>
-          
                   </div>
-                  
+
                   <div class="modal-footer">
                     <button
                       type="button"
@@ -158,41 +160,15 @@
             <th scope="col">Type</th>
             <th scope="col">Status</th>
             <th scope="col">Staff Details</th>
-            <th scope="col">Equipment Details</th>
+            <th scope="col">Field Details</th>
             <th scope="col">Action</th>
           </tr>
         </thead>
-        <tbody id="dataTable">
-          <tr>
-            <td><input type="checkbox" /></td>
-            <td>F001</td>
-            <td>PlantDEmo</td>
-            <td>C001 site</td>
-            <td>250</td>
-            <!-- <td><div class="progress"><div class="progress-bar" style="width: 75%;"></div></div></td> -->
-            <td>lorem</td>
-            <td>Manager</td>
-
-            <td>
-              <button
-                class="btn btn-outline-primary btn-sm"
-                onclick="updateData()"
-              >
-                Update
-              </button>
-              <button
-                class="btn btn-outline-danger btn-sm"
-                onclick="deleteData()"
-              >
-                Delete
-              </button>
-            </td>
-          </tr>
-        </tbody>
+        <tbody class="tableRow"></tbody>
       </table>
     </div>
-
-    <script src="/Controller/pages/equipment.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script type="module" src="/Controller/pages/equipment.js"></script>
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"

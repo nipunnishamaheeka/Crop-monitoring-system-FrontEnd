@@ -1,53 +1,162 @@
-function addEquipment() {
-  alert("Add Equipment functionality coming soon!");
-}
+import {
+  deleteEquipment,
+  getAll,
+  save,
+  update,
+} from "../../model/equipmentModel.js";
 
-function updateData() {
-  alert("Update Data functionality coming soon!");
-}
+$(document).ready(function () {
+  let editingEquipmentCode = null;
 
-function deleteData() {
-  alert("Delete Data functionality coming soon!");
-}
-function showAddEquipmentModal() {
-  const addEquipmentModal = new bootstrap.Modal(
-    document.getElementById("addEquipmentModal")
-  );
-  addEquipmentModal.show();
-}
-
-// show images
-function previewImage(event, previewId) {
-  const reader = new FileReader();
-  reader.onload = function () {
-    const output = document.getElementById(previewId);
-    output.src = reader.result;
-    output.style.display = "block";
-  };
-  reader.readAsDataURL(event.target.files[0]);
-}
-
-document
-  .getElementById("addEquipmentForm")
-  .addEventListener("submit", function (event) {
-    event.preventDefault();
-    alert("Equipment added successfully!");
-    document.getElementById("addEquipmentForm").reset();
-    document.getElementById("preview1").style.display = "none";
-    document.getElementById("preview2").style.display = "none";
-    bootstrap.Modal.getInstance(
-      document.getElementById("addEquipmentModal")
-    ).hide();
+  $("#addEquipmentPopup").click(function () {
+    const addEquipmentModal = new bootstrap.Modal($("#addEquipmentModal")[0]);
+    addEquipmentModal.show();
+    $("#addEquipmentForm")[0].reset();
+    editingEquipmentCode = null;
   });
-// filter
-document.getElementById("searchInput").addEventListener("input", function () {
-  const searchValue = this.value.toLowerCase();
-  const rows = document.querySelectorAll("#dataTable tr");
 
-  rows.forEach((row) => {
-    const code = row.cells[1].textContent.toLowerCase();
-    const name = row.cells[2].textContent.toLowerCase();
-    row.style.display =
-      code.includes(searchValue) || name.includes(searchValue) ? "" : "none";
+  $("#addEquipmentForm").submit(async function (event) {
+    event.preventDefault();
+
+    const equipmentData = {
+      equipmentId: $("#equipmentCode").val(),
+      name: $("#equipmentName").val(),
+      type: $("#equipmentType").val(),
+      status: $("#equipmentStatus").val(),
+      assignedStaffId: $("#staffDetails").val(),
+      assignedFieldCode: $("#fieldDetails").val(),
+    };
+
+    try {
+      if (editingEquipmentCode) {
+        await update(editingEquipmentCode, equipmentData);
+        alert("updated successfully!");
+      } else {
+        await save(equipmentData);
+        alert("added successfully!");
+      }
+      $("#addEquipmentForm")[0].reset();
+      bootstrap.Modal.getInstance($("#addEquipmentModal")[0]).hide();
+      reloadTable();
+    } catch (error) {
+      console.error("Error saving or updating :", error);
+      alert("Failed to save or update !");
+    }
+  });
+
+  async function reloadTable() {
+    try {
+      const equipments = await getAll();
+      $("tbody.tableRow").empty();
+      equipments.forEach((equipment) => {
+        loadTable(equipment);
+      });
+    } catch (error) {
+      console.error("Error loading :", error);
+    }
+  }
+
+  function loadTable(equipmentData) {
+    const rowHtml = `
+      <tr>
+        <td><input type="checkbox" /></td>
+        <td>${equipmentData.equipmentId}</td>
+        <td>${equipmentData.name}</td>
+        <td>${equipmentData.type}</td>
+        <td>${equipmentData.status}</td>
+        <td>${equipmentData.assignedStaffId}</td>
+        <td>${equipmentData.assignedFieldCode}</td>
+        <td>
+          <button class="btn btn-outline-primary btn-sm editBtn" data-id="${equipmentData.equipmentId}">Edit</button>
+          <button class="btn btn-outline-danger btn-sm removeBtn" data-id="${equipmentData.equipmentId}">Delete</button>
+          
+        </td>
+      </tr>
+    `;
+    $("tbody.tableRow").append(rowHtml);
+  }
+
+  reloadTable();
+
+  $(document).on("click", ".removeBtn", async function () {
+    const equipmentId = $(this).data("id");
+    try {
+      await deleteEquipment(equipmentId);
+      alert("Equipment Deleted");
+      reloadTable();
+    } catch (error) {
+      console.error("Error deleting :", error);
+      alert("Failed to delete !");
+    }
+  });
+
+  $(document).on("click", ".editBtn", async function () {
+    const equipmentId = $(this).data("id");
+    try {
+      const equipment = await getAll().then((equipments) =>
+        equipments.find((equipment) => equipment.equipmentId === equipmentId)
+      );
+      if (equipment) {
+        $("#equipmentCode").val(equipment.equipmentId);
+        $("#equipmentName").val(equipment.name);
+        $("#equipmentType").val(equipment.type);
+        $("#equipmentStatus").val(equipment.status);
+        $("#staffDetails").val(equipment.assignedStaffId);
+        $("#fieldDetails").val(equipment.assignedFieldCode);
+        const addEquipmentModal = new bootstrap.Modal(
+          $("#addEquipmentModal")[0]
+        );
+        addEquipmentModal.show();
+        editingEquipmentCode = equipmentId;
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  });
+
+  function search(query) {
+    getAll()
+      .then((equipments) => {
+        const filtered = equipments.filter((equipment) => {
+          const equipmentId = equipment.equipmentId || "";
+          const name = equipment.name || "";
+
+          return (
+            equipmentId.toLowerCase().includes(query.toLowerCase()) ||
+            name.toLowerCase().includes(query.toLowerCase())
+          );
+        });
+        $("tbody.tableRow").empty();
+        if (filtered.length > 0) {
+          filtered.forEach((equipment) => {
+            loadTable(equipment);
+          });
+        } else {
+          const noResultsHtml = `<tr><td colspan="9" class="text-center">No vehicles found</td></tr>`;
+          $("tbody.tableRow").append(noResultsHtml);
+        }
+      })
+      .catch((error) => {
+        console.error("Error searching:", error);
+        alert("Failed to search!");
+      });
+  }
+
+  $("#searchInput").on("input", function () {
+    const query = $(this).val().trim();
+    if (query) {
+      search(query);
+    } else {
+      reloadTable();
+    }
+  });
+
+  $("#searchButton").on("click", function () {
+    const query = $("#searchInput").val().trim();
+    if (query) {
+      search(query);
+    } else {
+      reloadTable();
+    }
   });
 });
