@@ -4,9 +4,11 @@ import {
   saveCrops,
   updateCrops,
 } from "../../model/cropsModel.js";
+import { getAll } from "../../model/fieldModel.js";
 
 $(document).ready(function () {
   let editingCropCode = null;
+  loadFieldData();
 
   $("#addCropPopup").click(function () {
     const addCropsModal = new bootstrap.Modal($("#addCropsModal")[0]);
@@ -37,7 +39,7 @@ $(document).ready(function () {
     const cropImage = $("#c_image")[0].files[0];
     const cropData = {
       crop_code: $("#cropCode").val(),
-      field_code: $("#fieldCode").val(),
+      code: $("#fieldCode").val(),
       category: $("#category").val(),
       cropCommonName: $("#cropsName").val(),
       cropScientificName: $("#scientificName").val(),
@@ -62,6 +64,25 @@ $(document).ready(function () {
       alert("Failed to save or update crop!");
     }
   });
+
+  // Load Field Data for the dropdown
+  async function loadFieldData() {
+    try {
+      const fields = await getAll();
+      const fieldSelect = $("#fieldCode");
+      fieldSelect.empty();
+      fieldSelect.append(`<option value="">Select Field</option>`);
+
+      fields.forEach(function (field) {
+        fieldSelect.append(
+          `<option value="${field.code}">${field.name}</option>`
+        );
+      });
+      window.fieldData = fields;
+    } catch (error) {
+      console.error("Error loading field data:", error);
+    }
+  }
 
   async function reloadTable() {
     try {
@@ -88,7 +109,6 @@ $(document).ready(function () {
         <td>
           <button class="btn btn-outline-primary btn-sm editBtn" data-id="${cropData.cropCode}">Edit</button>
           <button class="btn btn-outline-danger btn-sm removeBtn" data-id="${cropData.cropCode}">Delete</button>
-          
         </td>
       </tr>
     `;
