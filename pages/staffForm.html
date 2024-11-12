@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Managment System</title>
+    <link
+      href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+      crossorigin="anonymous"
+    />
+  </head>
+  <body>
+    <div class="container">
+      <h2 class="text-center">Staff Management</h2>
+      <hr />
+      <br />
+      <div class="d-flex justify-content-between align-items-center my-3">
+        <input
+          type="text"
+          id="searchInput"
+          class="form-control w-50"
+          placeholder="Search by Staff Code or Common Name"
+          aria-label="Search"
+        />
+
+        <button class="btn btn-primary" id="addStaffPopup">Add Member</button>
+
+        <!-- Add Data -->
+        <div
+          class="modal fade"
+          id="addStaffModal"
+          tabindex="-1"
+          aria-labelledby="addStaffModalLabel"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="addStaffModalLabel">
+                  Add New Staff
+                </h5>
+                <button
+                  type="button"
+                  class="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                ></button>
+              </div>
+              <div class="modal-body">
+                <form id="addStaffForm">
+                  <div class="row mb-3">
+                    <div class="col-md-6">
+                      <label for="staffCode" class="form-label">Id</label>
+                      <input
+                        type="text"
+                        class="form-control staffCode"
+                        id="staffCode"
+                        required
+                        readonly
+                      />
+                    </div>
+                    <div class="col-md-6">
+                      <label for="fristName" class="form-label"
+                        >Frist Name</label
+                      >
+                      <input
+                        type="text"
+                        class="form-control fristName"
+                        id="fristName"
+                        name="name"
+                        required
+                      />
+                    </div>
+                  </div>
+                  <div class="row mb-3">
+                    <div class="col-md-6">
+                      <label for="lastName" class="form-label">Last Name</label>
+                      <input
+                        type="text"
+                        class="form-control lastName"
+                        id="lastName"
+                        name="name"
+                        required
+                      />
+                    </div>
+                    <div class="col-md-6">
+                      <label for="designation" class="form-label"
+                        >Designation</label
+                      >
+                      <input
+                        type="text"
+                        class="form-control designation"
+                        id="designation"
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  <div class="row mb-3">
+                    <div class="col-md-6">
+                      <label for="gender" class="form-label">Gender</label>
+                      <input
+                        type="text"
+                        class="form-control gender"
+                        id="gender"
+                        name="name"
+                        required
+                      />
+                    </div>
+                    <div class="col-md-6">
+                      <label for="joinedDate" class="form-label"
+                        >Joined Date</label
+                      >
+                      <input
+                        type="text"
+                        class="form-control joinedDate"
+                        id="joinedDate"
+                        name="name"
+                        required
+                      />
+                    </div>
+                  </div>
+                  <div class="row mb-3">
+                    <div class="col-md-6">
+                      <label for="dob" class="form-label">DOB</label>
+                      <input
+                        type="text"
+                        class="form-control dob"
+                        id="dob"
+                        name="category"
+                        required
+                      />
+                    </div>
+                    <div class="col-md-6">
+                      <label for="line01" class="form-label"
+                        >Address Line 01</label
+                      >
+                      <input
+                        type="text"
+                        class="form-control line01"
+                        id="line01"
+                        name="type"
+                        required
+                      />
+                    </div>
+                  </div>
+                  <div class="row mb-3">
+                    <div class="col-md-6">
+                      <label for="line02" class="form-label"
+                        >Address Line 02</label
+                      >
+                      <input
+                        type="text"
+                        class="form-control line02"
+                        id="line02"
+                        name="type"
+                        required
+                      />
+                    </div>
+                    <div class="col-md-6">
+                      <label for="line03" class="form-label"
+                        >Address Line 03</label
+                      >
+                      <input
+                        type="text"
+                        class="form-control line03"
+                        id="line03"
+                        name="type"
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  <div class="row mb-3">
+                    <div class="col-md-6">
+                      <label for="line04" class="form-label"
+                        >Address Line 04</label
+                      >
+                      <input
+                        type="text"
+                        class="form-control line04"
+                        id="line04"
+                        name="type"
+                        required
+                      />
+                    </div>
+                    <div class="col-md-6">
+                      <label for="line05" class="form-label"
+                        >Address Line 05</label
+                      >
+                      <input
+                        type="text"
+                        class="form-control line05"
+                        id="line05"
+                        name="type"
+                        required
+                      />
+                    </div>
+                  </div>
+                  <div class="row mb-3">
+                    <div class="col-md-6">
+                      <label for="contactNo" class="form-label"
+                        >Contact No</label
+                      >
+                      <input
+                        type="text"
+                        class="form-control contactNo"
+                        id="contactNo"
+                        name="status"
+                        required
+                      />
+                    </div>
+                    <div class="col-md-6">
+                      <label for="email" class="form-label">Email</label>
+                      <input
+                        type="text"
+                        class="form-control email"
+                        id="email"
+                        name="staffDetails"
+                        required
+                      />
+                    </div>
+                  </div>
+                  <div class="row mb-3">
+                    <div class="col-md-6">
+                      <label for="role" class="form-label">Role</label>
+                      <input
+                        type="text"
+                        class="form-control role"
+                        id="role"
+                        name="remarks"
+                        required
+                      />
+                    </div>
+                    <div class="col-md-6">
+                      <label for="field" class="form-label">Field</label>
+                      <input
+                        type="text"
+                        class="form-control field"
+                        id="field"
+                        name="remarks"
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  <div class="row mb-3">
+                    <div class="col-md-6">
+                      <label for="vehicle" class="form-label">Vehicle</label>
+                      <input
+                        type="text"
+                        class="form-control vehicle"
+                        id="vehicle"
+                        name="vehicle"
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  <div class="modal-footer">
+                    <button
+                      type="button"
+                      class="btn btn-secondary"
+                      data-bs-dismiss="modal"
+                    >
+                      Close
+                    </button>
+                    <button
+                      type="submit"
+                      class="btn btn-primary"
+                      id="saveStaffBtn"
+                    >
+                      Save Staff
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- End Add data section -->
+      </div>
+
+      <!-- Data Table -->
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th scope="col"><input type="checkbox" /></th>
+            <th scope="col">Id</th>
+            <th scope="col">First Name</th>
+            <th scope="col">Last Name</th>
+            <th scope="col">Designation</th>
+            <th scope="col">Gender</th>
+            <th scope="col">Joined Date</th>
+            <th scope="col">DOB</th>
+            <th scope="col">Address Line 01</th>
+            <th scope="col">Address Line 02</th>
+            <th scope="col">Address Line 03</th>
+            <th scope="col">Address Line 04</th>
+            <th scope="col">Address Line 05</th>
+            <th scope="col">Contact No</th>
+            <th scope="col">Email</th>
+            <th scope="col">Role</th>
+            <th scope="col">Field</th>
+            <th scope="col">Vehicle</th>
+            <th scope="col">Action</th>
+          </tr>
+        </thead>
+        <tbody class="tableRow"></tbody>
+      </table>
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script type="module" src="/Controller/pages/staff.js"></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>
