@@ -8,6 +8,9 @@ export const saveCrops = (cropsData) => {
     success: function (response) {
       console.log("Crops saved successfully:", response);
       alert("Crops saved successfully!");
+      console.log("model ekath awda bn ");
+      console.log(cropsData);
+      
       $("#addCropsForm")[0].reset(); 
       $("#addCropsModal").modal("hide"); 
     },

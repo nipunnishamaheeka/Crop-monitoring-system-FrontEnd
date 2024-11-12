@@ -7,6 +7,9 @@ export const save = (equipmentData) => {
     success: function (response) {
       console.log(" saved successfully:", response);
       alert(" saved successfully!");
+      console.log("model ekath awda bn ");
+      console.log(equipmentData);
+
       $("#addEquipmentForm")[0].reset();
       $("#addEquipmentModal").modal("hide");
     },
@@ -17,7 +20,7 @@ export const save = (equipmentData) => {
   });
 };
 
-export const getAll = () => {
+export const getAllEquipments = () => {
   return new Promise((resolve, reject) => {
     $.ajax({
       url: "http://localhost:5055/cropcontroller/api/v1/equipment/allEquipments",

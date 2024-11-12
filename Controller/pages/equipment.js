@@ -1,13 +1,16 @@
 import {
   deleteEquipment,
-  getAll,
+  getAllEquipments,
   save,
   update,
 } from "../../model/equipmentModel.js";
+import { getAll } from "../../model/fieldModel.js";
+ 
 
 $(document).ready(function () {
   let editingEquipmentCode = null;
-
+  loadFieldData();
+  
   $("#addEquipmentPopup").click(function () {
     const addEquipmentModal = new bootstrap.Modal($("#addEquipmentModal")[0]);
     addEquipmentModal.show();
@@ -24,7 +27,7 @@ $(document).ready(function () {
       type: $("#equipmentType").val(),
       status: $("#equipmentStatus").val(),
       assignedStaffId: $("#staffDetails").val(),
-      assignedFieldCode: $("#fieldDetails").val(),
+      assignedFieldCode: $("#fieldCode").val(),
     };
 
     try {
@@ -44,9 +47,28 @@ $(document).ready(function () {
     }
   });
 
+  // Load Field Data for the dropdown
+  async function loadFieldData() {
+    try {
+      const fields = await getAll();
+      const fieldSelect = $("#fieldCode");
+      fieldSelect.empty();
+      fieldSelect.append(`<option value="">Select Field</option>`);
+
+      fields.forEach(function (field) {
+        fieldSelect.append(
+          `<option value="${field.code}">${field.name}</option>`
+        );
+      });
+      window.fieldData = fields;
+    } catch (error) {
+      console.error("Error loading field data:", error);
+    }
+  }
+
   async function reloadTable() {
     try {
-      const equipments = await getAll();
+      const equipments = await getAllEquipments();
       $("tbody.tableRow").empty();
       equipments.forEach((equipment) => {
         loadTable(equipment);
@@ -93,7 +115,7 @@ $(document).ready(function () {
   $(document).on("click", ".editBtn", async function () {
     const equipmentId = $(this).data("id");
     try {
-      const equipment = await getAll().then((equipments) =>
+      const equipment = await getAllEquipments().then((equipments) =>
         equipments.find((equipment) => equipment.equipmentId === equipmentId)
       );
       if (equipment) {

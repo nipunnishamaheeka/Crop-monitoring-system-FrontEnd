@@ -39,7 +39,7 @@ $(document).ready(function () {
     const cropImage = $("#c_image")[0].files[0];
     const cropData = {
       crop_code: $("#cropCode").val(),
-      code: $("#fieldCode").val(),
+      field_code: $("#fieldCode").val(),
       category: $("#category").val(),
       cropCommonName: $("#cropsName").val(),
       cropScientificName: $("#scientificName").val(),
@@ -53,6 +53,7 @@ $(document).ready(function () {
         alert("Crop updated successfully!");
       } else {
         await saveCrops(cropData);
+        console.log(cropData);
         alert("Crop added successfully!");
       }
       $("#addCropsForm")[0].reset();
