@@ -1,4 +1,4 @@
-import { deleteStaff, getAll, save, update } from "../../model/staffModel.js";
+import { deleteStaff, getAllStaff, save, update } from "../../model/staffModel.js";
 
 $(document).ready(function () {
   let editingStaffCode = null;
@@ -52,7 +52,7 @@ $(document).ready(function () {
 
   async function reloadTable() {
     try {
-      const staffs = await getAll();
+      const staffs = await getAllStaff();
       $("tbody.tableRow").empty();
       staffs.forEach((staff) => {
         loadTable(staff);
@@ -111,7 +111,7 @@ $(document).ready(function () {
   $(document).on("click", ".editBtn", async function () {
     const id = $(this).data("id");
     try {
-      const staff = await getAll().then((staffs) =>
+      const staff = await getAllStaff().then((staffs) =>
         staffs.find((staff) => staff.id === id)
       );
       if (staff) {

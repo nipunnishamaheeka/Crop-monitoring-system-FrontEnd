@@ -16,7 +16,7 @@ export const save = (staffData) => {
     },
   });
 };
-export const getAll = () => {
+export const getAllStaff = () => {
   return new Promise((resolve, reject) => {
     $.ajax({
       url: "http://localhost:5055/cropcontroller/api/v1/staff/allStaff",

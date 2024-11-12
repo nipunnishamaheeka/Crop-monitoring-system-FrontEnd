@@ -1,8 +1,9 @@
 import { deleteField, getAll, save, update } from "../../model/fieldModel.js";
+import { getAllStaff } from "../../model/staffModel.js";
 
 $(document).ready(function () {
   let editingFieldCode = null;
-
+  loadStaffData();
   $("#addFieldPopup").click(function () {
     const addFieldModal = new bootstrap.Modal($("#addFieldModal")[0]);
     addFieldModal.show();
@@ -65,6 +66,25 @@ $(document).ready(function () {
       alert("Failed to save or update !");
     }
   });
+
+  // Load Field Data for the dropdown
+  async function loadStaffData() {
+    try {
+      const staffs = await getAllStaff();
+      const staffSelect = $("#staffCode");
+      staffSelect.empty();
+      staffSelect.append(`<option value="">Select Staff</option>`);
+
+      staffs.forEach(function (staff) {
+        staffSelect.append(
+          `<option value="${staff.staff_id}">${staff.fristName}</option>`
+        );
+      });
+      window.StaffData = staffs;
+    } catch (error) {
+      console.error("Error loading field data:", error);
+    }
+  }
 
   async function reloadTable() {
     try {
