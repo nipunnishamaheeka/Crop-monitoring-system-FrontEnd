@@ -45,17 +45,16 @@ $(document).ready(function () {
     }
   });
 
-  async function reloadTable() {
-    try {
-      const vehicles = await getAll();
-      $("tbody.tableRow").empty();
-      vehicles.forEach((vehicle) => {
-        loadTable(vehicle);
-      });
-    } catch (error) {
-      console.error("Error loading :", error);
-    }
+async function reloadTable() {
+  try {
+    const vehicles = await getAll();
+    $("tbody.tableRow").empty();
+    vehicles.forEach((vehicle) => loadTable(vehicle));
+  } catch (error) {
+    console.error("Error loading table:", error);
+    alert("Failed to load vehicle data!");
   }
+} 
 
   function loadTable(vehicleData) {
     const rowHtml = `
