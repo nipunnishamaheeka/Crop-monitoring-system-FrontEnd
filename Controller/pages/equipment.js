@@ -11,8 +11,6 @@ $(document).ready(function () {
   let editingEquipmentCode = null;
   loadFieldData();
   loadStaffData();
-  console.log("loaded" + window.fieldData);
-
   $("#addEquipmentPopup").click(function () {
     const addEquipmentModal = new bootstrap.Modal($("#addEquipmentModal")[0]);
     addEquipmentModal.show();
@@ -66,31 +64,22 @@ $(document).ready(function () {
       console.error("Error loading field data:", error);
     }
   }
-
-  let staffDataMap = {};
-  console.log("staffDataMap" + staffDataMap);
-
   async function loadStaffData() {
     try {
       const staffs = await getAllStaff();
       const staffSelect = $("#staffCode");
       staffSelect.empty();
       staffSelect.append(`<option value="">Select Staff</option>`);
-
-      staffs.forEach(function (staff) {
-        // Store each staff's ID and name in the map for easy lookup
-        staffDataMap[staff.id] = staff.firstName;
-        console.log("staffDataMappahala" + staff.id + staff.firstName);
-
+      staffs.forEach((staff) => {
         staffSelect.append(
           `<option value="${staff.id}">${staff.firstName}</option>`
         );
       });
+      window.staffData = staffs;
     } catch (error) {
       console.error("Error loading staff data:", error);
     }
   }
-
   async function reloadTable() {
     try {
       const equipments = await getAllEquipments();
@@ -103,29 +92,7 @@ $(document).ready(function () {
     }
   }
 
-  // function loadTable(equipmentData) {
-  //   const rowHtml = `
-  //     <tr>
-  //       <td><input type="checkbox" /></td>
-  //       <td>${equipmentData.equipmentId}</td>
-  //       <td>${equipmentData.name}</td>
-  //       <td>${equipmentData.type}</td>
-  //       <td>${equipmentData.status}</td>
-  //       <td>${equipmentData.assignedStaffId}</td>
-  //       <td>${equipmentData.assignedFieldCode}</td>
-  //       <td>
-  //         <button class="btn btn-outline-primary btn-sm editBtn" data-id="${equipmentData.equipmentId}">Edit</button>
-  //         <button class="btn btn-outline-danger btn-sm removeBtn" data-id="${equipmentData.equipmentId}">Delete</button>
-  //       </td>
-  //     </tr>
-  //   `;
-  //   $("tbody.tableRow").append(rowHtml);
-  // }
   function loadTable(equipmentData) {
-    const assignedStaffName =
-      staffDataMap[equipmentData.assignedStaffId] || "Unassigned";
-    console.log("assignedStaffName" + assignedStaffName);
-
     const rowHtml = `
     <tr>
       <td><input type="checkbox" /></td>
@@ -133,11 +100,23 @@ $(document).ready(function () {
       <td>${equipmentData.name}</td>
       <td>${equipmentData.type}</td>
       <td>${equipmentData.status}</td>
-      <td>${staffDataMap}</td> <!-- Display staff name instead of ID -->
-      <td>${equipmentData.assignedFieldCode}</td>
+      <td>${
+        equipmentData.assignedStaff === null
+          ? "Unassigned"
+          : equipmentData.assignedStaff.firstName
+      }</td> <!-- Display staff name instead of ID -->
+      <td>${
+        equipmentData.assignedField === null
+          ? "Unassigned"
+          : equipmentData.assignedField.name
+      }</td>
       <td>
-        <button class="btn btn-outline-primary btn-sm editBtn" data-id="${equipmentData.equipmentId}">Edit</button>
-        <button class="btn btn-outline-danger btn-sm removeBtn" data-id="${equipmentData.equipmentId}">Delete</button>
+        <button class="btn btn-outline-primary btn-sm editBtn" data-id="${
+          equipmentData.equipmentId
+        }">Edit</button>
+        <button class="btn btn-outline-danger btn-sm removeBtn" data-id="${
+          equipmentData.equipmentId
+        }">Delete</button>
       </td>
     </tr>
   `;
@@ -169,8 +148,18 @@ $(document).ready(function () {
         $("#equipmentName").val(equipment.name);
         $("#equipmentType").val(equipment.type);
         $("#equipmentStatus").val(equipment.status);
-        $("#staffCode").val(equipment.assignedStaffId); // Corrected ID
-        $("#fieldCode").val(equipment.assignedFieldCode); // Corrected ID
+        const staffMemberName = equipment.assignedStaff.firstName;
+        if (
+          $("#staffCode option[value='" + staffMemberName + "']").length === 0
+        ) {
+          $("#staffCode").append(new Option(staffMemberName, staffMemberName));
+        }
+        $("#staffCode").val(staffMemberName);
+        const fieldName = equipment.assignedField.name;
+        if ($("#fieldCode option[value='" + fieldName + "']").length === 0) {
+          $("#fieldCode").append(new Option(fieldName, fieldName));
+        }
+        $("#fieldCode").val(fieldName);
         const addEquipmentModal = new bootstrap.Modal(
           $("#addEquipmentModal")[0]
         );

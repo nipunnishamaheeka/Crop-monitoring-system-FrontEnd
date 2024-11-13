@@ -135,10 +135,8 @@ $(document).ready(function () {
         if (
           $("#staffCode option[value='" + staffMemberName + "']").length === 0
         ) {
-          // If the option doesn't exist, add it
           $("#staffCode").append(new Option(staffMemberName, staffMemberName));
         }
-        // Now set the value
         $("#staffCode").val(staffMemberName);
 
         $("#remarks").val(vehicle.remarks);
