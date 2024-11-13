@@ -4,13 +4,15 @@ import {
   save,
   update,
 } from "../../model/equipmentModel.js";
-import { getAll } from "../../model/fieldModel.js";
- 
+import { getAll as getAllFields } from "../../model/fieldModel.js";
+import { getAllStaff } from "../../model/staffModel.js";
 
 $(document).ready(function () {
   let editingEquipmentCode = null;
   loadFieldData();
-  
+  loadStaffData();
+  console.log("loaded" + window.fieldData);
+
   $("#addEquipmentPopup").click(function () {
     const addEquipmentModal = new bootstrap.Modal($("#addEquipmentModal")[0]);
     addEquipmentModal.show();
@@ -26,7 +28,7 @@ $(document).ready(function () {
       name: $("#equipmentName").val(),
       type: $("#equipmentType").val(),
       status: $("#equipmentStatus").val(),
-      assignedStaffId: $("#staffDetails").val(),
+      assignedStaffId: $("#staffCode").val(), // Corrected ID
       assignedFieldCode: $("#fieldCode").val(),
     };
 
@@ -42,20 +44,19 @@ $(document).ready(function () {
       bootstrap.Modal.getInstance($("#addEquipmentModal")[0]).hide();
       reloadTable();
     } catch (error) {
-      console.error("Error saving or updating :", error);
-      alert("Failed to save or update !");
+      console.error("Error saving or updating:", error);
+      alert("Failed to save or update!");
     }
   });
 
   // Load Field Data for the dropdown
   async function loadFieldData() {
     try {
-      const fields = await getAll();
+      const fields = await getAllFields();
       const fieldSelect = $("#fieldCode");
       fieldSelect.empty();
       fieldSelect.append(`<option value="">Select Field</option>`);
-
-      fields.forEach(function (field) {
+      fields.forEach((field) => {
         fieldSelect.append(
           `<option value="${field.code}">${field.name}</option>`
         );
@@ -63,6 +64,30 @@ $(document).ready(function () {
       window.fieldData = fields;
     } catch (error) {
       console.error("Error loading field data:", error);
+    }
+  }
+
+  let staffDataMap = {};
+  console.log("staffDataMap" + staffDataMap);
+
+  async function loadStaffData() {
+    try {
+      const staffs = await getAllStaff();
+      const staffSelect = $("#staffCode");
+      staffSelect.empty();
+      staffSelect.append(`<option value="">Select Staff</option>`);
+
+      staffs.forEach(function (staff) {
+        // Store each staff's ID and name in the map for easy lookup
+        staffDataMap[staff.id] = staff.firstName;
+        console.log("staffDataMappahala" + staff.id + staff.firstName);
+
+        staffSelect.append(
+          `<option value="${staff.id}">${staff.firstName}</option>`
+        );
+      });
+    } catch (error) {
+      console.error("Error loading staff data:", error);
     }
   }
 
@@ -74,27 +99,48 @@ $(document).ready(function () {
         loadTable(equipment);
       });
     } catch (error) {
-      console.error("Error loading :", error);
+      console.error("Error loading equipment data:", error);
     }
   }
 
+  // function loadTable(equipmentData) {
+  //   const rowHtml = `
+  //     <tr>
+  //       <td><input type="checkbox" /></td>
+  //       <td>${equipmentData.equipmentId}</td>
+  //       <td>${equipmentData.name}</td>
+  //       <td>${equipmentData.type}</td>
+  //       <td>${equipmentData.status}</td>
+  //       <td>${equipmentData.assignedStaffId}</td>
+  //       <td>${equipmentData.assignedFieldCode}</td>
+  //       <td>
+  //         <button class="btn btn-outline-primary btn-sm editBtn" data-id="${equipmentData.equipmentId}">Edit</button>
+  //         <button class="btn btn-outline-danger btn-sm removeBtn" data-id="${equipmentData.equipmentId}">Delete</button>
+  //       </td>
+  //     </tr>
+  //   `;
+  //   $("tbody.tableRow").append(rowHtml);
+  // }
   function loadTable(equipmentData) {
+    const assignedStaffName =
+      staffDataMap[equipmentData.assignedStaffId] || "Unassigned";
+    console.log("assignedStaffName" + assignedStaffName);
+
     const rowHtml = `
-      <tr>
-        <td><input type="checkbox" /></td>
-        <td>${equipmentData.equipmentId}</td>
-        <td>${equipmentData.name}</td>
-        <td>${equipmentData.type}</td>
-        <td>${equipmentData.status}</td>
-        <td>${equipmentData.assignedStaffId}</td>
-        <td>${equipmentData.assignedFieldCode}</td>
-        <td>
-          <button class="btn btn-outline-primary btn-sm editBtn" data-id="${equipmentData.equipmentId}">Edit</button>
-          <button class="btn btn-outline-danger btn-sm removeBtn" data-id="${equipmentData.equipmentId}">Delete</button>
-          
-        </td>
-      </tr>
-    `;
+    <tr>
+      <td><input type="checkbox" /></td>
+      <td>${equipmentData.equipmentId}</td>
+      <td>${equipmentData.name}</td>
+      <td>${equipmentData.type}</td>
+      <td>${equipmentData.status}</td>
+      <td>${staffDataMap}</td> <!-- Display staff name instead of ID -->
+      <td>${equipmentData.assignedFieldCode}</td>
+      <td>
+        <button class="btn btn-outline-primary btn-sm editBtn" data-id="${equipmentData.equipmentId}">Edit</button>
+        <button class="btn btn-outline-danger btn-sm removeBtn" data-id="${equipmentData.equipmentId}">Delete</button>
+      </td>
+    </tr>
+  `;
     $("tbody.tableRow").append(rowHtml);
   }
 
@@ -107,8 +153,8 @@ $(document).ready(function () {
       alert("Equipment Deleted");
       reloadTable();
     } catch (error) {
-      console.error("Error deleting :", error);
-      alert("Failed to delete !");
+      console.error("Error deleting equipment:", error);
+      alert("Failed to delete!");
     }
   });
 
@@ -123,8 +169,8 @@ $(document).ready(function () {
         $("#equipmentName").val(equipment.name);
         $("#equipmentType").val(equipment.type);
         $("#equipmentStatus").val(equipment.status);
-        $("#staffDetails").val(equipment.assignedStaffId);
-        $("#fieldDetails").val(equipment.assignedFieldCode);
+        $("#staffCode").val(equipment.assignedStaffId); // Corrected ID
+        $("#fieldCode").val(equipment.assignedFieldCode); // Corrected ID
         const addEquipmentModal = new bootstrap.Modal(
           $("#addEquipmentModal")[0]
         );
@@ -132,17 +178,16 @@ $(document).ready(function () {
         editingEquipmentCode = equipmentId;
       }
     } catch (error) {
-      console.error("Error fetching data:", error);
+      console.error("Error fetching equipment data:", error);
     }
   });
 
   function search(query) {
-    getAll()
+    getAllEquipments()
       .then((equipments) => {
         const filtered = equipments.filter((equipment) => {
           const equipmentId = equipment.equipmentId || "";
           const name = equipment.name || "";
-
           return (
             equipmentId.toLowerCase().includes(query.toLowerCase()) ||
             name.toLowerCase().includes(query.toLowerCase())
@@ -154,12 +199,12 @@ $(document).ready(function () {
             loadTable(equipment);
           });
         } else {
-          const noResultsHtml = `<tr><td colspan="9" class="text-center">No vehicles found</td></tr>`;
+          const noResultsHtml = `<tr><td colspan="9" class="text-center">No equipment found</td></tr>`;
           $("tbody.tableRow").append(noResultsHtml);
         }
       })
       .catch((error) => {
-        console.error("Error searching:", error);
+        console.error("Error searching equipment:", error);
         alert("Failed to search!");
       });
   }

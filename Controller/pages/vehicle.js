@@ -1,3 +1,4 @@
+import { getAllStaff } from "../../model/staffModel.js";
 import {
   deleteVehicle,
   getAll,
@@ -7,6 +8,7 @@ import {
 
 $(document).ready(function () {
   let editingVehicleCode = null;
+  loadStaffData();
 
   $("#addVehiclePopup").click(function () {
     const addVehicleModal = new bootstrap.Modal($("#addVehicleModal")[0]);
@@ -45,16 +47,34 @@ $(document).ready(function () {
     }
   });
 
-async function reloadTable() {
-  try {
-    const vehicles = await getAll();
-    $("tbody.tableRow").empty();
-    vehicles.forEach((vehicle) => loadTable(vehicle));
-  } catch (error) {
-    console.error("Error loading table:", error);
-    alert("Failed to load vehicle data!");
+  // Load Staff Data for the dropdown
+  async function loadStaffData() {
+    try {
+      const staffs = await getAllStaff();
+      const staffSelect = $("#staffCode");
+      staffSelect.empty();
+      staffSelect.append(`<option value="">Select Staff</option>`);
+      staffs.forEach((staff) => {
+        staffSelect.append(
+          `<option value="${staff.id}">${staff.firstName}</option>`
+        );
+      });
+      window.staffData = staffs;
+    } catch (error) {
+      console.error("Error loading staff data:", error);
+    }
   }
-} 
+
+  async function reloadTable() {
+    try {
+      const vehicles = await getAll();
+      $("tbody.tableRow").empty();
+      vehicles.forEach((vehicle) => loadTable(vehicle));
+    } catch (error) {
+      console.error("Error loading table:", error);
+      alert("Failed to load vehicle data!");
+    }
+  }
 
   function loadTable(vehicleData) {
     const rowHtml = `
@@ -65,11 +85,19 @@ async function reloadTable() {
         <td>${vehicleData.vehicleCategory}</td>
         <td>${vehicleData.fuelType}</td>
         <td>${vehicleData.status}</td>
-        <td>${vehicleData.staffId}</td>
+        <td>${
+          vehicleData.allocatedStaffMember === null
+            ? "No"
+            : vehicleData.allocatedStaffMember.firstName
+        }</td>
         <td>${vehicleData.remarks}</td>
         <td>
-          <button class="btn btn-outline-primary btn-sm editBtn" data-id="${vehicleData.vehicleCode}">Edit</button>
-          <button class="btn btn-outline-danger btn-sm removeBtn" data-id="${vehicleData.vehicleCode}">Delete</button>
+          <button class="btn btn-outline-primary btn-sm editBtn" data-id="${
+            vehicleData.vehicleCode
+          }">Edit</button>
+          <button class="btn btn-outline-danger btn-sm removeBtn" data-id="${
+            vehicleData.vehicleCode
+          }">Delete</button>
           
         </td>
       </tr>
@@ -103,7 +131,16 @@ async function reloadTable() {
         $("#vehicleCategory").val(vehicle.vehicleCategory);
         $("#fuelType").val(vehicle.fuelType);
         $("#status").val(vehicle.status);
-        $("#staffDetails").val(vehicle.staffId);
+        const staffMemberName = vehicle.allocatedStaffMember.firstName;
+        if (
+          $("#staffCode option[value='" + staffMemberName + "']").length === 0
+        ) {
+          // If the option doesn't exist, add it
+          $("#staffCode").append(new Option(staffMemberName, staffMemberName));
+        }
+        // Now set the value
+        $("#staffCode").val(staffMemberName);
+
         $("#remarks").val(vehicle.remarks);
         const addVehiclesModal = new bootstrap.Modal($("#addVehicleModal")[0]);
         addVehiclesModal.show();
