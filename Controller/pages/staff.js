@@ -1,8 +1,11 @@
 import { deleteStaff, getAllStaff, save, update } from "../../model/staffModel.js";
+import { getAll as getAllFields } from "../../model/fieldModel.js";
+import { getAll } from "../../model/vehiclesModel.js";
 
 $(document).ready(function () {
   let editingStaffCode = null;
-
+  loadFieldData();
+  loadVehicleData();
   $("#addStaffPopup").click(function () {
     const addStaffModal = new bootstrap.Modal($("#addStaffModal")[0]);
     addStaffModal.show();
@@ -29,7 +32,7 @@ $(document).ready(function () {
       contactNo: $("#contactNo").val(),
       email: $("#email").val(),
       role: $("#role").val(),
-      fields: $("#field").val(),
+      fields: $("#fieldCode").val(),
       vehicles: $("#vehicle").val(),
     };
 
@@ -49,7 +52,40 @@ $(document).ready(function () {
       alert("Failed to save or update !");
     }
   });
-
+  // Load vehicle Data for the dropdown
+  async function loadVehicleData() {
+    try {
+      const vehicles = await getAll();
+      const vehicleSelect = $("#vehicle");
+      vehicleSelect.empty();
+      vehicleSelect.append(`<option value="">Select Field</option>`);
+      vehicles.forEach((vehicle) => {
+        vehicleSelect.append(
+          `<option value="${vehicle.v_code}">${vehicle.licensePlateNo}</option>`
+        );
+      });
+      window.vehicleData = vehicles;
+    } catch (error) {
+      console.error("Error loading vehicle data:", error);
+    }
+  }
+  // Load Field Data for the dropdown
+  async function loadFieldData() {
+    try {
+      const fields = await getAllFields();
+      const fieldSelect = $("#fieldCode");
+      fieldSelect.empty();
+      fieldSelect.append(`<option value="">Select Field</option>`);
+      fields.forEach((field) => {
+        fieldSelect.append(
+          `<option value="${field.code}">${field.name}</option>`
+        );
+      });
+      window.fieldData = fields;
+    } catch (error) {
+      console.error("Error loading field data:", error);
+    }
+  }
   async function reloadTable() {
     try {
       const staffs = await getAllStaff();
@@ -81,12 +117,22 @@ $(document).ready(function () {
         <td>${staffData.contactNo}</td>
         <td>${staffData.email}</td>
         <td>${staffData.role}</td>
-        <td>${staffData.fields}</td>
-        <td>${staffData.vehicle}</td>
+            <td>${
+              staffData.fields === null ? "Unassigned" : staffData.fields.name
+            }</td>
+        <td>${
+          staffData.vehicles === null
+            ? "Unassigned"
+            : staffData.vehicles.vehicleCode
+        }</td>
 
         <td>
-          <button class="btn btn-outline-primary btn-sm editBtn" data-id="${staffData.id}">Edit</button>
-          <button class="btn btn-outline-danger btn-sm removeBtn" data-id="${staffData.id}">Delete</button>
+          <button class="btn btn-outline-primary btn-sm editBtn" data-id="${
+            staffData.id
+          }">Edit</button>
+          <button class="btn btn-outline-danger btn-sm removeBtn" data-id="${
+            staffData.id
+          }">Delete</button>
           
         </td>
       </tr>
