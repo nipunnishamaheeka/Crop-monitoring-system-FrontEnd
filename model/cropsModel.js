@@ -27,18 +27,29 @@ export const getAllCrops = () => {
       url: "http://localhost:5055/cropcontroller/api/v1/crops/allCrops",
       type: "GET",
       contentType: "application/json",
-      success: function (cropsList) {
-        console.log("Crops retrieved successfully:", cropsList);
-        resolve(cropsList); 
+      success: function (cropsList, textStatus, xhr) {
+        if (xhr.status === 200) {
+          console.log("Crops retrieved successfully:", cropsList);
+          resolve(cropsList);
+        } else {
+          console.warn(`Unexpected status code: ${xhr.status}`);
+          alert("Unexpected response from server.");
+          reject([]);
+        }
       },
       error: function (xhr, status, error) {
-        console.error("Error retrieving crops:", xhr, status, error);
-        alert("Failed to retrieve crops!");
-        reject([]); 
+        console.error("Error retrieving crops:", { xhr, status, error });
+        if (xhr.readyState === 4) {
+          alert("Failed to retrieve crops! Server returned an error.");
+        } else if (xhr.readyState === 0) {
+          alert("Failed to retrieve crops! Network error.");
+        }
+        reject([]);
       },
     });
   });
 };
+
 
 export const updateCrops = (cropCode, updatedCropData) => {
   $.ajax({

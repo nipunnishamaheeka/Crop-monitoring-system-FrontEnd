@@ -19,12 +19,12 @@ $(document).ready(function () {
   });
 
   function previewImage(event, previewId) {
-    const reader = new FileReader();
-    reader.onload = function () {
-      $(`#${previewId}`).attr("src", reader.result).show();
-    };
     const file = event.target.files[0];
     if (file) {
+      const reader = new FileReader();
+      reader.onload = function () {
+        $(`#${previewId}`).attr("src", reader.result).show();
+      };
       reader.readAsDataURL(file);
     }
   }
@@ -36,7 +36,6 @@ $(document).ready(function () {
   $("#addCropsForm").submit(async function (event) {
     event.preventDefault();
 
-    const cropImage = $("#c_image")[0].files[0];
     const cropData = {
       crop_code: $("#cropCode").val(),
       field_code: $("#fieldCode").val(),
@@ -44,7 +43,9 @@ $(document).ready(function () {
       cropCommonName: $("#cropsName").val(),
       cropScientificName: $("#scientificName").val(),
       cropSeason: $("#season").val(),
-      cropImage: cropImage ? URL.createObjectURL(cropImage) : null,
+      cropImage: $("#c_image")[0].files[0]
+        ? URL.createObjectURL($("#c_image")[0].files[0])
+        : null,
     };
 
     try {
@@ -53,12 +54,9 @@ $(document).ready(function () {
         alert("Crop updated successfully!");
       } else {
         await saveCrops(cropData);
-        console.log(cropData);
         alert("Crop added successfully!");
       }
-      $("#addCropsForm")[0].reset();
-      $("#preview1").hide();
-      bootstrap.Modal.getInstance($("#addCropsModal")[0]).hide();
+      resetForm();
       reloadTable();
     } catch (error) {
       console.error("Error saving or updating crop:", error);
@@ -66,20 +64,22 @@ $(document).ready(function () {
     }
   });
 
-  // Load Field Data for the dropdown
+  function resetForm() {
+    $("#addCropsForm")[0].reset();
+    $("#preview1").hide();
+    bootstrap.Modal.getInstance($("#addCropsModal")[0]).hide();
+  }
+
   async function loadFieldData() {
     try {
       const fields = await getAll();
       const fieldSelect = $("#fieldCode");
-      fieldSelect.empty();
-      fieldSelect.append(`<option value="">Select Field</option>`);
-
-      fields.forEach(function (field) {
+      fieldSelect.empty().append(`<option value="">Select Field</option>`);
+      fields.forEach((field) =>
         fieldSelect.append(
           `<option value="${field.code}">${field.name}</option>`
-        );
-      });
-      window.fieldData = fields;
+        )
+      );
     } catch (error) {
       console.error("Error loading field data:", error);
     }
@@ -89,58 +89,58 @@ $(document).ready(function () {
     try {
       const crops = await getAllCrops();
       $("tbody.tableRow").empty();
-      crops.forEach((crop) => {
-        loadTable(crop);
-      });
+      crops.forEach((crop) => loadTableRow(crop));
     } catch (error) {
       console.error("Error loading crops:", error);
     }
   }
-  function loadTable(cropData) {
+
+  function loadTableRow(cropData) {
     const rowHtml = `
       <tr>
         <td><input type="checkbox" /></td>
         <td>${cropData.cropCode}</td>
-        <td>${cropData.field}</td>
+        <td>${cropData.field ? cropData.field.name : "Unassigned"}</td>
         <td>${cropData.cropCommonName}</td>
         <td>${cropData.cropScientificName}</td>
-        <td><img src="${cropData.cropImage}" class="img-thumbnail" style="max-width: 50px;" /></td>
+        <td><img src="${
+          cropData.cropImage
+        }" class="img-thumbnail" style="max-width: 50px;" /></td>
         <td>${cropData.category}</td>
         <td>${cropData.cropSeason}</td>
         <td>
-          <button class="btn btn-outline-primary btn-sm editBtn" data-id="${cropData.cropCode}">Edit</button>
-          <button class="btn btn-outline-danger btn-sm removeBtn" data-id="${cropData.cropCode}">Delete</button>
+          <button class="btn btn-outline-primary btn-sm editBtn" data-id="${
+            cropData.cropCode
+          }">Edit</button>
+          <button class="btn btn-outline-danger btn-sm removeBtn" data-id="${
+            cropData.cropCode
+          }">Delete</button>
         </td>
       </tr>
     `;
     $("tbody.tableRow").append(rowHtml);
   }
-  reloadTable();
+
   $(document).on("click", ".removeBtn", async function () {
     const cropCode = $(this).data("id");
     try {
       await deleteCrops(cropCode);
-      alert("Crops Deleted");
+      alert("Crop deleted successfully!");
       reloadTable();
     } catch (error) {
       console.error("Error deleting crop:", error);
       alert("Failed to delete crop!");
     }
   });
+
   $(document).on("click", ".editBtn", async function () {
     const cropCode = $(this).data("id");
     try {
-      const crop = await getAllCrops().then((crops) =>
-        crops.find((crop) => crop.cropCode === cropCode)
+      const crop = (await getAllCrops()).find(
+        (crop) => crop.cropCode === cropCode
       );
       if (crop) {
-        $("#cropCode").val(crop.cropCode);
-        $("#fieldCode").val(crop.field);
-        $("#category").val(crop.category);
-        $("#cropsName").val(crop.cropCommonName);
-        $("#scientificName").val(crop.cropScientificName);
-        $("#season").val(crop.cropSeason);
-        $("#preview1").attr("src", crop.cropImage).show();
+        populateFormWithCropData(crop);
         const addCropsModal = new bootstrap.Modal($("#addCropsModal")[0]);
         addCropsModal.show();
         editingCropCode = cropCode;
@@ -149,19 +149,26 @@ $(document).ready(function () {
       console.error("Error fetching crop data:", error);
     }
   });
+
+  function populateFormWithCropData(crop) {
+    $("#cropCode").val(crop.cropCode);
+    $("#fieldCode").val(crop.field ? crop.field.code : "");
+    $("#category").val(crop.category);
+    $("#cropsName").val(crop.cropCommonName);
+    $("#scientificName").val(crop.cropScientificName);
+    $("#season").val(crop.cropSeason);
+    $("#preview1").attr("src", crop.cropImage).show();
+  }
   function searchCrops(query) {
     getAllCrops()
       .then((crops) => {
-        const filteredCrops = crops.filter((crop) => {
-          return (
+        const filteredCrops = crops.filter(
+          (crop) =>
             crop.cropCode.toLowerCase().includes(query.toLowerCase()) ||
             crop.cropCommonName.toLowerCase().includes(query.toLowerCase())
-          );
-        });
+        );
         $("tbody.tableRow").empty();
-        filteredCrops.forEach((crop) => {
-          loadTable(crop);
-        });
+        filteredCrops.forEach((crop) => loadTableRow(crop));
       })
       .catch((error) => {
         console.error("Error searching crops:", error);
@@ -170,19 +177,12 @@ $(document).ready(function () {
   }
   $("#searchInput").on("input", function () {
     const query = $(this).val().trim();
-    if (query) {
-      searchCrops(query);
-    } else {
-      reloadTable();
-    }
+    query ? searchCrops(query) : reloadTable();
   });
 
   $("#searchButton").on("click", function () {
     const query = $("#searchInput").val().trim();
-    if (query) {
-      searchCrops(query);
-    } else {
-      reloadTable();
-    }
+    query ? searchCrops(query) : reloadTable();
   });
+  reloadTable();
 });
