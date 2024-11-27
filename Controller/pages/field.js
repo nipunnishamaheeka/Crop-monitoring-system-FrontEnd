@@ -28,7 +28,7 @@ $(document).ready(function () {
     previewImage(event, "preview1");
   });
 
-  $("#f_image2").change(function (event) {
+  $("#image2").change(function (event) {
     previewImage(event, "preview2");
   });
 
@@ -39,11 +39,11 @@ $(document).ready(function () {
     // const fieldImage2 = $("#image2")[0].files[0];
     const fieldData = {
       code: $("#fieldCode").val(),
-      name: $("#fieldName").val(),
-      location: $("#fieldLocation").val(),
-      size_of_Field: $("#fieldSize").val(),
-      // c_code: $("#crops").val(),
-      // staffId: $("#staff").val(),
+      fieldName: $("#fieldName").val(),
+      fieldLocation: $("#fieldLocation").val(),
+      fieldSize: $("#fieldSize").val(),
+      crop: $("#crops").val(),
+      staff: $("#staff").val(),
       // fieldImage1: fieldImage1 ? URL.createObjectURL(fieldImage1) : null,
       // fieldImage2: fieldImage2 ? URL.createObjectURL(fieldImage2) : null,
     };
@@ -66,18 +66,16 @@ $(document).ready(function () {
       alert("Failed to save or update !");
     }
   });
-
-  // Load Field Data for the dropdown
   async function loadStaffData() {
     try {
       const staffs = await getAllStaff();
-      const staffSelect = $("#staffCode");
+      const staffSelect = $("#staffCode");  
       staffSelect.empty();
       staffSelect.append(`<option value="">Select Staff</option>`);
 
       staffs.forEach(function (staff) {
         staffSelect.append(
-          `<option value="${staff.staff_id}">${staff.fristName}</option>`
+          `<option value="${staff.id}">${staff.fristName}</option>`
         );
       });
       window.StaffData = staffs;
@@ -85,7 +83,6 @@ $(document).ready(function () {
       console.error("Error loading field data:", error);
     }
   }
-
   async function reloadTable() {
     try {
       const fields = await getAll();
@@ -99,27 +96,31 @@ $(document).ready(function () {
   }
 
   function loadTable(fieldData) {
+    console.log(fieldData);
     const rowHtml = `
-      <tr>
-        <td><input type="checkbox" /></td>
-        <td>${fieldData.code}</td>
-        <td>${fieldData.name}</td>
-        <td>${fieldData.location}</td>
-        <td>${fieldData.size_of_Field}</td>
-        <td>${fieldData.crops}</td>
-        <td>${fieldData.staffId}</td>
-         <td><img src="${fieldData.fieldImage1}" class="img-thumbnail" style="max-width: 50px;" /></td>
-         <td><img src="${fieldData.fieldImage2}" class="img-thumbnail" style="max-width: 50px;" /></td>
-        <td>
-          <button class="btn btn-outline-primary btn-sm editBtn" data-id="${fieldData.code}">Edit</button>
-          <button class="btn btn-outline-danger btn-sm removeBtn" data-id="${fieldData.code}">Delete</button>
-          
-        </td>
-      </tr>
-    `;
+    <tr>
+      <td><input type="checkbox" /></td>
+      <td>${fieldData.code}</td>
+      <td>${fieldData.fieldName}</td>
+      <td>${fieldData.fieldLocation}</td>
+      <td>${fieldData.fieldSize}</td>
+      <td>${fieldData.crop}</td>
+      <td>${fieldData.staff.length ? fieldData.staff.firstName : "Unassigned"
+      }</td>
+      <td><img src="${fieldData.image1
+      }" class="img-thumbnail" style="max-width: 50px;" /></td>
+      <td><img src="${fieldData.image2
+      }" class="img-thumbnail" style="max-width: 50px;" /></td>
+      <td>
+        <button class="btn btn-outline-primary btn-sm editBtn" data-id="${fieldData.code
+      }">Edit</button>
+        <button class="btn btn-outline-danger btn-sm removeBtn" data-id="${fieldData.code
+      }">Delete</button>
+      </td>
+    </tr>
+  `;
     $("tbody.tableRow").append(rowHtml);
   }
-
   reloadTable();
 
   $(document).on("click", ".removeBtn", async function () {
@@ -142,13 +143,13 @@ $(document).ready(function () {
       );
       if (field) {
         $("#fieldCode").val(field.code);
-        $("#fieldName").val(field.name);
-        $("#fieldLocation").val(field.location);
-        $("#fieldSize").val(field.size_of_Field);
-        $("#crops").val(field.crops);
-        $("#staff").val(field.staffId);
-        $("#preview1").attr("src", field.fieldImage1).show();
-        $("#preview2").attr("src", field.fieldImage2).show();
+        $("#fieldName").val(field.fieldName);
+        $("#fieldLocation").val(field.fieldLocation);
+        $("#fieldSize").val(field.fieldSize);
+        $("#crops").val(field.crop);
+        $("#staff").val(field.id);
+        $("#preview1").attr("src", field.image1).show();
+        $("#preview2").attr("src", field.image2).show();
         const addFieldModal = new bootstrap.Modal($("#addFieldModal")[0]);
         addFieldModal.show();
         editingFieldCode = code;

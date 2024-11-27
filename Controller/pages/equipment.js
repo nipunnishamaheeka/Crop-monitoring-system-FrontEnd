@@ -17,26 +17,25 @@ $(document).ready(function () {
     $("#addEquipmentForm")[0].reset();
     editingEquipmentCode = null;
   });
-
   $("#addEquipmentForm").submit(async function (event) {
     event.preventDefault();
 
     const equipmentData = {
       equipmentId: $("#equipmentCode").val(),
-      name: $("#equipmentName").val(),
-      type: $("#equipmentType").val(),
+      equipmentName: $("#equipmentName").val(),
+      equipmentType: $("#equipmentType").val(),
       status: $("#equipmentStatus").val(),
-      assignedStaffId: $("#staffCode").val(), // Corrected ID
-      assignedFieldCode: $("#fieldCode").val(),
+      staff: $("#staffCode").val(),
+      field: $("#fieldCode").val(),
     };
 
     try {
       if (editingEquipmentCode) {
         await update(editingEquipmentCode, equipmentData);
-        alert("updated successfully!");
+        alert("Updated successfully!");
       } else {
         await save(equipmentData);
-        alert("added successfully!");
+        alert("Added successfully!");
       }
       $("#addEquipmentForm")[0].reset();
       bootstrap.Modal.getInstance($("#addEquipmentModal")[0]).hide();
@@ -46,8 +45,6 @@ $(document).ready(function () {
       alert("Failed to save or update!");
     }
   });
-
-  // Load Field Data for the dropdown
   async function loadFieldData() {
     try {
       const fields = await getAllFields();
@@ -56,7 +53,7 @@ $(document).ready(function () {
       fieldSelect.append(`<option value="">Select Field</option>`);
       fields.forEach((field) => {
         fieldSelect.append(
-          `<option value="${field.code}">${field.name}</option>`
+          `<option value="${field.code}">${field.fieldName}</option>`
         );
       });
       window.fieldData = fields;
@@ -91,25 +88,16 @@ $(document).ready(function () {
       console.error("Error loading equipment data:", error);
     }
   }
-
   function loadTable(equipmentData) {
     const rowHtml = `
     <tr>
       <td><input type="checkbox" /></td>
-      <td>${equipmentData.equipmentId}</td>
-      <td>${equipmentData.name}</td>
-      <td>${equipmentData.type}</td>
-      <td>${equipmentData.status}</td>
-      <td>${
-        equipmentData.assignedStaff === null
-          ? "Unassigned"
-          : equipmentData.assignedStaff.firstName
-      }</td> <!-- Display staff name instead of ID -->
-      <td>${
-        equipmentData.assignedField === null
-          ? "Unassigned"
-          : equipmentData.assignedField.name
-      }</td>
+      <td>${equipmentData.equipmentId || "N/A"}</td>
+      <td>${equipmentData.equipmentName || "N/A"}</td>
+      <td>${equipmentData.equipmentType || "N/A"}</td>
+      <td>${equipmentData.status || "N/A"}</td>
+      <td>${equipmentData.staff ? equipmentData.staff.firstName : "No"}</td>
+      <td>${equipmentData.field ? equipmentData.field.fieldName : "No"}</td>
       <td>
         <button class="btn btn-outline-primary btn-sm editBtn" data-id="${
           equipmentData.equipmentId
@@ -124,19 +112,17 @@ $(document).ready(function () {
   }
 
   reloadTable();
-
   $(document).on("click", ".removeBtn", async function () {
     const equipmentId = $(this).data("id");
     try {
       await deleteEquipment(equipmentId);
-      alert("Equipment Deleted");
+      alert("Equipment deleted");
       reloadTable();
     } catch (error) {
       console.error("Error deleting equipment:", error);
       alert("Failed to delete!");
     }
   });
-
   $(document).on("click", ".editBtn", async function () {
     const equipmentId = $(this).data("id");
     try {
@@ -145,20 +131,14 @@ $(document).ready(function () {
       );
       if (equipment) {
         $("#equipmentCode").val(equipment.equipmentId);
-        $("#equipmentName").val(equipment.name);
-        $("#equipmentType").val(equipment.type);
+        $("#equipmentName").val(equipment.equipmentName);
+        $("#equipmentType").val(equipment.equipmentType);
         $("#equipmentStatus").val(equipment.status);
-        const staffMemberName = equipment.assignedStaff.firstName;
-        if (
-          $("#staffCode option[value='" + staffMemberName + "']").length === 0
-        ) {
-          $("#staffCode").append(new Option(staffMemberName, staffMemberName));
-        }
-        $("#staffCode").val(staffMemberName);
-        const fieldName = equipment.assignedField.name;
-        if ($("#fieldCode option[value='" + fieldName + "']").length === 0) {
-          $("#fieldCode").append(new Option(fieldName, fieldName));
-        }
+
+        const staffMemberId = equipment.staff ? equipment.staff.id : "";
+        $("#staffCode").val(staffMemberId);
+
+        const fieldName = equipment.field ? equipment.field.code : "";
         $("#fieldCode").val(fieldName);
         const addEquipmentModal = new bootstrap.Modal(
           $("#addEquipmentModal")[0]
@@ -168,9 +148,9 @@ $(document).ready(function () {
       }
     } catch (error) {
       console.error("Error fetching equipment data:", error);
+      alert("Failed to fetch equipment data!");
     }
   });
-
   function search(query) {
     getAllEquipments()
       .then((equipments) => {

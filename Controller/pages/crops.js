@@ -77,7 +77,7 @@ $(document).ready(function () {
       fieldSelect.empty().append(`<option value="">Select Field</option>`);
       fields.forEach((field) =>
         fieldSelect.append(
-          `<option value="${field.code}">${field.name}</option>`
+          `<option value="${field.code}">${field.fieldName}</option>`
         )
       );
     } catch (error) {
@@ -100,7 +100,7 @@ $(document).ready(function () {
       <tr>
         <td><input type="checkbox" /></td>
         <td>${cropData.cropCode}</td>
-        <td>${cropData.field ? cropData.field.name : "Unassigned"}</td>
+        <td>${cropData.field ? cropData.field.fieldName : "Unassigned"}</td>
         <td>${cropData.cropCommonName}</td>
         <td>${cropData.cropScientificName}</td>
         <td><img src="${

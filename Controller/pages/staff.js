@@ -1,4 +1,9 @@
-import { deleteStaff, getAllStaff, save, update } from "../../model/staffModel.js";
+import {
+  deleteStaff,
+  getAllStaff,
+  save,
+  update,
+} from "../../model/staffModel.js";
 import { getAll as getAllFields } from "../../model/fieldModel.js";
 import { getAll } from "../../model/vehiclesModel.js";
 
@@ -20,19 +25,19 @@ $(document).ready(function () {
       id: $("#staffCode").val(),
       firstName: $("#fristName").val(),
       lastName: $("#lastName").val(),
-      fuelType: $("#designation").val(),
+      designation: $("#designation").val(),
       gender: $("#gender").val(),
       joinedDate: $("#joinedDate").val(),
       dob: $("#dob").val(),
-      addressLine01: $("#line01").val(),
-      addressLine02: $("#line02").val(),
-      addressLine03: $("#line03").val(),
-      addressLine04: $("#line04").val(),
-      addressLine05: $("#line05").val(),
+      addressLine1: $("#line01").val(),
+      addressLine2: $("#line02").val(),
+      addressLine3: $("#line03").val(),
+      addressLine4: $("#line04").val(),
+      addressLine5: $("#line05").val(),
       contactNo: $("#contactNo").val(),
       email: $("#email").val(),
       role: $("#role").val(),
-      fields: $("#fieldCode").val(),
+      field: $("#fieldCode").val(),
       vehicles: $("#vehicle").val(),
     };
 
@@ -52,7 +57,6 @@ $(document).ready(function () {
       alert("Failed to save or update !");
     }
   });
-  // Load vehicle Data for the dropdown
   async function loadVehicleData() {
     try {
       const vehicles = await getAll();
@@ -61,7 +65,7 @@ $(document).ready(function () {
       vehicleSelect.append(`<option value="">Select Field</option>`);
       vehicles.forEach((vehicle) => {
         vehicleSelect.append(
-          `<option value="${vehicle.v_code}">${vehicle.licensePlateNo}</option>`
+          `<option value="${vehicle.v_code}">${vehicle.licensePlateNumber}</option>`
         );
       });
       window.vehicleData = vehicles;
@@ -69,7 +73,6 @@ $(document).ready(function () {
       console.error("Error loading vehicle data:", error);
     }
   }
-  // Load Field Data for the dropdown
   async function loadFieldData() {
     try {
       const fields = await getAllFields();
@@ -78,7 +81,7 @@ $(document).ready(function () {
       fieldSelect.append(`<option value="">Select Field</option>`);
       fields.forEach((field) => {
         fieldSelect.append(
-          `<option value="${field.code}">${field.name}</option>`
+          `<option value="${field.code}">${field.fieldName}</option>`
         );
       });
       window.fieldData = fields;
@@ -97,46 +100,39 @@ $(document).ready(function () {
       console.error("Error loading :", error);
     }
   }
-
   function loadTable(staffData) {
+    console.log(staffData);
+    const fields = staffData.field || [];
+    const vehicles = staffData.vehicles || [];
+    const fieldName = fields.length > 0 ? fields[0].fieldName : "Unassigned";
+    const vehicleCode =
+      vehicles.length > 0 ? vehicles[0].vehicleCode : "Unassigned";
     const rowHtml = `
-      <tr>
-        <td><input type="checkbox" /></td>
-        <td>${staffData.id}</td>
-        <td>${staffData.firstName}</td>
-        <td>${staffData.lastName}</td>
-        <td>${staffData.fuelType}</td>
-        <td>${staffData.gender}</td>
-        <td>${staffData.joinedDate}</td>
-        <td>${staffData.dob}</td>
-        <td>${staffData.addressLine01}</td>
-        <td>${staffData.addressLine02}</td>
-        <td>${staffData.addressLine03}</td>
-        <td>${staffData.addressLine04}</td>
-        <td>${staffData.addressLine05}</td>
-        <td>${staffData.contactNo}</td>
-        <td>${staffData.email}</td>
-        <td>${staffData.role}</td>
-            <td>${
-              staffData.fields === null ? "Unassigned" : staffData.fields.name
-            }</td>
-        <td>${
-          staffData.vehicles === null
-            ? "Unassigned"
-            : staffData.vehicles.vehicleCode
-        }</td>
-
-        <td>
-          <button class="btn btn-outline-primary btn-sm editBtn" data-id="${
-            staffData.id
-          }">Edit</button>
-          <button class="btn btn-outline-danger btn-sm removeBtn" data-id="${
-            staffData.id
-          }">Delete</button>
-          
-        </td>
-      </tr>
-    `;
+    <tr>
+      <td><input type="checkbox" /></td>
+      <td>${staffData.id}</td>
+      <td>${staffData.firstName}</td>
+      <td>${staffData.lastName}</td>
+      <td>${staffData.designation}</td>
+      <td>${staffData.gender}</td>
+      <td>${staffData.joinedDate}</td>
+      <td>${staffData.dob}</td>
+      <td>${staffData.addressLine1}</td>
+      <td>${staffData.addressLine2}</td>
+      <td>${staffData.addressLine3}</td>
+      <td>${staffData.addressLine4}</td>
+      <td>${staffData.addressLine5}</td>
+      <td>${staffData.contactNo}</td>
+      <td>${staffData.email}</td>
+      <td>${staffData.role}</td>
+      <td>${fieldName}</td>
+      <td>${vehicleCode}</td>
+      <td>
+        <button class="btn btn-outline-primary btn-sm editBtn" data-id="${staffData.id}">Edit</button>
+        <button class="btn btn-outline-danger btn-sm removeBtn" data-id="${staffData.id}">Delete</button>
+      </td>
+    </tr>
+  `;
     $("tbody.tableRow").append(rowHtml);
   }
 
@@ -164,19 +160,19 @@ $(document).ready(function () {
         $("#staffCode").val(staff.id);
         $("#fristName").val(staff.firstName);
         $("#lastName").val(staff.lastName);
-        $("#designation").val(staff.fuelType);
+        $("#designation").val(staff.designation);
         $("#gender").val(staff.gender);
         $("#joinedDate").val(staff.joinedDate);
         $("#dob").val(staff.dob);
-        $("#line01").val(staff.addressLine01);
-        $("#line02").val(staff.addressLine02);
-        $("#line03").val(staff.addressLine03);
-        $("#line04").val(staff.addressLine04);
-        $("#line05").val(staff.addressLine05);
+        $("#line01").val(staff.addressLine1);
+        $("#line02").val(staff.addressLine2);
+        $("#line03").val(staff.addressLine3);
+        $("#line04").val(staff.addressLine4);
+        $("#line05").val(staff.addressLine5);
         $("#contactNo").val(staff.contactNo);
         $("#email").val(staff.email);
         $("#role").val(staff.role);
-        $("#field").val(staff.fields);
+        $("#field").val(staff.field);
         $("#vehicle").val(staff.vehicles);
         const addStaffModal = new bootstrap.Modal($("#addStaffModal")[0]);
         addStaffModal.show();

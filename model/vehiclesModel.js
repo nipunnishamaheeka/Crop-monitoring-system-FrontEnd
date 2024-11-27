@@ -6,6 +6,7 @@ export const save = (vehicleData) => {
     data: JSON.stringify(vehicleData),
     success: function (response) {
       console.log(" saved successfully:", response);
+      console.log(vehicleData);
       alert(" saved successfully!");
       $("#addVehicleForm")[0].reset();
       $("#addVehicleModal").modal("hide");
@@ -35,23 +36,22 @@ export const getAll = () => {
     });
   });
 };
-
-export const update = (vehicleCode, updatedVehicleData) => {
+export const update = (vehicleCode, updatedVehicleData, id) => {
   $.ajax({
-    url: `http://localhost:5055/cropcontroller/api/v1/vehicle/` + vehicleCode,
+    url: `http://localhost:5055/cropcontroller/api/v1/vehicle/${vehicleCode}?staffId=${id}`,
     type: "PUT",
     contentType: "application/json",
     data: JSON.stringify(updatedVehicleData),
     success: function (response) {
-      console.log("updated successfully:", response);
-      alert("updated successfully!");
+      console.log("Updated successfully:", response);
+      alert("Updated successfully!");
       $("#updateVehicleForm")[0].reset();
       $("#updateVehicleModal").modal("hide");
       reloadTable();
     },
     error: function (xhr, status, error) {
-      console.error("Error updating :", xhr, status, error);
-      alert("Failed to update !");
+      console.error("Error updating:", xhr, status, error);
+      alert("Failed to update!");
     },
   });
 };

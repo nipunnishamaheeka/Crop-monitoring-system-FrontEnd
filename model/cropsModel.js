@@ -1,18 +1,15 @@
 export const saveCrops = (cropsData) => {
-  
   $.ajax({
     url: "http://localhost:5055/cropcontroller/api/v1/crops",
     type: "POST",
     contentType: "application/json",
     data: JSON.stringify(cropsData),
+    // xhrFields: { withCredentials: true }, // Include cookies
     success: function (response) {
       console.log("Crops saved successfully:", response);
       alert("Crops saved successfully!");
-      console.log("model ekath awda bn ");
-      console.log(cropsData);
-      
-      $("#addCropsForm")[0].reset(); 
-      $("#addCropsModal").modal("hide"); 
+      $("#addCropsForm")[0].reset();
+      $("#addCropsModal").modal("hide");
     },
     error: function (xhr, status, error) {
       console.error("Error saving crops:", xhr, status, error);
@@ -27,6 +24,7 @@ export const getAllCrops = () => {
       url: "http://localhost:5055/cropcontroller/api/v1/crops/allCrops",
       type: "GET",
       contentType: "application/json",
+      // xhrFields: { withCredentials: true }, // Include cookies
       success: function (cropsList, textStatus, xhr) {
         if (xhr.status === 200) {
           console.log("Crops retrieved successfully:", cropsList);
@@ -50,13 +48,13 @@ export const getAllCrops = () => {
   });
 };
 
-
 export const updateCrops = (cropCode, updatedCropData) => {
   $.ajax({
     url: `http://localhost:5055/cropcontroller/api/v1/crops/` + cropCode,
     type: "PUT",
     contentType: "application/json",
     data: JSON.stringify(updatedCropData),
+    // xhrFields: { withCredentials: true }, // Include cookies
     success: function (response) {
       console.log("Crops updated successfully:", response);
       alert("Crops updated successfully!");
@@ -73,10 +71,10 @@ export const updateCrops = (cropCode, updatedCropData) => {
 
 export const deleteCrops = (cropCode) => {
   $.ajax({
-    url:
-      `http://localhost:5055/cropcontroller/api/v1/crops/`+ cropCode,
+    url: `http://localhost:5055/cropcontroller/api/v1/crops/` + cropCode,
     type: "DELETE",
     contentType: "application/json",
+    // xhrFields: { withCredentials: true }, // Include cookies
     success: function (response) {
       console.log("Crops deleted successfully:", response);
       alert("Crops deleted successfully!");
@@ -87,4 +85,3 @@ export const deleteCrops = (cropCode) => {
     },
   });
 };
-
