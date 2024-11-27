@@ -25,26 +25,28 @@ $(document).ready(function () {
       equipmentName: $("#equipmentName").val(),
       equipmentType: $("#equipmentType").val(),
       status: $("#equipmentStatus").val(),
-      staff: $("#staffCode").val(),
-      field: $("#fieldCode").val(),
+      staffId: $("#staffCode").val(),
+      fieldCode: $("#fieldCode").val(),
     };
 
     try {
       if (editingEquipmentCode) {
         await update(editingEquipmentCode, equipmentData);
         alert("Updated successfully!");
+        reloadTable();
       } else {
         await save(equipmentData);
+        reloadTable();
         alert("Added successfully!");
       }
       $("#addEquipmentForm")[0].reset();
       bootstrap.Modal.getInstance($("#addEquipmentModal")[0]).hide();
-      reloadTable();
     } catch (error) {
       console.error("Error saving or updating:", error);
       alert("Failed to save or update!");
     }
   });
+
   async function loadFieldData() {
     try {
       const fields = await getAllFields();

@@ -41,17 +41,20 @@ export const getAllEquipments = () => {
 
 export const update = (equipmentId, updatedEquipmentData) => {
   $.ajax({
-    url: `http://localhost:5055/cropcontroller/api/v1/equipment/` + equipmentId,
+    url:
+      `http://localhost:5055/cropcontroller/api/v1/equipment/` +
+      equipmentId +
+      "?staffId=" +
+      updatedEquipmentData.staffId +
+      "&fieldCode=" +
+      updatedEquipmentData.fieldCode,
     type: "PUT",
     contentType: "application/json",
     data: JSON.stringify(updatedEquipmentData),
-    dataType: "text", // Handle response as text to avoid JSON parsing errors
+    dataType: "text",
     success: function (response) {
       console.log("Updated successfully:", response);
       alert("Updated successfully!");
-      $("#updateEquipmentForm")[0].reset();
-      $("#updateEquipmentModal").modal("hide");
-      reloadTable();
     },
     error: function (xhr, status, error) {
       console.error(
