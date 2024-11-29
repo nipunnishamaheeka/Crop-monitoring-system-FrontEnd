@@ -100,8 +100,37 @@ $(document).ready(function () {
       console.error("Error loading :", error);
     }
   }
+  // function loadTable(staffData) {
+  //   console.log(staffData);
+  //   const fields = staffData.field || [];
+  //   const vehicles = staffData.vehicles || [];
+  //   const fieldName = fields.length > 0 ? fields[0].fieldName : "Unassigned";
+  //   const vehicleCode =
+  //     vehicles.length > 0 ? vehicles[0].vehicleCode : "Unassigned";
+  //   const rowHtml = `
+  //   <tr>
+  //     <td><input type="checkbox" /></td>
+  //     <td>${staffData.id}</td>
+  //     <td>${staffData.firstName}</td>
+  //     <td>${staffData.designation}</td>
+  //     <td>${staffData.dob}</td>
+  //     <td>${staffData.contactNo}</td>
+  //     <td>${staffData.email}</td>
+  //     <td>${staffData.role}</td>
+  //     <td>${fieldName}</td>
+  //     <td>${vehicleCode}</td>
+  //     <td>
+  //       <button class="btn btn-outline-primary btn-sm editBtn" data-id="${staffData.id}">Edit</button>
+  //       <button class="btn btn-outline-danger btn-sm removeBtn" data-id="${staffData.id}">Delete</button>
+  //       <button class="btn btn-outline-primary btn-sm editBtn" data-id="${staffData.id}">Show</button>
+  //     </td>
+  //   </tr>
+  // `;
+  //   $("tbody.tableRow").append(rowHtml);
+  // }
   function loadTable(staffData) {
     console.log(staffData);
+    const fullAddress = `${staffData.addressLine1}, ${staffData.addressLine2}, ${staffData.addressLine3}, ${staffData.addressLine4}, ${staffData.addressLine5}`;
     const fields = staffData.field || [];
     const vehicles = staffData.vehicles || [];
     const fieldName = fields.length > 0 ? fields[0].fieldName : "Unassigned";
@@ -111,22 +140,17 @@ $(document).ready(function () {
     <tr>
       <td><input type="checkbox" /></td>
       <td>${staffData.id}</td>
-      <td>${staffData.firstName}</td>
-      <td>${staffData.lastName}</td>
+      <td>${staffData.firstName} ${staffData.lastName}</td>
       <td>${staffData.designation}</td>
-      <td>${staffData.gender}</td>
       <td>${staffData.joinedDate}</td>
       <td>${staffData.dob}</td>
-      <td>${staffData.addressLine1}</td>
-      <td>${staffData.addressLine2}</td>
-      <td>${staffData.addressLine3}</td>
-      <td>${staffData.addressLine4}</td>
-      <td>${staffData.addressLine5}</td>
+      <td>${fullAddress}</td>
       <td>${staffData.contactNo}</td>
       <td>${staffData.email}</td>
       <td>${staffData.role}</td>
       <td>${fieldName}</td>
       <td>${vehicleCode}</td>
+      <td>${staffData.gender}</td>
       <td>
         <button class="btn btn-outline-primary btn-sm editBtn" data-id="${staffData.id}">Edit</button>
         <button class="btn btn-outline-danger btn-sm removeBtn" data-id="${staffData.id}">Delete</button>

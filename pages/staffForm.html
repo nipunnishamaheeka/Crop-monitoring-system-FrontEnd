@@ -252,7 +252,7 @@
                       <label for="fieldCode" class="form-label"
                         >Field Code</label
                       >
-                      <select class="form-select" id="fieldCode" >
+                      <select class="form-select" id="fieldCode">
                         <option value="">Select Field</option>
                       </select>
                     </div>
@@ -302,8 +302,27 @@
       </div>
 
       <!-- Data Table -->
-      <table class="table table-hover">
+       <div class="table-responsive mt-3 overflow-auto">
+      <table class="table table-hover ">
         <thead>
+          <tr>
+            <th scope="col"><input type="checkbox" /></th>
+            <th scope="col">Id</th>
+            <th scope="col">Name</th>
+            <th scope="col">Designation</th>
+            <th scope="col">Joined Date</th>
+            <th scope="col">DOB</th>
+            <th scope="col">Address</th>
+            <th scope="col">Contact No</th>
+            <th scope="col">Email</th>
+            <th scope="col">Role</th>
+            <th scope="col">Field</th>
+            <th scope="col">Vehicle</th>
+            <th scope="col">Gender</th>
+            <th scope="col">Action</th>
+          </tr>
+        </thead>
+        <!-- <thead>
           <tr>
             <th scope="col"><input type="checkbox" /></th>
             <th scope="col">Id</th>
@@ -325,9 +344,10 @@
             <th scope="col">Vehicle</th>
             <th scope="col">Action</th>
           </tr>
-        </thead>
+        </thead> -->
         <tbody class="tableRow"></tbody>
       </table>
+      </div>
     </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script type="module" src="/Controller/pages/staff.js"></script>

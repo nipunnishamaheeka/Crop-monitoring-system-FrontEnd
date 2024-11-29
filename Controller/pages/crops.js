@@ -104,7 +104,7 @@ $(document).ready(function () {
         <td>${cropData.cropCommonName}</td>
         <td>${cropData.cropScientificName}</td>
         <td><img src="${
-          cropData.cropImage
+          base64ToImageURL(cropData.cropImage)
         }" class="img-thumbnail" style="max-width: 50px;" /></td>
         <td>${cropData.category}</td>
         <td>${cropData.cropSeason}</td>
@@ -119,6 +119,10 @@ $(document).ready(function () {
       </tr>
     `;
     $("tbody.tableRow").append(rowHtml);
+  }
+
+  function base64ToImageURL(base64Data) {
+    return `data:image/png;base64,${base64Data}`;
   }
 
   $(document).on("click", ".removeBtn", async function () {

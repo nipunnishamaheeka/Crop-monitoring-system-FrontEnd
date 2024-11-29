@@ -36,18 +36,23 @@ export const getAll = () => {
     });
   });
 };
-export const update = (vehicleCode, updatedVehicleData, id) => {
+export const update = (vehicleCode, updatedVehicleData) => {
   $.ajax({
-    url: `http://localhost:5055/cropcontroller/api/v1/vehicle/${vehicleCode}?staffId=${id}`,
+
+    url:
+      `http://localhost:5055/cropcontroller/api/v1/vehicle/` +
+      vehicleCode +
+      "?staffId=" +
+      updatedVehicleData.staffId,
     type: "PUT",
     contentType: "application/json",
     data: JSON.stringify(updatedVehicleData),
     success: function (response) {
       console.log("Updated successfully:", response);
       alert("Updated successfully!");
-      $("#updateVehicleForm")[0].reset();
+      // $("#updateVehicleForm")[0].reset();
       $("#updateVehicleModal").modal("hide");
-      reloadTable();
+      // reloadTable();
     },
     error: function (xhr, status, error) {
       console.error("Error updating:", xhr, status, error);
