@@ -66,23 +66,22 @@ $(document).ready(function () {
       alert("Failed to save or update !");
     }
   });
-  async function loadStaffData() {
-    try {
-      const staffs = await getAllStaff();
-      const staffSelect = $("#staffCode");  
-      staffSelect.empty();
-      staffSelect.append(`<option value="">Select Staff</option>`);
-
-      staffs.forEach(function (staff) {
-        staffSelect.append(
-          `<option value="${staff.id}">${staff.fristName}</option>`
-        );
-      });
-      window.StaffData = staffs;
-    } catch (error) {
-      console.error("Error loading field data:", error);
-    }
-  }
+   async function loadStaffData() {
+     try {
+       const staffs = await getAllStaff();
+       const staffSelect = $("#staffCode");
+       staffSelect.empty();
+       staffSelect.append(`<option value="">Select Staff</option>`);
+       staffs.forEach((staff) => {
+         staffSelect.append(
+           `<option value="${staff.id}">${staff.firstName}</option>`
+         );
+       });
+       window.staffData = staffs;
+     } catch (error) {
+       console.error("Error loading staff data:", error);
+     }
+   }
   async function reloadTable() {
     try {
       const fields = await getAll();
@@ -105,23 +104,32 @@ $(document).ready(function () {
       <td>${fieldData.fieldLocation}</td>
       <td>${fieldData.fieldSize}</td>
       <td>${fieldData.crop}</td>
-      <td>${fieldData.staff.length ? fieldData.staff.firstName : "Unassigned"
+      <td>${
+        fieldData.staff.length ? fieldData.staff.firstName : "Unassigned"
       }</td>
-      <td><img src="${fieldData.image1
-      }" class="img-thumbnail" style="max-width: 50px;" /></td>
-      <td><img src="${fieldData.image2
-      }" class="img-thumbnail" style="max-width: 50px;" /></td>
+      <td><img src="${base64ToImageURL(
+        fieldData.image1
+      )}" class="img-thumbnail" style="max-width: 50px;" /></td>
+      <td><img src="${base64ToImageURL(
+        fieldData.image2
+      )}" class="img-thumbnail" style="max-width: 50px;" /></td>
       <td>
-        <button class="btn btn-outline-primary btn-sm editBtn" data-id="${fieldData.code
-      }">Edit</button>
-        <button class="btn btn-outline-danger btn-sm removeBtn" data-id="${fieldData.code
-      }">Delete</button>
+        <button class="btn btn-outline-primary btn-sm editBtn" data-id="${
+          fieldData.code
+        }">Edit</button>
+        <button class="btn btn-outline-danger btn-sm removeBtn" data-id="${
+          fieldData.code
+        }">Delete</button>
       </td>
     </tr>
   `;
     $("tbody.tableRow").append(rowHtml);
   }
   reloadTable();
+
+function base64ToImageURL(base64Data) {
+  return `data:image/png;base64,${base64Data}`;
+}
 
   $(document).on("click", ".removeBtn", async function () {
     const code = $(this).data("id");
