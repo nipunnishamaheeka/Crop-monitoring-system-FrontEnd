@@ -37,15 +37,13 @@ $(document).ready(function () {
     event.preventDefault();
 
     const cropData = {
-      crop_code: $("#cropCode").val(),
-      field_code: $("#fieldCode").val(),
-      category: $("#category").val(),
+      cropCode: $("#cropCode").val(),
+      fieldCode: $("#fieldCode").val(),
+      cropType: $("#category").val(),
       cropCommonName: $("#cropsName").val(),
       cropScientificName: $("#scientificName").val(),
       cropSeason: $("#season").val(),
-      cropImage: $("#c_image")[0].files[0]
-        ? URL.createObjectURL($("#c_image")[0].files[0])
-        : null,
+      cropImage: $("#c_image")[0].files[0],
     };
 
     try {

@@ -1,10 +1,23 @@
 export const saveCrops = (cropsData) => {
+  console.log("Crops data:", cropsData);
+  const formData = new FormData();
+  // formData.append("crop_code", cropsData.crop_code);
+  formData.append("cropName", cropsData.cropCommonName);
+  formData.append("cropType", cropsData.cropType);
+  formData.append("cropSeason", cropsData.cropSeason);
+  formData.append("cropScientificName", cropsData.cropScientificName);
+  formData.append("fieldCode", cropsData.fieldCode);
+
+  if (cropsData.cropImage) {
+    formData.append("cropImage", cropsData.cropImage); // Append the file here
+  }
+
   $.ajax({
     url: "http://localhost:5055/cropcontroller/api/v1/crops",
     type: "POST",
-    contentType: "application/json",
-    data: JSON.stringify(cropsData),
-    // xhrFields: { withCredentials: true }, // Include cookies
+    data: formData,
+    processData: false, // Tell jQuery not to process the data
+    contentType: false, // Tell jQuery not to set contentType
     success: function (response) {
       console.log("Crops saved successfully:", response);
       alert("Crops saved successfully!");
@@ -17,6 +30,8 @@ export const saveCrops = (cropsData) => {
     },
   });
 };
+
+
 
 export const getAllCrops = () => {
   return new Promise((resolve, reject) => {

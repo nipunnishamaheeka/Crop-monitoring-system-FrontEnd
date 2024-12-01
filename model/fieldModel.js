@@ -1,18 +1,60 @@
+// export const save = (fieldData) => {
+//   $.ajax({
+//     url: "http://localhost:5055/cropcontroller/api/v1/field",
+//     type: "POST",
+//     contentType: "application/json",
+//     data: JSON.stringify(fieldData),
+//     success: function (response) {
+//       console.log(" saved successfully:", response);
+//       alert(" saved successfully!");
+//       $("#addFieldForm")[0].reset();
+//       $("#addFieldModal").modal("hide");
+//     },
+//     error: function (xhr, status, error) {
+//       console.error("Error saving :", xhr, status, error);
+//       alert("Failed to save !");
+//     },
+//   });
+// };
 export const save = (fieldData) => {
+  console.log("Field data:", fieldData);
+
+  // Create a FormData object
+  const formData = new FormData();
+
+  // Append field details to FormData
+  formData.append("fieldName", fieldData.fieldName || "");
+  formData.append("fieldLocationX", fieldData.fieldLocationX || "");
+  formData.append("fieldSize", fieldData.fieldSize || "");
+  formData.append("fieldLocationY", fieldData.fieldLocationY || "");
+  formData.append("staffId", fieldData.staffId || "");
+
+  // Check for images and append them
+  if (fieldData.image1) {
+    formData.append("image1", fieldData.image1);
+  }
+  if (fieldData.image2) {
+    formData.append("image2", fieldData.image2);
+  }
+
+  console.log("FormData initialized successfully");
+
+
   $.ajax({
     url: "http://localhost:5055/cropcontroller/api/v1/field",
     type: "POST",
-    contentType: "application/json",
-    data: JSON.stringify(fieldData),
+    data: formData,
+    processData: false, // Tell jQuery not to process the data
+    contentType: false, // Tell jQuery not to set contentType
     success: function (response) {
-      console.log(" saved successfully:", response);
-      alert(" saved successfully!");
+      console.log("Field saved successfully:", response);
+      alert("Field saved successfully!");
       $("#addFieldForm")[0].reset();
       $("#addFieldModal").modal("hide");
     },
     error: function (xhr, status, error) {
-      console.error("Error saving :", xhr, status, error);
-      alert("Failed to save !");
+      console.error("Error saving field:", xhr, status, error);
+      alert("Failed to save field!");
     },
   });
 };

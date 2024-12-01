@@ -2,17 +2,29 @@ import { deleteField, getAll, save, update } from "../../model/fieldModel.js";
 import { getAllStaff } from "../../model/staffModel.js";
 
 $(document).ready(function () {
-  let editingFieldCode = null;
-  loadStaffData();
-  $("#addFieldPopup").click(function () {
-    const addFieldModal = new bootstrap.Modal($("#addFieldModal")[0]);
-    addFieldModal.show();
-    $("#addFieldForm")[0].reset();
-    $("#preview1").hide();
-    $("#preview2").hide();
-    editingFieldCode = null;
-  });
+  let editingFieldCode = null; // Variable to track the field being edited
 
+  // Load staff data into the dropdown
+  async function loadStaffData() {
+    try {
+      const staffs = await getAllStaff();
+      const staffSelect = $("#staffCode");
+      staffSelect.empty();
+      staffSelect.append(`<option value="">Select Staff</option>`);
+      staffs.forEach((staff) => {
+        staffSelect.append(
+          `<option value="${staff.id}">${staff.firstName} ${
+            staff.lastName || ""
+          }</option>`
+        );
+      });
+      window.staffData = staffs;
+    } catch (error) {
+      console.error("Error loading staff data:", error);
+    }
+  }
+
+  // Preview uploaded image
   function previewImage(event, previewId) {
     const reader = new FileReader();
     reader.onload = function () {
@@ -24,64 +36,64 @@ $(document).ready(function () {
     }
   }
 
+  // Show the Add Field modal
+  $("#addFieldPopup").click(function () {
+    const addFieldModal = new bootstrap.Modal($("#addFieldModal")[0]);
+    addFieldModal.show();
+    $("#addFieldForm")[0].reset();
+    $("#preview1").hide();
+    $("#preview2").hide();
+    editingFieldCode = null;
+  });
+
+  // Handle image previews
   $("#image1").change(function (event) {
     previewImage(event, "preview1");
   });
-
   $("#image2").change(function (event) {
     previewImage(event, "preview2");
   });
 
+  // Submit the Add/Edit Field form
   $("#addFieldForm").submit(async function (event) {
     event.preventDefault();
 
-    // const fieldImage1 = $("#image1")[0].files[0];
-    // const fieldImage2 = $("#image2")[0].files[0];
     const fieldData = {
-      code: $("#fieldCode").val(),
+      fieldCode: $("#fieldCode").val(),
       fieldName: $("#fieldName").val(),
-      fieldLocation: $("#fieldLocation").val(),
-      fieldSize: $("#fieldSize").val(),
-      crop: $("#crops").val(),
-      staff: $("#staff").val(),
-      // fieldImage1: fieldImage1 ? URL.createObjectURL(fieldImage1) : null,
-      // fieldImage2: fieldImage2 ? URL.createObjectURL(fieldImage2) : null,
+      fieldLocationX: parseFloat($("#fieldLocationX").val()),
+      fieldLocationY: parseFloat($("#fieldLocationY").val()),
+      fieldSize: parseFloat($("#fieldSize").val()),
+      staffIds: $("#staffCode").val(),
+      image1: $("#image1")[0].files[0],
+      image2: $("#image2")[0].files[0],
     };
 
     try {
       if (editingFieldCode) {
+        // Perform Update
         await update(editingFieldCode, fieldData);
-        alert("updated successfully!");
+        reloadTable();
+        alert("Field updated successfully!");
       } else {
+        // Perform Add
         await save(fieldData);
-        alert("added successfully!");
+        alert("Field added successfully!");
+          reloadTable();
       }
       $("#addFieldForm")[0].reset();
       $("#preview1").hide();
       $("#preview2").hide();
       bootstrap.Modal.getInstance($("#addFieldModal")[0]).hide();
-      // reloadTable();
+      reloadTable();
     } catch (error) {
-      console.error("Error saving or updating :", error);
-      alert("Failed to save or update !");
+      console.error("Error saving or updating field:", error);
+      console.log(update)
+      alert("Failed to save or update field!");
     }
   });
-   async function loadStaffData() {
-     try {
-       const staffs = await getAllStaff();
-       const staffSelect = $("#staffCode");
-       staffSelect.empty();
-       staffSelect.append(`<option value="">Select Staff</option>`);
-       staffs.forEach((staff) => {
-         staffSelect.append(
-           `<option value="${staff.id}">${staff.firstName}</option>`
-         );
-       });
-       window.staffData = staffs;
-     } catch (error) {
-       console.error("Error loading staff data:", error);
-     }
-   }
+
+  // Reload the table with field data
   async function reloadTable() {
     try {
       const fields = await getAll();
@@ -90,59 +102,68 @@ $(document).ready(function () {
         loadTable(field);
       });
     } catch (error) {
-      console.error("Error loading :", error);
+      console.error("Error loading fields:", error);
     }
   }
 
+  // Load field data into the table
   function loadTable(fieldData) {
-    console.log(fieldData);
+    const fieldLocation = `${fieldData.fieldLocation.x}, ${fieldData.fieldLocation.y}`;
+    const staffNames =
+      fieldData.staff.map((staff) => staff.firstName).join(", ") ||
+      "Unassigned";
+
     const rowHtml = `
-    <tr>
-      <td><input type="checkbox" /></td>
-      <td>${fieldData.code}</td>
-      <td>${fieldData.fieldName}</td>
-      <td>${fieldData.fieldLocation}</td>
-      <td>${fieldData.fieldSize}</td>
-      <td>${fieldData.crop}</td>
-      <td>${
-        fieldData.staff.length ? fieldData.staff.firstName : "Unassigned"
-      }</td>
-      <td><img src="${base64ToImageURL(
-        fieldData.image1
-      )}" class="img-thumbnail" style="max-width: 50px;" /></td>
-      <td><img src="${base64ToImageURL(
-        fieldData.image2
-      )}" class="img-thumbnail" style="max-width: 50px;" /></td>
-      <td>
-        <button class="btn btn-outline-primary btn-sm editBtn" data-id="${
-          fieldData.code
-        }">Edit</button>
-        <button class="btn btn-outline-danger btn-sm removeBtn" data-id="${
-          fieldData.code
-        }">Delete</button>
-      </td>
-    </tr>
-  `;
+      <tr>
+        <td><input type="checkbox" /></td>
+        <td>${fieldData.code}</td>
+        <td>${fieldData.fieldName}</td>
+        <td>${fieldLocation}</td>
+        <td>${fieldData.fieldSize}</td>
+        <td>${
+          fieldData.crop && fieldData.crop.length > 0
+            ? fieldData.crop.map((crop) => crop.name).join(", ")
+            : "Unassigned"
+        }</td>
+        <td>${staffNames}</td>
+        <td><img src="${base64ToImageURL(
+          fieldData.image1
+        )}" class="img-thumbnail" style="max-width: 50px;" /></td>
+        <td><img src="${base64ToImageURL(
+          fieldData.image2
+        )}" class="img-thumbnail" style="max-width: 50px;" /></td>
+        <td>
+          <button class="btn btn-outline-primary btn-sm editBtn" data-id="${
+            fieldData.code
+          }">Edit</button>
+          <button class="btn btn-outline-danger btn-sm removeBtn" data-id="${
+            fieldData.code
+          }">Delete</button>
+        </td>
+      </tr>
+    `;
     $("tbody.tableRow").append(rowHtml);
   }
-  reloadTable();
 
-function base64ToImageURL(base64Data) {
-  return `data:image/png;base64,${base64Data}`;
-}
+  // Convert base64 to image URL
+  function base64ToImageURL(base64Data) {
+    return `data:image/png;base64,${base64Data}`;
+  }
 
+  // Handle delete field action
   $(document).on("click", ".removeBtn", async function () {
     const code = $(this).data("id");
     try {
       await deleteField(code);
-      alert("Field Deleted");
+      alert("Field deleted successfully!");
       reloadTable();
     } catch (error) {
-      console.error("Error deleting :", error);
-      alert("Failed to delete !");
+      console.error("Error deleting field:", error);
+      alert("Failed to delete field!");
     }
   });
 
+  // Handle edit field action
   $(document).on("click", ".editBtn", async function () {
     const code = $(this).data("id");
     try {
@@ -152,18 +173,22 @@ function base64ToImageURL(base64Data) {
       if (field) {
         $("#fieldCode").val(field.code);
         $("#fieldName").val(field.fieldName);
-        $("#fieldLocation").val(field.fieldLocation);
+        $("#fieldLocationX").val(field.fieldLocation.x);
+        $("#fieldLocationY").val(field.fieldLocation.y);
         $("#fieldSize").val(field.fieldSize);
-        $("#crops").val(field.crop);
-        $("#staff").val(field.id);
-        $("#preview1").attr("src", field.image1).show();
-        $("#preview2").attr("src", field.image2).show();
+        $("#staffCode").val(field.staff.map((s) => s.id)); // Multiple staff IDs can be selected
+        $("#preview1").attr("src", base64ToImageURL(field.image1)).show();
+        $("#preview2").attr("src", base64ToImageURL(field.image2)).show();
         const addFieldModal = new bootstrap.Modal($("#addFieldModal")[0]);
         addFieldModal.show();
-        editingFieldCode = code;
+        editingFieldCode = code; // Set the code for updating
       }
     } catch (error) {
-      console.error("Error fetching data:", error);
+      console.error("Error fetching field data:", error);
     }
   });
+
+  // Initial load of staff data and fields
+  loadStaffData();
+  reloadTable();
 });

@@ -44,155 +44,139 @@
           placeholder="Search Data"
           id="searchInput"
         />
-
         <button class="btn btn-primary" id="addFieldPopup">Add Field</button>
+      </div>
 
-        <!-- Add Data -->
-        <div
-          class="modal fade"
-          id="addFieldModal"
-          tabindex="-1"
-          aria-labelledby="addFieldModalLabel"
-          aria-hidden="true"
-        >
-          <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="addFieldModalLabel">
-                  Add New Field
-                </h5>
-                <button
-                  type="button"
-                  class="btn-close"
-                  data-bs-dismiss="modal"
-                  aria-label="Close"
-                ></button>
-              </div>
-              <div class="modal-body">
-                <form id="addFieldForm">
-                  <div class="row mb-3">
-                    <div class="col-md-6">
-                      <label for="fieldCode" class="form-label">Code</label>
-                      <input
-                        type="text"
-                        class="form-control"
-                        id="fieldCode"
-                        name="code"
-                        required
-                        readonly
-                      />
-                    </div>
-                    <div class="col-md-6">
-                      <label for="fieldName" class="form-label">Name</label>
-                      <input
-                        type="text"
-                        class="form-control"
-                        id="fieldName"
-                        name="name"
-                        required
-                      />
-                    </div>
+      <!-- Add Field Modal -->
+      <div
+        class="modal fade"
+        id="addFieldModal"
+        tabindex="-1"
+        aria-labelledby="addFieldModalLabel"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="addFieldModalLabel">Add New Field</h5>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
+            <!-- Updated Add Field Modal -->
+            <div class="modal-body">
+              <form id="addFieldForm">
+                <div class="row mb-3">
+                  <div class="col-md-6">
+                    <label for="fieldCode" class="form-label">Code</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="fieldCode"
+                      name="code"
+                      required
+                      readonly
+                    />
                   </div>
-                  <div class="row mb-3">
-                    <div class="col-md-6">
-                      <label for="fieldLocation" class="form-label"
-                        >Location</label
-                      >
-                      <input
-                        type="text"
-                        class="form-control"
-                        id="fieldLocation"
-                        name="location"
-                        required
-                      />
-                    </div>
-                    <div class="col-md-6">
-                      <label for="fieldSize" class="form-label"
-                        >Size of Field</label
-                      >
-                      <input
-                        type="text"
-                        class="form-control"
-                        id="fieldSize"
-                        name="size"
-                        required
-                      />
-                    </div>
+                  <div class="col-md-6">
+                    <label for="fieldName" class="form-label">Name</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="fieldName"
+                      name="name"
+                      required
+                    />
                   </div>
-                  <div class="row mb-3">
-                    <div class="col-md-6">
-                      <label for="crops" class="form-label">Crops</label>
-                      <input
-                        type="text"
-                        class="form-control"
-                        id="crops"
-                        name="crops"
-                        required
-                      />
-                    </div>
-                        <div class="col-md-6">
-                      <label for="staffCode" class="form-label"
-                        >Allocat Staff</label
-                      >
-                      <select class="form-select" id="staffCode" >
-                        <option value="">Select </option>
-                      </select>
-                    </div>
-                  </div>
-                  <div class="row mb-3">
-                    <div class="col-md-6">
-                      <label for="image1" class="form-label"
-                        >Upload Image 1</label
-                      >
-                      <input
-                        type="file"
-                        class="form-control"
-                        id="image1"
-                        name="image1"
-                        accept="image/*"
-                      />
-                      <img
-                        id="preview1"
-                        class="img-thumbnail mt-2"
-                        style="display: none; max-width: 100px"
-                      />
-                    </div>
-                    <div class="col-md-6">
-                      <label for="image2" class="form-label"
-                        >Upload Image 2</label
-                      >
-                      <input
-                        type="file"
-                        class="form-control"
-                        id="image2"
-                        name="image2"
-                        accept="image/*"
-                      />
-                      <img
-                        id="preview2"
-                        class="img-thumbnail mt-2"
-                        style="display: none; max-width: 100px"
-                      />
-                    </div>
-                  </div>
-                  <div class="modal-footer">
-                    <button
-                      type="button"
-                      class="btn btn-secondary"
-                      data-bs-dismiss="modal"
+                </div>
+                <div class="row mb-3">
+                  <div class="col-md-6">
+                    <label for="fieldLocationX" class="form-label"
+                      >Location X</label
                     >
-                      Close
-                    </button>
-                    <button type="submit" class="btn btn-primary">
-                      Save Field
-                    </button>
+                    <input
+                      type="number"
+                      class="form-control"
+                      id="fieldLocationX"
+                      name="locationX"
+                      required
+                    />
                   </div>
-                </form>
-              </div>
+                  <div class="col-md-6">
+                    <label for="fieldLocationY" class="form-label"
+                      >Location Y</label
+                    >
+                    <input
+                      type="number"
+                      class="form-control"
+                      id="fieldLocationY"
+                      name="locationY"
+                      required
+                    />
+                  </div>
+                </div>
+                <div class="row mb-3">
+                  <div class="col-md-6">
+                    <label for="fieldSize" class="form-label"
+                      >Size of Field</label
+                    >
+                    <input
+                      type="number"
+                      class="form-control"
+                      id="fieldSize"
+                      name="size"
+                      required
+                    />
+                  </div>
+                  <div class="col-md-6">
+                    <label for="staffCode" class="form-label">Staff</label>
+                    <select
+                      class="form-control"
+                      id="staffCode"
+                      name="staff"
+                      required
+                    ></select>
+                  </div>
+                </div>
+                <!-- Image uploads -->
+                <div class="row mb-3">
+                  <div class="col-md-6">
+                    <label for="image1" class="form-label">Image 1</label>
+                    <input
+                      type="file"
+                      class="form-control"
+                      id="image1"
+                      accept="image/*"
+                    />
+                    <img
+                      id="preview1"
+                      class="img-thumbnail mt-2"
+                      style="display: none"
+                    />
+                  </div>
+                  <div class="col-md-6">
+                    <label for="image2" class="form-label">Image 2</label>
+                    <input
+                      type="file"
+                      class="form-control"
+                      id="image2"
+                      accept="image/*"
+                    />
+                    <img
+                      id="preview2"
+                      class="img-thumbnail mt-2"
+                      style="display: none"
+                    />
+                  </div>
+                </div>
+                <button type="submit" class="btn btn-primary">Save</button>
+              </form>
             </div>
           </div>
         </div>
-        <!-- End Add data section -->
       </div>
 
       <!-- Data Table -->
@@ -203,7 +187,7 @@
             <th scope="col">Code</th>
             <th scope="col">Name</th>
             <th scope="col">Location</th>
-            <th scope="col">Size of the Feild</th>
+            <th scope="col">Size of Field</th>
             <th scope="col">Crops</th>
             <th scope="col">Staff</th>
             <th scope="col">Image1</th>
@@ -214,6 +198,7 @@
         <tbody class="tableRow"></tbody>
       </table>
     </div>
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script type="module" src="/Controller/pages/field.js"></script>
     <script
