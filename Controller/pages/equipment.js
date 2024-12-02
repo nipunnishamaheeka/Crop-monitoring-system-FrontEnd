@@ -261,25 +261,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 });
-//  // Update count on form submission
-//     form.addEventListener("submit", (event) => {
-//       event.preventDefault(); // Prevent form submission
-//       const selectedName = nameDropdown.value;
-
-//       if (selectedName) {
-//         const selectedEquipment = equipmentData.find((item) => item.name === selectedName);
-//         if (selectedEquipment && selectedEquipment.count > 0) {
-//           selectedEquipment.count -= 1; // Decrease count by 1
-//           alert(`${selectedName} has been added successfully! Remaining count: ${selectedEquipment.count}`);
-//           populateDropdown(); // Refresh dropdown
-//           form.reset(); // Reset the form
-//         } else {
-//           alert("Selected equipment is out of stock.");
-//         }
-//       } else {
-//         alert("Please select an equipment.");
-//       }
-//     });
 
 // togel button
 

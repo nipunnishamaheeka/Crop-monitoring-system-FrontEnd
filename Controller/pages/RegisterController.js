@@ -8,19 +8,14 @@ $(document).ready(() => {
     const email = $("#emailInput").val().trim();
     const password = $("#passwordInput").val().trim();
     const role = $("#selectRole").val();
-    // console.log(email,password,role);
-    // Validate input fields
-      if (validateForm(email, password, role)) {
-        // console.log(validateForm(email, password, role));
-      // Call register function
+
+    if (validateForm(email, password, role)) {
       register(email, password, role)
         .then((response) => {
-          // Save token as cookie
           const token = response.token;
           document.cookie = `authToken=${token}; max-age=3600; path=/; Secure; SameSite=Strict`;
           console.log("Token saved as cookie:", document.cookie);
 
-          // Redirect to sign-in page
           window.location.href = "/pages/signInForm.html";
         })
         .catch(() => {

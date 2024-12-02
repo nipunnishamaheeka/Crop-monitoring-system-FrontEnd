@@ -1,3 +1,4 @@
+import { getCookie } from "../model/TokenModel.js";
 export const saveCrops = (cropsData) => {
   console.log("Crops data:", cropsData);
   const formData = new FormData();
@@ -18,6 +19,9 @@ export const saveCrops = (cropsData) => {
     data: formData,
     processData: false, // Tell jQuery not to process the data
     contentType: false, // Tell jQuery not to set contentType
+    headers: {
+      Authorization: "Bearer " + getCookie("authToken"), // Include token if required
+    },
     success: function (response) {
       console.log("Crops saved successfully:", response);
       alert("Crops saved successfully!");
@@ -39,7 +43,9 @@ export const getAllCrops = () => {
       url: "http://localhost:5055/cropcontroller/api/v1/crops/allCrops",
       type: "GET",
       contentType: "application/json",
-      // xhrFields: { withCredentials: true }, // Include cookies
+      headers: {
+        Authorization: "Bearer " + getCookie("authToken"),
+      },
       success: function (cropsList, textStatus, xhr) {
         if (xhr.status === 200) {
           console.log("Crops retrieved successfully:", cropsList);
@@ -69,6 +75,9 @@ export const updateCrops = (cropCode, updatedCropData) => {
     type: "PUT",
     contentType: "application/json",
     data: JSON.stringify(updatedCropData),
+    headers: {
+      Authorization: "Bearer " + getCookie("authToken"),
+    },
     // xhrFields: { withCredentials: true }, // Include cookies
     success: function (response) {
       console.log("Crops updated successfully:", response);
@@ -89,6 +98,9 @@ export const deleteCrops = (cropCode) => {
     url: `http://localhost:5055/cropcontroller/api/v1/crops/` + cropCode,
     type: "DELETE",
     contentType: "application/json",
+    headers: {
+      Authorization: "Bearer " + getCookie("authToken"),
+    },
     // xhrFields: { withCredentials: true }, // Include cookies
     success: function (response) {
       console.log("Crops deleted successfully:", response);

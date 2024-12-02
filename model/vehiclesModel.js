@@ -1,9 +1,13 @@
+import { getCookie } from "../model/TokenModel.js";
 export const save = (vehicleData) => {
   $.ajax({
     url: "http://localhost:5055/cropcontroller/api/v1/vehicle",
     type: "POST",
     contentType: "application/json",
     data: JSON.stringify(vehicleData),
+    headers: {
+      Authorization: "Bearer " + getCookie("authToken"),
+    },
     success: function (response) {
       console.log(" saved successfully:", response);
       console.log(vehicleData);
@@ -24,6 +28,9 @@ export const getAll = () => {
       url: "http://localhost:5055/cropcontroller/api/v1/vehicle/allVehicles",
       type: "GET",
       contentType: "application/json",
+      headers: {
+        Authorization: "Bearer " + getCookie("authToken"),
+      },
       success: function (vehiclesList) {
         console.log(" retrieved successfully:", vehiclesList);
         resolve(vehiclesList);
@@ -38,7 +45,6 @@ export const getAll = () => {
 };
 export const update = (vehicleCode, updatedVehicleData) => {
   $.ajax({
-
     url:
       `http://localhost:5055/cropcontroller/api/v1/vehicle/` +
       vehicleCode +
@@ -47,6 +53,9 @@ export const update = (vehicleCode, updatedVehicleData) => {
     type: "PUT",
     contentType: "application/json",
     data: JSON.stringify(updatedVehicleData),
+    headers: {
+      Authorization: "Bearer " + getCookie("authToken"),
+    },
     success: function (response) {
       console.log("Updated successfully:", response);
       alert("Updated successfully!");
@@ -66,6 +75,9 @@ export const deleteVehicle = (vehicleCode) => {
     url: `http://localhost:5055/cropcontroller/api/v1/vehicle/` + vehicleCode,
     type: "DELETE",
     contentType: "application/json",
+    headers: {
+      Authorization: "Bearer " + getCookie("authToken"),
+    },
     success: function (response) {
       console.log("deleted successfully:", response);
       alert("deleted successfully!");

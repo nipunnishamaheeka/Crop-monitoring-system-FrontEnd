@@ -34,11 +34,6 @@ export function tokenRefresh() {
   });
 }
 
-// export function saveCookie(name, value) {
-//   document.cookie = `${name}=${value}; path=/;`;
-//   console.log(`Cookie saved: ${name}=${value}`);
-// }
-
 export function saveCookie(name, value, days) {
   const date = new Date();
   date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);

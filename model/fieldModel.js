@@ -1,21 +1,4 @@
-// export const save = (fieldData) => {
-//   $.ajax({
-//     url: "http://localhost:5055/cropcontroller/api/v1/field",
-//     type: "POST",
-//     contentType: "application/json",
-//     data: JSON.stringify(fieldData),
-//     success: function (response) {
-//       console.log(" saved successfully:", response);
-//       alert(" saved successfully!");
-//       $("#addFieldForm")[0].reset();
-//       $("#addFieldModal").modal("hide");
-//     },
-//     error: function (xhr, status, error) {
-//       console.error("Error saving :", xhr, status, error);
-//       alert("Failed to save !");
-//     },
-//   });
-// };
+import { getCookie } from "../model/TokenModel.js";
 export const save = (fieldData) => {
   console.log("Field data:", fieldData);
 
@@ -39,13 +22,15 @@ export const save = (fieldData) => {
 
   console.log("FormData initialized successfully");
 
-
   $.ajax({
     url: "http://localhost:5055/cropcontroller/api/v1/field",
     type: "POST",
     data: formData,
     processData: false, // Tell jQuery not to process the data
     contentType: false, // Tell jQuery not to set contentType
+    headers: {
+      Authorization: "Bearer " + getCookie("authToken"),
+    },
     success: function (response) {
       console.log("Field saved successfully:", response);
       alert("Field saved successfully!");
@@ -65,6 +50,9 @@ export const getAll = () => {
       url: "http://localhost:5055/cropcontroller/api/v1/field/allFields",
       type: "GET",
       contentType: "application/json",
+      headers: {
+        Authorization: "Bearer " + getCookie("authToken"),
+      },
       success: function (fieldList) {
         console.log(" retrieved successfully:", fieldList);
         resolve(fieldList);
@@ -78,22 +66,37 @@ export const getAll = () => {
   });
 };
 
-export const update = (code, updatedData) => {
+export const update = (code, updatedData, staffIds) => {
+  const formData = new FormData();
+
+  // Append each property of updatedData to the FormData object
+  for (const key in updatedData) {
+    if (updatedData[key] instanceof File) {
+      formData.append(key, updatedData[key]); // Add file fields
+    } else {
+      formData.append(key, updatedData[key]); // Add other fields
+    }
+  }
+
   $.ajax({
-    url: `http://localhost:5055/cropcontroller/api/v1/field/` + code,
+    url: `http://localhost:5055/cropcontroller/api/v1/field/${code}?staffIds=${staffIds}`,
     type: "PUT",
-    contentType: "application/json",
-    data: JSON.stringify(updatedData),
+    data: formData,
+    processData: false, // Required for FormData
+    contentType: false, // Required for FormData
+    headers: {
+      Authorization: "Bearer " + getCookie("authToken"),
+    },
     success: function (response) {
-      console.log("updated successfully:", response);
-      alert("updated successfully!");
+      console.log("Updated successfully:", response);
+      alert("Field updated successfully!");
       $("#updateFieldForm")[0].reset();
       $("#updateFieldModal").modal("hide");
       reloadTable();
     },
     error: function (xhr, status, error) {
-      console.error("Error updating :", xhr, status, error);
-      alert("Failed to update !");
+      console.error("Error updating:", xhr, status, error);
+      alert("Failed to update field!");
     },
   });
 };
@@ -103,6 +106,9 @@ export const deleteField = (code) => {
     url: `http://localhost:5055/cropcontroller/api/v1/field/` + code,
     type: "DELETE",
     contentType: "application/json",
+    headers: {
+      Authorization: "Bearer " + getCookie("authToken"),
+    },
     success: function (response) {
       console.log("deleted successfully:", response);
       alert("deleted successfully!");

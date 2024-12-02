@@ -9,8 +9,8 @@ import { getAll } from "../../model/vehiclesModel.js";
 
 $(document).ready(function () {
   let editingStaffCode = null;
-  loadFieldData();
-  loadVehicleData();
+  // loadFieldData();
+  // loadVehicleData();
   $("#addStaffPopup").click(function () {
     const addStaffModal = new bootstrap.Modal($("#addStaffModal")[0]);
     addStaffModal.show();
@@ -22,13 +22,13 @@ $(document).ready(function () {
     event.preventDefault();
 
     const staffData = {
-      id: $("#staffCode").val(),
+      id: "S00",
       firstName: $("#fristName").val(),
       lastName: $("#lastName").val(),
       designation: $("#designation").val(),
       gender: $("#gender").val(),
       joinedDate: $("#joinedDate").val(),
-      dob: $("#dob").val(),
+      DOB: $("#dob").val(),
       addressLine1: $("#line01").val(),
       addressLine2: $("#line02").val(),
       addressLine3: $("#line03").val(),
@@ -37,8 +37,8 @@ $(document).ready(function () {
       contactNo: $("#contactNo").val(),
       email: $("#email").val(),
       role: $("#role").val(),
-      field: $("#fieldCode").val(),
-      vehicles: $("#vehicle").val(),
+      // field: $("#fieldCode").val(),
+      // vehicles: $("#vehicle").val(),
     };
 
     try {
@@ -46,7 +46,9 @@ $(document).ready(function () {
         await update(editingStaffCode, staffData);
         alert("updated successfully!");
       } else {
+        console.log(staffData);
         await save(staffData);
+
         alert("added successfully!");
       }
       $("#addStaffForm")[0].reset();
@@ -57,38 +59,6 @@ $(document).ready(function () {
       alert("Failed to save or update !");
     }
   });
-  async function loadVehicleData() {
-    try {
-      const vehicles = await getAll();
-      const vehicleSelect = $("#vehicle");
-      vehicleSelect.empty();
-      vehicleSelect.append(`<option value="">Select Field</option>`);
-      vehicles.forEach((vehicle) => {
-        vehicleSelect.append(
-          `<option value="${vehicle.v_code}">${vehicle.licensePlateNumber}</option>`
-        );
-      });
-      window.vehicleData = vehicles;
-    } catch (error) {
-      console.error("Error loading vehicle data:", error);
-    }
-  }
-  async function loadFieldData() {
-    try {
-      const fields = await getAllFields();
-      const fieldSelect = $("#fieldCode");
-      fieldSelect.empty();
-      fieldSelect.append(`<option value="">Select Field</option>`);
-      fields.forEach((field) => {
-        fieldSelect.append(
-          `<option value="${field.code}">${field.fieldName}</option>`
-        );
-      });
-      window.fieldData = fields;
-    } catch (error) {
-      console.error("Error loading field data:", error);
-    }
-  }
   async function reloadTable() {
     try {
       const staffs = await getAllStaff();
@@ -100,42 +70,9 @@ $(document).ready(function () {
       console.error("Error loading :", error);
     }
   }
-  // function loadTable(staffData) {
-  //   console.log(staffData);
-  //   const fields = staffData.field || [];
-  //   const vehicles = staffData.vehicles || [];
-  //   const fieldName = fields.length > 0 ? fields[0].fieldName : "Unassigned";
-  //   const vehicleCode =
-  //     vehicles.length > 0 ? vehicles[0].vehicleCode : "Unassigned";
-  //   const rowHtml = `
-  //   <tr>
-  //     <td><input type="checkbox" /></td>
-  //     <td>${staffData.id}</td>
-  //     <td>${staffData.firstName}</td>
-  //     <td>${staffData.designation}</td>
-  //     <td>${staffData.dob}</td>
-  //     <td>${staffData.contactNo}</td>
-  //     <td>${staffData.email}</td>
-  //     <td>${staffData.role}</td>
-  //     <td>${fieldName}</td>
-  //     <td>${vehicleCode}</td>
-  //     <td>
-  //       <button class="btn btn-outline-primary btn-sm editBtn" data-id="${staffData.id}">Edit</button>
-  //       <button class="btn btn-outline-danger btn-sm removeBtn" data-id="${staffData.id}">Delete</button>
-  //       <button class="btn btn-outline-primary btn-sm editBtn" data-id="${staffData.id}">Show</button>
-  //     </td>
-  //   </tr>
-  // `;
-  //   $("tbody.tableRow").append(rowHtml);
-  // }
   function loadTable(staffData) {
     console.log(staffData);
     const fullAddress = `${staffData.addressLine1}, ${staffData.addressLine2}, ${staffData.addressLine3}, ${staffData.addressLine4}, ${staffData.addressLine5}`;
-    const fields = staffData.field || [];
-    const vehicles = staffData.vehicles || [];
-    const fieldName = fields.length > 0 ? fields[0].fieldName : "Unassigned";
-    const vehicleCode =
-      vehicles.length > 0 ? vehicles[0].vehicleCode : "Unassigned";
     const rowHtml = `
     <tr>
       <td><input type="checkbox" /></td>
@@ -148,8 +85,6 @@ $(document).ready(function () {
       <td>${staffData.contactNo}</td>
       <td>${staffData.email}</td>
       <td>${staffData.role}</td>
-      <td>${fieldName}</td>
-      <td>${vehicleCode}</td>
       <td>${staffData.gender}</td>
       <td>
         <button class="btn btn-outline-primary btn-sm editBtn" data-id="${staffData.id}">Edit</button>

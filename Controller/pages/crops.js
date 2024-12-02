@@ -101,9 +101,9 @@ $(document).ready(function () {
         <td>${cropData.field ? cropData.field.fieldName : "Unassigned"}</td>
         <td>${cropData.cropCommonName}</td>
         <td>${cropData.cropScientificName}</td>
-        <td><img src="${
-          base64ToImageURL(cropData.cropImage)
-        }" class="img-thumbnail" style="max-width: 50px;" /></td>
+        <td><img src="${base64ToImageURL(
+          cropData.cropImage
+        )}" class="img-thumbnail" style="max-width: 50px;" /></td>
         <td>${cropData.category}</td>
         <td>${cropData.cropSeason}</td>
         <td>

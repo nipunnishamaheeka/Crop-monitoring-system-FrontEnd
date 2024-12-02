@@ -54,44 +54,41 @@ $(document).ready(function () {
     previewImage(event, "preview2");
   });
 
-  // Submit the Add/Edit Field form
-  $("#addFieldForm").submit(async function (event) {
-    event.preventDefault();
+$("#addFieldForm").submit(async function (event) {
+  event.preventDefault();
 
-    const fieldData = {
-      fieldCode: $("#fieldCode").val(),
-      fieldName: $("#fieldName").val(),
-      fieldLocationX: parseFloat($("#fieldLocationX").val()),
-      fieldLocationY: parseFloat($("#fieldLocationY").val()),
-      fieldSize: parseFloat($("#fieldSize").val()),
-      staffIds: $("#staffCode").val(),
-      image1: $("#image1")[0].files[0],
-      image2: $("#image2")[0].files[0],
-    };
+  const fieldData = {
+    fieldCode: $("#fieldCode").val(),
+    fieldName: $("#fieldName").val(),
+    fieldLocationX: parseFloat($("#fieldLocationX").val()),
+    fieldLocationY: parseFloat($("#fieldLocationY").val()),
+    fieldSize: parseFloat($("#fieldSize").val()),
+    image1: $("#image1")[0].files[0],
+    image2: $("#image2")[0].files[0],
+  };
 
-    try {
-      if (editingFieldCode) {
-        // Perform Update
-        await update(editingFieldCode, fieldData);
-        reloadTable();
-        alert("Field updated successfully!");
-      } else {
-        // Perform Add
-        await save(fieldData);
-        alert("Field added successfully!");
-        reloadTable();
-      }
-      $("#addFieldForm")[0].reset();
-      $("#preview1").hide();
-      $("#preview2").hide();
-      bootstrap.Modal.getInstance($("#addFieldModal")[0]).hide();
-      reloadTable();
-    } catch (error) {
-      console.error("Error saving or updating field:", error);
-      console.log(update);
-      alert("Failed to save or update field!");
+  try {
+    if (editingFieldCode) {
+      // Perform Update
+      await update(editingFieldCode, fieldData, $("#staffCode").val());
+      alert("Field updated successfully!");
+    } else {
+      // Perform Add
+      await save(fieldData); // Ensure save() also handles FormData correctly
+      alert("Field added successfully!");
     }
-  });
+
+    $("#addFieldForm")[0].reset();
+    $("#preview1").hide();
+    $("#preview2").hide();
+    bootstrap.Modal.getInstance($("#addFieldModal")[0]).hide();
+    reloadTable();
+  } catch (error) {
+    console.error("Error saving or updating field:", error);
+    alert("Failed to save or update field!");
+  }
+});
+
 
   // Reload the table with field data
   async function reloadTable() {
@@ -120,11 +117,6 @@ $(document).ready(function () {
         <td>${fieldData.fieldName}</td>
         <td>${fieldLocation}</td>
         <td>${fieldData.fieldSize}</td>
-        <td>${
-          fieldData.crop && fieldData.crop.length > 0
-            ? fieldData.crop.map((crop) => crop.name).join(", ")
-            : "Unassigned"
-        }</td>
         <td>${staffNames}</td>
         <td><img src="${base64ToImageURL(
           fieldData.image1

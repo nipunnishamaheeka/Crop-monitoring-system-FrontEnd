@@ -1,9 +1,13 @@
+import { getCookie } from "../model/TokenModel.js";
 export const save = (equipmentData) => {
   $.ajax({
     url: "http://localhost:5055/cropcontroller/api/v1/equipment",
     type: "POST",
     contentType: "application/json",
     data: JSON.stringify(equipmentData),
+    headers: {
+      Authorization: "Bearer " + getCookie("authToken"),
+    },
     success: function (response) {
       ReloadTable();
       console.log(" saved successfully:", response);
@@ -27,6 +31,9 @@ export const getAllEquipments = () => {
       url: "http://localhost:5055/cropcontroller/api/v1/equipment/allEquipments",
       type: "GET",
       contentType: "application/json",
+      headers: {
+        Authorization: "Bearer " + getCookie("authToken"),
+      },
       success: function (equipmentsList) {
         console.log(" retrieved successfully:", equipmentsList);
         resolve(equipmentsList);
@@ -53,6 +60,9 @@ export const update = (equipmentId, updatedEquipmentData) => {
     contentType: "application/json",
     data: JSON.stringify(updatedEquipmentData),
     dataType: "text",
+    headers: {
+      Authorization: "Bearer " + getCookie("authToken"),
+    },
     success: function (response) {
       ReloadTable();
       console.log("Updated successfully:", response);
@@ -75,6 +85,9 @@ export const deleteEquipment = (equipmentId) => {
     url: `http://localhost:5055/cropcontroller/api/v1/equipment/` + equipmentId,
     type: "DELETE",
     contentType: "application/json",
+    headers: {
+      Authorization: "Bearer " + getCookie("authToken"),
+    },
     success: function (response) {
       console.log("deleted successfully:", response);
       alert("deleted successfully!");
