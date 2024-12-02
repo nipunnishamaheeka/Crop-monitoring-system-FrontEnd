@@ -79,7 +79,7 @@ $(document).ready(function () {
         // Perform Add
         await save(fieldData);
         alert("Field added successfully!");
-          reloadTable();
+        reloadTable();
       }
       $("#addFieldForm")[0].reset();
       $("#preview1").hide();
@@ -88,7 +88,7 @@ $(document).ready(function () {
       reloadTable();
     } catch (error) {
       console.error("Error saving or updating field:", error);
-      console.log(update)
+      console.log(update);
       alert("Failed to save or update field!");
     }
   });

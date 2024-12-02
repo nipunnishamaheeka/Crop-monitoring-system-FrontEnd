@@ -8,7 +8,11 @@ import {
 
 $(document).ready(function () {
   let editingVehicleCode = null;
+
   loadStaffData();
+  loadVehicles();
+
+  // Open Add Vehicle Modal
   $("#addVehiclePopup").click(function () {
     const addVehicleModal = new bootstrap.Modal($("#addVehicleModal")[0]);
     addVehicleModal.show();
@@ -16,15 +20,19 @@ $(document).ready(function () {
     editingVehicleCode = null;
   });
 
+  // Add/Update Vehicle
   $("#addVehicleForm").submit(async function (event) {
     event.preventDefault();
+
+    // Check the status based on the checkbox
+    const status = $("#status").prop("checked") ? "AVAILABLE" : "UNAVAILABLE";
 
     const vehicleData = {
       v_code: $("#vehicleCode").val(),
       licensePlateNumber: $("#vehiclePlateNumber").val(),
       vehicleCategory: $("#vehicleCategory").val(),
       fuelType: $("#fuelType").val(),
-      status: $("#status").val(),
+      status: status, // Save the status as 'AVAILABLE' or 'UNAVAILABLE'
       staffId: $("#staffCode").val(),
       remarks: $("#remarks").val(),
     };
@@ -45,6 +53,8 @@ $(document).ready(function () {
       alert("Failed to save or update vehicle!");
     }
   });
+
+  // Load Staff Data for Dropdown
   async function loadStaffData() {
     try {
       const staffs = await getAllStaff();
@@ -62,6 +72,7 @@ $(document).ready(function () {
     }
   }
 
+  // Reload Vehicles Table
   async function reloadTable() {
     try {
       const vehicles = await getAll();
@@ -72,6 +83,8 @@ $(document).ready(function () {
       alert("Failed to load vehicle data!");
     }
   }
+
+  // Load a Vehicle in the Table
   function loadTable(vehicleData) {
     const rowHtml = `
       <tr>
@@ -95,7 +108,19 @@ $(document).ready(function () {
     `;
     $("tbody.tableRow").append(rowHtml);
   }
-  reloadTable();
+
+  // Load All Vehicles into the Table on Page Load
+  async function loadVehicles() {
+    try {
+      const vehicles = await getAll();
+      vehicles.forEach((vehicle) => loadTable(vehicle));
+    } catch (error) {
+      console.error("Error loading vehicle data:", error);
+      alert("Failed to load vehicle data!");
+    }
+  }
+
+  // Delete Vehicle
   $(document).on("click", ".removeBtn", async function () {
     const vehicleCode = $(this).data("id");
     try {
@@ -107,6 +132,8 @@ $(document).ready(function () {
       alert("Failed to delete vehicle!");
     }
   });
+
+  // Edit Vehicle
   $(document).on("click", ".editBtn", async function () {
     const vehicleCode = $(this).data("id");
     try {
@@ -121,8 +148,8 @@ $(document).ready(function () {
         $("#status").val(vehicle.status);
         const staffMemberId = vehicle.staff ? vehicle.staff.id : "";
         $("#staffCode").val(staffMemberId);
-
         $("#remarks").val(vehicle.remarks);
+
         const addVehicleModal = new bootstrap.Modal($("#addVehicleModal")[0]);
         addVehicleModal.show();
         editingVehicleCode = vehicleCode;
@@ -131,6 +158,8 @@ $(document).ready(function () {
       console.error("Error fetching vehicle data:", error);
     }
   });
+
+  // Search Functionality
   function search(query) {
     getAll()
       .then((vehicles) => {
@@ -155,6 +184,8 @@ $(document).ready(function () {
         alert("Failed to search vehicles!");
       });
   }
+
+  // Handle Search Input
   $("#searchInput").on("input", function () {
     const query = $(this).val().trim();
     if (query) {
@@ -163,6 +194,8 @@ $(document).ready(function () {
       reloadTable();
     }
   });
+
+  // Handle Search Button Click
   $("#searchButton").on("click", function () {
     const query = $("#searchInput").val().trim();
     if (query) {
@@ -171,4 +204,42 @@ $(document).ready(function () {
       reloadTable();
     }
   });
+});
+
+// Vehicle-to-Fuel Mapping (Fuel Type Auto-fill)
+const fuelMapping = {
+  Car: "Petrol",
+  Van: "Diesel",
+  Motorbike: "Petrol",
+  "Tractors Land Masters": "Diesel",
+  "Tractors 4WD": "Diesel",
+  "Tankers Truck": "Diesel",
+  "Land Vehicles": "Diesel",
+  Lorry: "Diesel",
+};
+
+// Auto-fill Fuel Type based on Vehicle Category
+document
+  .getElementById("vehicleCategory")
+  .addEventListener("change", function () {
+    const selectedCategory = this.value;
+    const fuelTypeInput = document.getElementById("fuelType");
+
+    // Set fuel type or clear if no category is selected
+    if (fuelMapping[selectedCategory]) {
+      fuelTypeInput.value = fuelMapping[selectedCategory];
+    } else {
+      fuelTypeInput.value = "";
+    }
+  });
+
+// togel button
+
+document.getElementById("status").addEventListener("change", function () {
+  const statusLabel = this.nextElementSibling;
+  if (this.checked) {
+    statusLabel.textContent = "Available";
+  } else {
+    statusLabel.textContent = "Unavailable";
+  }
 });

@@ -59,10 +59,12 @@
                 <form id="addVehicleForm">
                   <div class="row mb-3">
                     <div class="col-md-6">
-                      <label for="vehicleCode" class="form-label">Id</label>
+                      <label for="vehicleCode" class="form-label"
+                        >Vehicle ID</label
+                      >
                       <input
                         type="text"
-                        class="form-control vehicleCode"
+                        class="form-control"
                         id="vehicleCode"
                         required
                         readonly
@@ -70,13 +72,12 @@
                     </div>
                     <div class="col-md-6">
                       <label for="vehiclePlateNumber" class="form-label"
-                        >License plate number</label
+                        >License Plate Number</label
                       >
                       <input
                         type="text"
-                        class="form-control vehiclePlateNumber"
+                        class="form-control"
                         id="vehiclePlateNumber"
-                        name="name"
                         required
                       />
                     </div>
@@ -84,58 +85,68 @@
                   <div class="row mb-3">
                     <div class="col-md-6">
                       <label for="vehicleCategory" class="form-label"
-                        >Vehicle category</label
+                        >Vehicle Category</label
                       >
-                      <input
-                        type="text"
-                        class="form-control vehicleCategory"
-                        id="vehicleCategory"
-                        name="category"
-                        required
-                      />
+                      <select class="form-select" id="vehicleCategory" required>
+                        <option value="">Select Category</option>
+                        <option value="Car">Car</option>
+                        <option value="Van">Van</option>
+                        <option value="Motorbike">Motorbike</option>
+                        <option value="Tractors Land Masters">
+                          Tractors - Land Masters
+                        </option>
+                        <option value="Tractors 4WD">Tractors - 4WD</option>
+                        <option value="Tankers Truck">Tankers Truck</option>
+                        <option value="Land Vehicles">Land Vehicles</option>
+                        <option value="Lorry">Lorry</option>
+                      </select>
                     </div>
                     <div class="col-md-6">
-                      <label for="fuelType" class="form-label">Fuel type</label>
+                      <label for="fuelType" class="form-label">Fuel Type</label>
                       <input
                         type="text"
-                        class="form-control fuelType"
+                        class="form-control"
                         id="fuelType"
-                        name="type"
                         required
+                        readonly
                       />
                     </div>
                   </div>
                   <div class="row mb-3">
+                    <!-- <div class="col-md-6">
+                      <label for="status" class="form-label">Status</label>
+                      <input type="text" class="form-control" id="status" required />
+                    </div> -->
+
                     <div class="col-md-6">
                       <label for="status" class="form-label">Status</label>
-                      <input
-                        type="text"
-                        class="form-control status"
-                        id="status"
-                        name="status"
-                        required
-                      />
+                      <div class="form-check form-switch">
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          id="status"
+                        />
+                        <label class="form-check-label" for="status"
+                          >Available</label
+                        >
+                      </div>
                     </div>
+
                     <div class="col-md-6">
                       <label for="staffCode" class="form-label"
-                        >Allocat Staff</label
+                        >Allocate Staff</label
                       >
                       <select class="form-select" id="staffCode" required>
                         <option value="">Select</option>
                       </select>
                     </div>
-                    <div class="col-md-6">
+                  </div>
+                  <div class="row mb-3">
+                    <div class="col-md-12">
                       <label for="remarks" class="form-label">Remarks</label>
-                      <input
-                        type="text"
-                        class="form-control remarks"
-                        id="remarks"
-                        name="remarks"
-                        required
-                      />
+                      <input type="text" class="form-control" id="remarks" />
                     </div>
                   </div>
-
                   <div class="modal-footer">
                     <button
                       type="button"
@@ -144,11 +155,7 @@
                     >
                       Close
                     </button>
-                    <button
-                      type="submit"
-                      class="btn btn-primary"
-                      id="saveVehicleBtn"
-                    >
+                    <button type="submit" class="btn btn-primary">
                       Save Vehicle
                     </button>
                   </div>
@@ -157,28 +164,29 @@
             </div>
           </div>
         </div>
+
         <!-- End Add data section -->
       </div>
 
       <!-- Data Table -->
-       <div class="table-responsive mt-3 overflow-auto">
-      <table class="table table-hover">
-        <thead>
-          <tr>
-            <th scope="col"><input type="checkbox" /></th>
-            <th scope="col">Id</th>
-            <th scope="col">License Plate number</th>
-            <th scope="col">Category</th>
-            <th scope="col">Fuel Type</th>
-            <th scope="col">Status</th>
-            <th scope="col">Allocated Staff</th>
-            <th scope="col">Remarks</th>
-            <th scope="col">Action</th>
-          </tr>
-        </thead>
-        <tbody class="tableRow"></tbody>
-      </table>
-       </div>
+      <div class="table-responsive mt-3 overflow-auto">
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th scope="col"><input type="checkbox" /></th>
+              <th scope="col">Id</th>
+              <th scope="col">License Plate number</th>
+              <th scope="col">Category</th>
+              <th scope="col">Fuel Type</th>
+              <th scope="col">Status</th>
+              <th scope="col">Allocated Staff</th>
+              <th scope="col">Remarks</th>
+              <th scope="col">Action</th>
+            </tr>
+          </thead>
+          <tbody class="tableRow"></tbody>
+        </table>
+      </div>
     </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script type="module" src="/Controller/pages/vehicle.js"></script>

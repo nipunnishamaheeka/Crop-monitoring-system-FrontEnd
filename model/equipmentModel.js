@@ -5,6 +5,7 @@ export const save = (equipmentData) => {
     contentType: "application/json",
     data: JSON.stringify(equipmentData),
     success: function (response) {
+      ReloadTable();
       console.log(" saved successfully:", response);
       alert(" saved successfully!");
       console.log("model ekath awda bn ");
@@ -53,6 +54,7 @@ export const update = (equipmentId, updatedEquipmentData) => {
     data: JSON.stringify(updatedEquipmentData),
     dataType: "text",
     success: function (response) {
+      ReloadTable();
       console.log("Updated successfully:", response);
       alert("Updated successfully!");
     },

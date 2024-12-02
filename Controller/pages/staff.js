@@ -253,3 +253,38 @@ $(document).ready(function () {
     }
   });
 });
+
+// adding name
+
+const roleCounts = {
+  MANAGER: 0,
+  ADMINISTRATIVE: 0,
+  SCIENTIST: 0,
+  OTHER: 0,
+};
+
+// Add event listener for the designation dropdown
+document
+  .getElementById("designation")
+  .addEventListener("change", function (event) {
+    const selectedOption = event.target.selectedOptions[0];
+    const selectedRole = selectedOption.getAttribute("data-role");
+    const limit = parseInt(selectedOption.getAttribute("data-limit"), 10);
+
+    if (selectedRole) {
+      // Check if the count exceeds the limit
+      if (roleCounts[selectedRole] >= limit) {
+        alert(`The limit for ${selectedRole} (${limit}) has been reached.`);
+        event.target.value = ""; // Reset the selection
+        document.getElementById("role").value = ""; // Clear the role field
+      } else {
+        // Autofill the role and increment the count
+        document.getElementById("role").value = selectedRole;
+        roleCounts[selectedRole]++;
+      }
+    } else {
+      document.getElementById("role").value = ""; // Clear the role field if no selection
+    }
+
+    console.log("Current Role Counts:", roleCounts); // Debugging
+  });

@@ -68,7 +68,7 @@
                         readonly
                       />
                     </div>
-                    <div class="col-md-6">
+                    <!-- <div class="col-md-6">
                       <label for="equipmentName" class="form-label">Name</label>
                       <input
                         type="text"
@@ -77,6 +77,18 @@
                         name="name"
                         required
                       />
+                    </div> -->
+                    <!-- Add a dropdown for Name -->
+                    <div class="col-md-6">
+                      <label for="equipmentName" class="form-label">Name</label>
+                      <select
+                        class="form-select"
+                        id="equipmentName"
+                        name="name"
+                        required
+                      >
+                        <option value="">Select Equipment</option>
+                      </select>
                     </div>
                   </div>
                   <div class="row mb-3">
@@ -86,11 +98,12 @@
                         type="text"
                         class="form-control"
                         id="equipmentType"
-                        name="location"
+                        name="type"
                         required
+                        readonly
                       />
                     </div>
-                    <div class="col-md-6">
+                    <!-- <div class="col-md-6">
                       <label for="equipmentStatus" class="form-label"
                         >Status</label
                       >
@@ -101,6 +114,19 @@
                         name="size"
                         required
                       />
+                    </div> -->
+                    <div class="col-md-6">
+                      <label for="status" class="form-label">Status</label>
+                      <div class="form-check form-switch">
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          id="equipmentStatus"
+                        />
+                        <label class="form-check-label" for="status"
+                          >Available</label
+                        >
+                      </div>
                     </div>
                   </div>
                   <div class="row mb-3">
@@ -143,22 +169,22 @@
       </div>
 
       <!-- Data Table -->
-       <div class="table-responsive mt-3 overflow-auto">
-      <table class="table table-hover">
-        <thead>
-          <tr>
-            <th scope="col"><input type="checkbox" /></th>
-            <th scope="col">Id</th>
-            <th scope="col">Name</th>
-            <th scope="col">Type</th>
-            <th scope="col">Status</th>
-            <th scope="col">Staff Details</th>
-            <th scope="col">Field Details</th>
-            <th scope="col">Action</th>
-          </tr>
-        </thead>
-        <tbody class="tableRow"></tbody>
-      </table>
+      <div class="table-responsive mt-3 overflow-auto">
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th scope="col"><input type="checkbox" /></th>
+              <th scope="col">Id</th>
+              <th scope="col">Name</th>
+              <th scope="col">Type</th>
+              <th scope="col">Status</th>
+              <th scope="col">Staff Details</th>
+              <th scope="col">Field Details</th>
+              <th scope="col">Action</th>
+            </tr>
+          </thead>
+          <tbody class="tableRow"></tbody>
+        </table>
       </div>
     </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>

@@ -20,11 +20,16 @@ $(document).ready(function () {
   $("#addEquipmentForm").submit(async function (event) {
     event.preventDefault();
 
+    // Check the status based on the checkbox
+    const status = $("#equipmentStatus").prop("checked")
+      ? "AVAILABLE"
+      : "UNAVAILABLE";
+
     const equipmentData = {
       equipmentId: $("#equipmentCode").val(),
       equipmentName: $("#equipmentName").val(),
       equipmentType: $("#equipmentType").val(),
-      status: $("#equipmentStatus").val(),
+      status: status,
       staffId: $("#staffCode").val(),
       fieldCode: $("#fieldCode").val(),
     };
@@ -198,3 +203,93 @@ $(document).ready(function () {
     }
   });
 });
+
+// Equipment data from the table
+let equipmentData = [
+  { name: "Plough", count: 8, type: "Agricultural" },
+  { name: "Mamotee", count: 35, type: "Agricultural" },
+  { name: "Shovel", count: 40, type: "Agricultural" },
+  { name: "Irrigation pumps", count: 15, type: "Agricultural" },
+  { name: "Wheelbarrow", count: 20, type: "Agricultural" },
+  { name: "Sprayer", count: 20, type: "Agricultural" },
+  { name: "Axe", count: 10, type: "Agricultural" },
+  { name: "Chain saw", count: 5, type: "Mechanical" },
+  { name: "Combine harvester", count: 4, type: "Agricultural" },
+  { name: "Seeder", count: 20, type: "Agricultural" },
+  { name: "Weeder", count: 20, type: "Agricultural" },
+  { name: "Wheel wrench", count: 15, type: "Mechanical" },
+  { name: "Screw drivers", count: 30, type: "Mechanical" },
+];
+
+// Populate Name dropdown
+function populateDropdown() {
+  const nameDropdown = document.getElementById("equipmentName");
+  nameDropdown.innerHTML = ""; // Clear existing options
+  const defaultOption = document.createElement("option");
+  defaultOption.value = "";
+  defaultOption.textContent = "Select Equipment";
+  nameDropdown.appendChild(defaultOption);
+
+  equipmentData.forEach((equipment) => {
+    if (equipment.count > 0) {
+      const option = document.createElement("option");
+      option.value = equipment.name;
+      option.textContent = `${equipment.name} (${equipment.count})`;
+      nameDropdown.appendChild(option);
+    }
+  });
+}
+
+// Auto-fill Type and update count on form submission
+document.addEventListener("DOMContentLoaded", () => {
+  populateDropdown();
+
+  const nameDropdown = document.getElementById("equipmentName");
+  const typeField = document.getElementById("equipmentType");
+  const form = document.getElementById("addEquipmentForm");
+
+  // Auto-fill Type field
+  nameDropdown.addEventListener("change", (event) => {
+    const selectedName = event.target.value;
+    const selectedEquipment = equipmentData.find(
+      (item) => item.name === selectedName
+    );
+    if (selectedEquipment) {
+      typeField.value = selectedEquipment.type;
+    } else {
+      typeField.value = "";
+    }
+  });
+});
+//  // Update count on form submission
+//     form.addEventListener("submit", (event) => {
+//       event.preventDefault(); // Prevent form submission
+//       const selectedName = nameDropdown.value;
+
+//       if (selectedName) {
+//         const selectedEquipment = equipmentData.find((item) => item.name === selectedName);
+//         if (selectedEquipment && selectedEquipment.count > 0) {
+//           selectedEquipment.count -= 1; // Decrease count by 1
+//           alert(`${selectedName} has been added successfully! Remaining count: ${selectedEquipment.count}`);
+//           populateDropdown(); // Refresh dropdown
+//           form.reset(); // Reset the form
+//         } else {
+//           alert("Selected equipment is out of stock.");
+//         }
+//       } else {
+//         alert("Please select an equipment.");
+//       }
+//     });
+
+// togel button
+
+document
+  .getElementById("equipmentStatus")
+  .addEventListener("change", function () {
+    const statusLabel = this.nextElementSibling;
+    if (this.checked) {
+      statusLabel.textContent = "Available";
+    } else {
+      statusLabel.textContent = "Unavailable";
+    }
+  });
