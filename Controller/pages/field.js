@@ -18,7 +18,7 @@ $(document).ready(function () {
           }</option>`
         );
       });
-      window.staffData = staffs;
+      window.staffData = staffs; // Cache staff data globally for use in other parts
     } catch (error) {
       console.error("Error loading staff data:", error);
     }
@@ -41,63 +41,53 @@ $(document).ready(function () {
     const addFieldModal = new bootstrap.Modal($("#addFieldModal")[0]);
     addFieldModal.show();
     $("#addFieldForm")[0].reset();
-    $("#preview1").hide();
-    $("#preview2").hide();
-    editingFieldCode = null;
+    $("#preview1, #preview2").hide();
+    editingFieldCode = null; // Clear editing code for a new field
   });
 
   // Handle image previews
-  $("#image1").change(function (event) {
-    previewImage(event, "preview1");
-  });
-  $("#image2").change(function (event) {
-    previewImage(event, "preview2");
-  });
+  $("#image1").change((event) => previewImage(event, "preview1"));
+  $("#image2").change((event) => previewImage(event, "preview2"));
 
-$("#addFieldForm").submit(async function (event) {
-  event.preventDefault();
+  // Submit Add/Edit Field Form
+  $("#addFieldForm").submit(async function (event) {
+    event.preventDefault();
 
-  const fieldData = {
-    fieldCode: $("#fieldCode").val(),
-    fieldName: $("#fieldName").val(),
-    fieldLocationX: parseFloat($("#fieldLocationX").val()),
-    fieldLocationY: parseFloat($("#fieldLocationY").val()),
-    fieldSize: parseFloat($("#fieldSize").val()),
-    image1: $("#image1")[0].files[0],
-    image2: $("#image2")[0].files[0],
-  };
+    const fieldData = {
+      fieldCode: $("#fieldCode").val(),
+      fieldName: $("#fieldName").val(),
+      fieldLocationX: parseFloat($("#fieldLocationX").val()),
+      fieldLocationY: parseFloat($("#fieldLocationY").val()),
+      fieldSize: parseFloat($("#fieldSize").val()),
+      image1: $("#image1")[0].files[0],
+      image2: $("#image2")[0].files[0],
+    };
 
-  try {
-    if (editingFieldCode) {
-      // Perform Update
-      await update(editingFieldCode, fieldData, $("#staffCode").val());
-      alert("Field updated successfully!");
-    } else {
-      // Perform Add
-      await save(fieldData); // Ensure save() also handles FormData correctly
-      alert("Field added successfully!");
+    try {
+      if (editingFieldCode) {
+        await update(editingFieldCode, fieldData, $("#staffCode").val());
+        alert("Field updated successfully!");
+      } else {
+        await save(fieldData);
+        alert("Field added successfully!");
+      }
+
+      $("#addFieldForm")[0].reset();
+      $("#preview1, #preview2").hide();
+      bootstrap.Modal.getInstance($("#addFieldModal")[0]).hide();
+      reloadTable();
+    } catch (error) {
+      console.error("Error saving or updating field:", error);
+      alert("Failed to save or update field!");
     }
-
-    $("#addFieldForm")[0].reset();
-    $("#preview1").hide();
-    $("#preview2").hide();
-    bootstrap.Modal.getInstance($("#addFieldModal")[0]).hide();
-    reloadTable();
-  } catch (error) {
-    console.error("Error saving or updating field:", error);
-    alert("Failed to save or update field!");
-  }
-});
-
+  });
 
   // Reload the table with field data
   async function reloadTable() {
     try {
       const fields = await getAll();
       $("tbody.tableRow").empty();
-      fields.forEach((field) => {
-        loadTable(field);
-      });
+      fields.forEach((field) => loadTable(field));
     } catch (error) {
       console.error("Error loading fields:", error);
     }
@@ -105,9 +95,12 @@ $("#addFieldForm").submit(async function (event) {
 
   // Load field data into the table
   function loadTable(fieldData) {
-    const fieldLocation = `${fieldData.fieldLocation.x}, ${fieldData.fieldLocation.y}`;
+    const fieldLocation =
+      fieldData.fieldLocation?.x && fieldData.fieldLocation?.y
+        ? `${fieldData.fieldLocation.x}, ${fieldData.fieldLocation.y}`
+        : "N/A";
     const staffNames =
-      fieldData.staff.map((staff) => staff.firstName).join(", ") ||
+      fieldData.staff?.map((staff) => staff.firstName).join(", ") ||
       "Unassigned";
 
     const rowHtml = `
@@ -116,7 +109,7 @@ $("#addFieldForm").submit(async function (event) {
         <td>${fieldData.code}</td>
         <td>${fieldData.fieldName}</td>
         <td>${fieldLocation}</td>
-        <td>${fieldData.fieldSize}</td>
+        <td>${fieldData.fieldSize || "N/A"}</td>
         <td>${staffNames}</td>
         <td><img src="${base64ToImageURL(
           fieldData.image1
@@ -165,22 +158,48 @@ $("#addFieldForm").submit(async function (event) {
       if (field) {
         $("#fieldCode").val(field.code);
         $("#fieldName").val(field.fieldName);
-        $("#fieldLocationX").val(field.fieldLocation.x);
-        $("#fieldLocationY").val(field.fieldLocation.y);
-        $("#fieldSize").val(field.fieldSize);
-        $("#staffCode").val(field.staff.map((s) => s.id)); // Multiple staff IDs can be selected
+        $("#fieldLocationX").val(field.fieldLocation?.x || "");
+        $("#fieldLocationY").val(field.fieldLocation?.y || "");
+        $("#fieldSize").val(field.fieldSize || "");
+        $("#staffCode").val(field.staff?.map((s) => s.id) || ""); // Handle unassigned staff
         $("#preview1").attr("src", base64ToImageURL(field.image1)).show();
         $("#preview2").attr("src", base64ToImageURL(field.image2)).show();
         const addFieldModal = new bootstrap.Modal($("#addFieldModal")[0]);
         addFieldModal.show();
-        editingFieldCode = code; // Set the code for updating
+        editingFieldCode = code;
       }
     } catch (error) {
       console.error("Error fetching field data:", error);
     }
   });
 
-  // Initial load of staff data and fields
+  // Search fields
+  async function searchFields(query) {
+    try {
+      const fields = await getAll();
+      const filteredFields = fields.filter(
+        (field) =>
+          field.code.toLowerCase().includes(query.toLowerCase()) ||
+          field.fieldName.toLowerCase().includes(query.toLowerCase())
+      );
+      $("tbody.tableRow").empty();
+      if (filteredFields.length > 0) {
+        filteredFields.forEach((field) => loadTable(field));
+      } else {
+        alert("No fields match your search criteria!");
+      }
+    } catch (error) {
+      console.error("Error searching fields:", error);
+      alert("Failed to search fields!");
+    }
+  }
+
+  $("#searchInput").on("input", function () {
+    const query = $(this).val().trim();
+    query ? searchFields(query) : reloadTable();
+  });
+
+  // Initial load
   loadStaffData();
   reloadTable();
 });

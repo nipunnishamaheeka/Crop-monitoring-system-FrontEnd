@@ -90,9 +90,17 @@ export const update = (code, updatedData, staffIds) => {
     success: function (response) {
       console.log("Updated successfully:", response);
       alert("Field updated successfully!");
-      $("#updateFieldForm")[0].reset();
+
+      // Check if the form exists before resetting it
+      const updateFieldForm = $("#updateFieldForm")[0];
+      if (updateFieldForm) {
+        updateFieldForm.reset();
+      } else {
+        console.warn("Form #updateFieldForm not found!");
+      }
+
       $("#updateFieldModal").modal("hide");
-      reloadTable();
+      // reloadTable();
     },
     error: function (xhr, status, error) {
       console.error("Error updating:", xhr, status, error);
@@ -100,6 +108,7 @@ export const update = (code, updatedData, staffIds) => {
     },
   });
 };
+
 
 export const deleteField = (code) => {
   $.ajax({
