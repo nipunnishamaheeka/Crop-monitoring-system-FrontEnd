@@ -57,3 +57,10 @@ document
     event.preventDefault();
     loadPage("cropsForm");
   });
+
+document
+  .getElementById("logs-btn")
+  .addEventListener("click", function (event) {
+    event.preventDefault();
+    loadPage("cropDetails");
+  });

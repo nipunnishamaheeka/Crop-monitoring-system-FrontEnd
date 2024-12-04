@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Management System</title>
+
+    <link
+      href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+      crossorigin="anonymous"
+    />
+  </head>
+  <body>
+
+       <div class="container">
+      <h2 class="text-center">Monitoring Log Service</h2>
+      <hr />
+      <br />
+      <div class="d-flex justify-content-between align-items-center my-3">
+        <input
+          type="text"
+          id="searchInput"
+          class="form-control w-50"
+          placeholder="Search by Log Code or Common Name"
+          aria-label="Search"
+        />
+
+        <button class="btn btn-primary" id="addLogPopup">Add Logs</button>
+
+        <!-- Add Log Modal -->
+        <div
+          class="modal fade"
+          id="addLogsModal"
+          tabindex="-1"
+          aria-labelledby="addLogsModalLabel"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="addLogsModalLabel">
+                  Add New Log
+                </h5>
+                <button
+                  type="button"
+                  class="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                ></button>
+              </div>
+              <div class="modal-body">
+                <form id="addLogsForm">
+                  <div class="row mb-3">
+                    <div class="col-md-6">
+                      <label for="logCode" class="form-label">Log Code</label>
+                      <input
+                        type="text"
+                        class="form-control logCode"
+                        id="logCode"
+                        required
+                        readonly
+                      />
+                    </div>
+
+                     <div class="col-md-6">
+                      <label for="logDate" class="form-label"
+                        >Log Date</label
+                      >
+                      <input
+                        type="text"
+                        class="form-control logDate"
+                        id="logDate"
+                        required
+                      />
+                    </div>
+
+                    <div class="col-md-6">
+                      <label for="logDetails" class="form-label"
+                        >Log Details</label
+                      >
+                      <input
+                        type="text"
+                        class="form-control logDetails"
+                        id="logDetails"
+                        required
+                      />
+                    </div>
+                  </div>
+                  <div class="row mb-3">
+                          <div class="col-md-6">
+                      <label for="o_image" class="form-label">Observed Image</label>
+                      <input
+                        type="file"
+                        class="form-control"
+                        id="o_image"
+                        accept="image/*"
+                      />
+                      <img
+                        id="preview1"
+                        class="img-thumbnail mt-2"
+                        style="display: none; max-width: 100px"
+                      />
+                    </div>
+                     <div class="col-md-6">
+                    <label for="field" class="form-label">Field</label>
+                    <select
+                      class="form-control"
+                      id="field"
+                      name="field"
+                      required
+                    ></select>
+                  </div>
+              
+                  </div>
+                  <div class="row mb-3">
+               <div class="col-md-6">
+                    <label for="crop" class="form-label">Crop</label>
+                    <select
+                      class="form-control"
+                      id="crop"
+                      name="crop"
+                      required
+                    ></select>
+                  </div>
+               <div class="col-md-6">
+                    <label for="staffCode" class="form-label">Staff</label>
+                    <select
+                      class="form-control"
+                      id="staffCode"
+                      name="staff"
+                      required
+                    ></select>
+                  </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button
+                      type="button"
+                      class="btn btn-secondary"
+                      data-bs-dismiss="modal"
+                    >
+                      Close
+                    </button>
+                    <button
+                      type="submit"
+                      class="btn btn-primary"
+                      id="saveLogsBtn"
+                    >
+                      Save Log
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+<!-- View Log Modal -->
+<div class="modal fade" id="viewLogsModal" tabindex="-1" aria-labelledby="viewLogsModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="viewLogsModalLabel">Log Details</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p><strong>Log Code:</strong> <span id="viewLogCode"></span></p>
+        <p><strong>Log Details:</strong> <span id="viewLogDetails"></span></p>
+        <p><strong>Log Date:</strong> <span id="viewLogDate"></span></p>
+        <p><strong>Field:</strong> <span id="viewField"></span></p>
+        <p><strong>Crop:</strong> <span id="viewCrop"></span></p>
+        <p><strong>Staff:</strong> <span id="viewStaff"></span></p>
+        <p><strong>Observed Image:</strong> <img id="viewObservedImg" class="img-fluid" src="" style="display:none;" /></p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+      <!-- Data Table -->
+      <div class="table-responsive mt-3 overflow-auto">
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th scope="col"><input type="checkbox" /></th>
+              <th scope="col">Log Code</th>
+              <th scope="col">Date</th>
+              <th scope="col">Obsevation</th>
+              <th scope="col">Observed Image</th>
+              <th scope="col">Field</th>
+              <th scope="col">Crop</th>
+              <th scope="col">Staff</th>
+              <th scope="col">Action</th>
+            </tr>
+          </thead>
+          <tbody class="tableRow"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script type="module" src="/Controller/pages/CropDetails.js"></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>
