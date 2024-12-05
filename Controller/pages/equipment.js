@@ -40,6 +40,7 @@ $(document).ready(function () {
         alert("Updated successfully!");
         reloadTable();
       } else {
+        reloadTable();
         await save(equipmentData);
         reloadTable();
         alert("Added successfully!");

@@ -61,32 +61,31 @@ export const update = async (staffId, updatedStaffData) => {
       contentType: "application/json",
       data: JSON.stringify(updatedStaffData),
       headers: {
-        Authorization: "Bearer " + authToken,
+        Authorization: `Bearer ${authToken}`,
       },
     });
 
-    console.log("Updated successfully:", response);
-    alert("Staff updated successfully!");
+    if (response && response.success) {
+      // Assuming the response includes a 'success' field for validation
+      console.log("Staff updated successfully:", response);
+      alert("Staff updated successfully!");
 
-    // Reset the form, hide modal, and refresh the table
-    $("#updateStaffForm")[0].reset();
-    $("#updateStaffModal").modal("hide");
-    reloadTable();
-  } catch (error) {
-    console.error("Error updating staff:", error);
-
-    // Check for specific error responses
-    if (error.status === 401) {
-      alert("Unauthorized. Please log in again.");
-    } else if (error.status === 404) {
-      alert("Staff not found.");
-    } else if (error.responseJSON && error.responseJSON.message) {
-      alert(`Error: ${error.responseJSON.message}`);
+      // Reset the form, hide the modal, and refresh the table
+      $("#updateStaffForm")[0].reset();
+      $("#updateStaffModal").modal("hide");
+      reloadTable();
     } else {
-      alert("Failed to update staff. Please try again.");
+      throw new Error(
+        "Update succeeded but the response format is unexpected."
+      );
     }
   }
+  catch (error) {
+    // console.error("Error updating staff:", error);
+
+  }
 };
+
 
 
 export const deleteStaff = (id) => {

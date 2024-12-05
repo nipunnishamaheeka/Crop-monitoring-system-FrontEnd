@@ -2,9 +2,8 @@ import { deleteField, getAll, save, update } from "../../model/fieldModel.js";
 import { getAllStaff } from "../../model/staffModel.js";
 
 $(document).ready(function () {
-  let editingFieldCode = null; // Variable to track the field being edited
+  let editingFieldCode = null;
 
-  // Load staff data into the dropdown
   async function loadStaffData() {
     try {
       const staffs = await getAllStaff();
@@ -18,7 +17,7 @@ $(document).ready(function () {
           }</option>`
         );
       });
-      window.staffData = staffs; // Cache staff data globally for use in other parts
+      window.staffData = staffs;
     } catch (error) {
       console.error("Error loading staff data:", error);
     }
@@ -36,20 +35,18 @@ $(document).ready(function () {
     }
   }
 
-  // Show the Add Field modal
   $("#addFieldPopup").click(function () {
     const addFieldModal = new bootstrap.Modal($("#addFieldModal")[0]);
     addFieldModal.show();
     $("#addFieldForm")[0].reset();
     $("#preview1, #preview2").hide();
-    editingFieldCode = null; // Clear editing code for a new field
+    editingFieldCode = null; 
   });
 
-  // Handle image previews
+  
   $("#image1").change((event) => previewImage(event, "preview1"));
   $("#image2").change((event) => previewImage(event, "preview2"));
 
-  // Submit Add/Edit Field Form
   $("#addFieldForm").submit(async function (event) {
     event.preventDefault();
 
@@ -69,7 +66,7 @@ $(document).ready(function () {
         alert("Field updated successfully!");
       } else {
         await save(fieldData);
-        alert("Field added successfully!");
+       swal("Confirmation!", "Field Saved Successfully!", "success");
       }
 
       $("#addFieldForm")[0].reset();
@@ -82,7 +79,6 @@ $(document).ready(function () {
     }
   });
 
-  // Reload the table with field data
   async function reloadTable() {
     try {
       const fields = await getAll();
@@ -93,7 +89,6 @@ $(document).ready(function () {
     }
   }
 
-  // Load field data into the table
   function loadTable(fieldData) {
     const fieldLocation =
       fieldData.fieldLocation?.x && fieldData.fieldLocation?.y
@@ -130,12 +125,10 @@ $(document).ready(function () {
     $("tbody.tableRow").append(rowHtml);
   }
 
-  // Convert base64 to image URL
   function base64ToImageURL(base64Data) {
     return `data:image/png;base64,${base64Data}`;
   }
 
-  // Handle delete field action
   $(document).on("click", ".removeBtn", async function () {
     const code = $(this).data("id");
     try {
@@ -148,7 +141,6 @@ $(document).ready(function () {
     }
   });
 
-  // Handle edit field action
   $(document).on("click", ".editBtn", async function () {
     const code = $(this).data("id");
     try {

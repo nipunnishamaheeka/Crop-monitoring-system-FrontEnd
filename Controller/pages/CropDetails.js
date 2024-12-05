@@ -132,7 +132,9 @@ $(document).ready(function () {
         alert("Failed to reload table!");
       });
   }
-
+    // <td>${logData.field ? logData.field.fieldName : "Unassigned"}</td>
+    //     <td>${logData.crop ? logData.crop.cropCommonName : "Unassigned"}</td>
+    //     <td>${logData.staff ? logData.staff.staffId : "Unassigned"}</td>
   function loadTableRow(logData) {
     const rowHtml = `
       <tr>
@@ -143,9 +145,7 @@ $(document).ready(function () {
                 <td><img src="${base64ToImageURL(
                   logData.observedImage
                 )}" class="img-thumbnail" style="max-width: 50px;" /></td>
-        <td>${logData.field ? logData.field.fieldName : "Unassigned"}</td>
-        <td>${logData.crop ? logData.crop.cropCommonName : "Unassigned"}</td>
-        <td>${logData.staff ? logData.staff.staffId : "Unassigned"}</td>
+    
      
 
        

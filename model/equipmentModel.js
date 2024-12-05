@@ -9,7 +9,6 @@ export const save = (equipmentData) => {
       Authorization: "Bearer " + getCookie("authToken"),
     },
     success: function (response) {
-      ReloadTable();
       console.log(" saved successfully:", response);
       alert(" saved successfully!");
       console.log("model ekath awda bn ");
@@ -64,7 +63,6 @@ export const update = (equipmentId, updatedEquipmentData) => {
       Authorization: "Bearer " + getCookie("authToken"),
     },
     success: function (response) {
-      ReloadTable();
       console.log("Updated successfully:", response);
       alert("Updated successfully!");
     },
