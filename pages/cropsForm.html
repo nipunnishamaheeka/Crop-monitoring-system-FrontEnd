@@ -80,12 +80,51 @@
                       <label for="cropsName" class="form-label"
                         >Common Name</label
                       >
-                      <input
-                        type="text"
-                        class="form-control cropsName"
-                        id="cropsName"
-                        required
-                      />
+                      <select class="form-select" id="cropsName" required>
+                        <option value="">Select Common Name</option>
+                        <option
+                          value="Rice"
+                          data-scientific-name="Oryza sativa"
+                        >
+                          Rice
+                        </option>
+                        <option
+                          value="Cowpea"
+                          data-scientific-name="Vigna unguiculata"
+                        >
+                          Cowpea
+                        </option>
+                        <option
+                          value="GreenGram"
+                          data-scientific-name="Vigna radiata"
+                        >
+                          Green Gram
+                        </option>
+                        <option
+                          value="Chickpea"
+                          data-scientific-name="Cicer arietinum"
+                        >
+                          Chickpea
+                        </option>
+                        <option
+                          value="Sweetpotato"
+                          data-scientific-name="Ipomoea batatas"
+                        >
+                          Sweet Potato
+                        </option>
+                        <option
+                          value="Reddish"
+                          data-scientific-name="Raphanus sativus"
+                        >
+                          Reddish
+                        </option>
+                        <option
+                          value="Cassava"
+                          data-scientific-name="Manihot esculenta"
+                        >
+                          Cassava
+                        </option>
+                      </select>
                     </div>
                   </div>
                   <div class="row mb-3">
@@ -123,16 +162,19 @@
                         class="form-control category"
                         id="category"
                         required
+                        readonly
                       />
                     </div>
+
                     <div class="col-md-6">
                       <label for="season" class="form-label">Crop Season</label>
-                      <input
-                        type="text"
-                        class="form-control season"
-                        id="season"
-                        required
-                      />
+                      <select class="form-select" id="season" required>
+                        <option value="">Select Season</option>
+                        <option value="Spring">Spring</option>
+                        <option value="Summer">Summer</option>
+                        <option value="Autumn">Autumn</option>
+                        <option value="Winter">Winter</option>
+                      </select>
                     </div>
                   </div>
                   <div class="modal-footer">
@@ -181,6 +223,7 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script type="module" src="/Controller/pages/crops.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"

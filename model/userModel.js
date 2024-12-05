@@ -18,7 +18,7 @@ export function register(email, password, role) {
     },
     error: function (xhr, status, error) {
       console.error("Error saving :", xhr, status, error);
-      alert("Failed to save !");
+      swal("Error", "Failed to save!", "error");
     },
   });
   // });

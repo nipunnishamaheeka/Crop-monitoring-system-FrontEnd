@@ -2,17 +2,14 @@ import { getCookie } from "../model/TokenModel.js";
 export const save = (fieldData) => {
   console.log("Field data:", fieldData);
 
-  // Create a FormData object
   const formData = new FormData();
 
-  // Append field details to FormData
   formData.append("fieldName", fieldData.fieldName || "");
   formData.append("fieldLocationX", fieldData.fieldLocationX || "");
   formData.append("fieldSize", fieldData.fieldSize || "");
   formData.append("fieldLocationY", fieldData.fieldLocationY || "");
   formData.append("staffId", fieldData.staffId || "");
 
-  // Check for images and append them
   if (fieldData.image1) {
     formData.append("image1", fieldData.image1);
   }
@@ -26,20 +23,20 @@ export const save = (fieldData) => {
     url: "http://localhost:5055/cropcontroller/api/v1/field",
     type: "POST",
     data: formData,
-    processData: false, // Tell jQuery not to process the data
-    contentType: false, // Tell jQuery not to set contentType
+    processData: false,
+    contentType: false,
     headers: {
       Authorization: "Bearer " + getCookie("authToken"),
     },
     success: function (response) {
       console.log("Field saved successfully:", response);
-      alert("Field saved successfully!");
+      // alert("Field saved successfully!");
       $("#addFieldForm")[0].reset();
       $("#addFieldModal").modal("hide");
     },
     error: function (xhr, status, error) {
       console.error("Error saving field:", xhr, status, error);
-      alert("Failed to save field!");
+      // alert("Failed to save field!");
     },
   });
 };
@@ -59,7 +56,11 @@ export const getAll = () => {
       },
       error: function (xhr, status, error) {
         console.error("Error retrieving :", xhr, status, error);
-        alert("Failed to retrieve !");
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: "Failed to retrieve fields. Please try again!",
+        });
         reject([]);
       },
     });
@@ -69,12 +70,11 @@ export const getAll = () => {
 export const update = (code, updatedData, staffIds) => {
   const formData = new FormData();
 
-  // Append each property of updatedData to the FormData object
   for (const key in updatedData) {
     if (updatedData[key] instanceof File) {
-      formData.append(key, updatedData[key]); // Add file fields
+      formData.append(key, updatedData[key]);
     } else {
-      formData.append(key, updatedData[key]); // Add other fields
+      formData.append(key, updatedData[key]);
     }
   }
 
@@ -82,16 +82,15 @@ export const update = (code, updatedData, staffIds) => {
     url: `http://localhost:5055/cropcontroller/api/v1/field/${code}?staffIds=${staffIds}`,
     type: "PUT",
     data: formData,
-    processData: false, // Required for FormData
-    contentType: false, // Required for FormData
+    processData: false,
+    contentType: false,
     headers: {
       Authorization: "Bearer " + getCookie("authToken"),
     },
     success: function (response) {
       console.log("Updated successfully:", response);
-      alert("Field updated successfully!");
+      // alert("Field updated successfully!");
 
-      // Check if the form exists before resetting it
       const updateFieldForm = $("#updateFieldForm")[0];
       if (updateFieldForm) {
         updateFieldForm.reset();
@@ -104,11 +103,10 @@ export const update = (code, updatedData, staffIds) => {
     },
     error: function (xhr, status, error) {
       console.error("Error updating:", xhr, status, error);
-      alert("Failed to update field!");
+      //  alert("Failed to update field!");
     },
   });
 };
-
 
 export const deleteField = (code) => {
   $.ajax({
@@ -120,11 +118,11 @@ export const deleteField = (code) => {
     },
     success: function (response) {
       console.log("deleted successfully:", response);
-      alert("deleted successfully!");
+      // alert("deleted successfully!");
     },
     error: function (xhr, status, error) {
       console.error("Error deleting :", xhr, status, error);
-      alert("Failed to delete !");
+      // alert("Failed to delete !");
     },
   });
 };

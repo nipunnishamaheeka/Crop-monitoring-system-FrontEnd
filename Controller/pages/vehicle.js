@@ -40,17 +40,19 @@ $(document).ready(function () {
     try {
       if (editingVehicleCode) {
         await update(editingVehicleCode, vehicleData);
-        alert("Updated successfully!");
+        reloadTable();
+        swal("Success", "Vehicle updated successfully!", "success");
       } else {
         await save(vehicleData);
-        alert("Added successfully!");
+        reloadTable();
+        swal("Success", "Vehicle added successfully!", "success");
       }
       $("#addVehicleForm")[0].reset();
       bootstrap.Modal.getInstance($("#addVehicleModal")[0]).hide();
       reloadTable();
     } catch (error) {
       console.error("Error saving or updating vehicle:", error);
-      alert("Failed to save or update vehicle!");
+      swal("Error", "Failed to save or update vehicle.", "error");
     }
   });
 
@@ -80,7 +82,7 @@ $(document).ready(function () {
       vehicles.forEach((vehicle) => loadTable(vehicle));
     } catch (error) {
       console.error("Error loading vehicle data:", error);
-      alert("Failed to load vehicle data!");
+      swal("Error", "Failed to load vehicle data!", "error");
     }
   }
 
@@ -116,7 +118,7 @@ $(document).ready(function () {
       vehicles.forEach((vehicle) => loadTable(vehicle));
     } catch (error) {
       console.error("Error loading vehicle data:", error);
-      alert("Failed to load vehicle data!");
+      swal("Error", "Failed to load vehicle data!", "error");
     }
   }
 
@@ -125,11 +127,11 @@ $(document).ready(function () {
     const vehicleCode = $(this).data("id");
     try {
       await deleteVehicle(vehicleCode);
-      alert("Vehicle Deleted");
       reloadTable();
+      swal("Success", "Vehicle deleted successfully!", "success");
     } catch (error) {
       console.error("Error deleting vehicle:", error);
-      alert("Failed to delete vehicle!");
+      swal("Error", "Failed to delete vehicle!", "error");
     }
   });
 
@@ -181,7 +183,7 @@ $(document).ready(function () {
       })
       .catch((error) => {
         console.error("Error searching vehicles:", error);
-        alert("Failed to search vehicles!");
+        swal("Error", "Failed to search vehicles!", "error");
       });
   }
 

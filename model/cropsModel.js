@@ -1,8 +1,8 @@
 import { getCookie } from "../model/TokenModel.js";
+
 export const saveCrops = (cropsData) => {
   console.log("Crops data:", cropsData);
   const formData = new FormData();
-  // formData.append("crop_code", cropsData.crop_code);
   formData.append("cropName", cropsData.cropCommonName);
   formData.append("cropType", cropsData.cropType);
   formData.append("cropSeason", cropsData.cropSeason);
@@ -24,18 +24,52 @@ export const saveCrops = (cropsData) => {
     },
     success: function (response) {
       console.log("Crops saved successfully:", response);
-      alert("Crops saved successfully!");
+      swal("Success", "Crop Added successfully!", "success");
       $("#addCropsForm")[0].reset();
       $("#addCropsModal").modal("hide");
     },
     error: function (xhr, status, error) {
       console.error("Error saving crops:", xhr, status, error);
-      alert("Failed to save crops!");
+      swal("Error", "Failed to save crops!", "error");
     },
   });
 };
 
-
+// export const getAllCrops = () => {
+//   return new Promise((resolve, reject) => {
+//     $.ajax({
+//       url: "http://localhost:5055/cropcontroller/api/v1/crops/allCrops",
+//       type: "GET",
+//       contentType: "application/json",
+//       headers: {
+//         Authorization: "Bearer " + getCookie("authToken"),
+//       },
+//       success: function (cropsList, textStatus, xhr) {
+//         if (xhr.status === 200) {
+//           console.log("Crops retrieved successfully:", cropsList);
+//           resolve(cropsList);
+//         } else {
+//           console.warn(`Unexpected status code: ${xhr.status}`);
+//           swal("Warning", "Unexpected response from server.", "warning");
+//           reject([]);
+//         }
+//       },
+//       error: function (xhr, status, error) {
+//         console.error("Error retrieving crops:", { xhr, status, error });
+//         if (xhr.readyState === 4) {
+//           swal(
+//             "Error",
+//             "Failed to retrieve crops! Server returned an error.",
+//             "error"
+//           );
+//         } else if (xhr.readyState === 0) {
+//           swal("Error", "Failed to retrieve crops! Network error.", "error");
+//         }
+//         reject([]);
+//       },
+//     });
+//   });
+// };
 
 export const getAllCrops = () => {
   return new Promise((resolve, reject) => {
@@ -44,7 +78,7 @@ export const getAllCrops = () => {
       type: "GET",
       contentType: "application/json",
       headers: {
-        Authorization: "Bearer " + getCookie("authToken"),
+        Authorization: `Bearer ${getCookie("authToken")}`,
       },
       success: function (cropsList, textStatus, xhr) {
         if (xhr.status === 200) {
@@ -52,22 +86,31 @@ export const getAllCrops = () => {
           resolve(cropsList);
         } else {
           console.warn(`Unexpected status code: ${xhr.status}`);
-          alert("Unexpected response from server.");
-          reject([]);
+          Swal.fire(
+            "Warning",
+            "Unexpected response from the server.",
+            "warning"
+          );
+          reject(new Error(`Unexpected status code: ${xhr.status}`));
         }
       },
       error: function (xhr, status, error) {
         console.error("Error retrieving crops:", { xhr, status, error });
+
+        let errorMessage = "An error occurred while retrieving crops.";
         if (xhr.readyState === 4) {
-          alert("Failed to retrieve crops! Server returned an error.");
+          errorMessage = "Failed to retrieve crops! Server returned an error.";
         } else if (xhr.readyState === 0) {
-          alert("Failed to retrieve crops! Network error.");
+          errorMessage = "Failed to retrieve crops! Network error.";
         }
-        reject([]);
+
+        Swal.fire("Error", errorMessage, "error");
+        reject(new Error(errorMessage));
       },
     });
   });
 };
+
 
 export const updateCrops = (cropCode, updatedCropData) => {
   $.ajax({
@@ -78,17 +121,16 @@ export const updateCrops = (cropCode, updatedCropData) => {
     headers: {
       Authorization: "Bearer " + getCookie("authToken"),
     },
-    // xhrFields: { withCredentials: true }, // Include cookies
     success: function (response) {
       console.log("Crops updated successfully:", response);
-      alert("Crops updated successfully!");
+      swal("Success", "Crops updated successfully!", "success");
       $("#updateCropsForm")[0].reset();
       $("#updateCropsModal").modal("hide");
       reloadTable();
     },
     error: function (xhr, status, error) {
       console.error("Error updating crops:", xhr, status, error);
-      alert("Failed to update crops!");
+      swal("Error", "Failed to update crops!", "error");
     },
   });
 };
@@ -101,14 +143,13 @@ export const deleteCrops = (cropCode) => {
     headers: {
       Authorization: "Bearer " + getCookie("authToken"),
     },
-    // xhrFields: { withCredentials: true }, // Include cookies
     success: function (response) {
       console.log("Crops deleted successfully:", response);
-      alert("Crops deleted successfully!");
+      swal("Success", "Crops deleted successfully!", "success");
     },
     error: function (xhr, status, error) {
       console.error("Error deleting crops:", xhr, status, error);
-      alert("Failed to delete crops!");
+      swal("Error", "Failed to delete crops!", "error");
     },
   });
 };

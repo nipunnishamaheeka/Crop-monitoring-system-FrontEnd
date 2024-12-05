@@ -20,10 +20,10 @@ $(document).ready(function () {
       window.staffData = staffs;
     } catch (error) {
       console.error("Error loading staff data:", error);
+      swal("Error", "Failed to load staff data. Please try again.", "error");
     }
   }
 
-  // Preview uploaded image
   function previewImage(event, previewId) {
     const reader = new FileReader();
     reader.onload = function () {
@@ -40,10 +40,9 @@ $(document).ready(function () {
     addFieldModal.show();
     $("#addFieldForm")[0].reset();
     $("#preview1, #preview2").hide();
-    editingFieldCode = null; 
+    editingFieldCode = null;
   });
 
-  
   $("#image1").change((event) => previewImage(event, "preview1"));
   $("#image2").change((event) => previewImage(event, "preview2"));
 
@@ -62,11 +61,13 @@ $(document).ready(function () {
 
     try {
       if (editingFieldCode) {
+        reloadTable();
         await update(editingFieldCode, fieldData, $("#staffCode").val());
-        alert("Field updated successfully!");
+        swal("Success", "Field updated successfully!", "success");
       } else {
+        reloadTable();
         await save(fieldData);
-       swal("Confirmation!", "Field Saved Successfully!", "success");
+        swal("Success", "Field saved successfully!", "success");
       }
 
       $("#addFieldForm")[0].reset();
@@ -75,7 +76,11 @@ $(document).ready(function () {
       reloadTable();
     } catch (error) {
       console.error("Error saving or updating field:", error);
-      alert("Failed to save or update field!");
+      swal(
+        "Error",
+        "Failed to save or update field. Please try again.",
+        "error"
+      );
     }
   });
 
@@ -86,6 +91,7 @@ $(document).ready(function () {
       fields.forEach((field) => loadTable(field));
     } catch (error) {
       console.error("Error loading fields:", error);
+      swal("Error", "Failed to load fields. Please try again.", "error");
     }
   }
 
@@ -132,12 +138,22 @@ $(document).ready(function () {
   $(document).on("click", ".removeBtn", async function () {
     const code = $(this).data("id");
     try {
-      await deleteField(code);
-      alert("Field deleted successfully!");
-      reloadTable();
+      const confirmResult = await swal({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+      });
+      if (confirmResult) {
+         reloadTable();
+        await deleteField(code);
+        swal("Deleted", "Field deleted successfully!", "success");
+       
+      }
     } catch (error) {
       console.error("Error deleting field:", error);
-      alert("Failed to delete field!");
+      swal("Error", "Failed to delete field. Please try again.", "error");
     }
   });
 
@@ -147,13 +163,14 @@ $(document).ready(function () {
       const field = await getAll().then((fields) =>
         fields.find((field) => field.code === code)
       );
+   
       if (field) {
         $("#fieldCode").val(field.code);
         $("#fieldName").val(field.fieldName);
         $("#fieldLocationX").val(field.fieldLocation?.x || "");
         $("#fieldLocationY").val(field.fieldLocation?.y || "");
         $("#fieldSize").val(field.fieldSize || "");
-        $("#staffCode").val(field.staff?.map((s) => s.id) || ""); // Handle unassigned staff
+        $("#staffCode").val(field.staff?.map((s) => s.id) || "");
         $("#preview1").attr("src", base64ToImageURL(field.image1)).show();
         $("#preview2").attr("src", base64ToImageURL(field.image2)).show();
         const addFieldModal = new bootstrap.Modal($("#addFieldModal")[0]);
@@ -162,10 +179,10 @@ $(document).ready(function () {
       }
     } catch (error) {
       console.error("Error fetching field data:", error);
+      swal("Error", "Failed to load field data. Please try again.", "error");
     }
   });
 
-  // Search fields
   async function searchFields(query) {
     try {
       const fields = await getAll();
@@ -178,11 +195,11 @@ $(document).ready(function () {
       if (filteredFields.length > 0) {
         filteredFields.forEach((field) => loadTable(field));
       } else {
-        alert("No fields match your search criteria!");
+        swal("No Results", "No fields match your search criteria!", "info");
       }
     } catch (error) {
       console.error("Error searching fields:", error);
-      alert("Failed to search fields!");
+      swal("Error", "Failed to search fields. Please try again.", "error");
     }
   }
 
@@ -191,7 +208,6 @@ $(document).ready(function () {
     query ? searchFields(query) : reloadTable();
   });
 
-  // Initial load
   loadStaffData();
   reloadTable();
 });

@@ -11,13 +11,13 @@ export const save = (vehicleData) => {
     success: function (response) {
       console.log(" saved successfully:", response);
       console.log(vehicleData);
-      alert(" saved successfully!");
+      swal("Success", "Crop Added successfully!", "success");
       $("#addVehicleForm")[0].reset();
       $("#addVehicleModal").modal("hide");
     },
     error: function (xhr, status, error) {
       console.error("Error saving :", xhr, status, error);
-      alert("Failed to save !");
+      swal("Error", "Failed to save!", "error");
     },
   });
 };
@@ -37,7 +37,7 @@ export const getAll = () => {
       },
       error: function (xhr, status, error) {
         console.error("Error retrieving :", xhr, status, error);
-        alert("Failed to retrieve !");
+        swal("Error", "Failed to retrieve!", "error");
         reject([]);
       },
     });
@@ -58,14 +58,14 @@ export const update = (vehicleCode, updatedVehicleData) => {
     },
     success: function (response) {
       console.log("Updated successfully:", response);
-      alert("Updated successfully!");
+      swal("Success", "Vehicle updated successfully!", "success");
       // $("#updateVehicleForm")[0].reset();
       $("#updateVehicleModal").modal("hide");
       // reloadTable();
     },
     error: function (xhr, status, error) {
       console.error("Error updating:", xhr, status, error);
-      alert("Failed to update!");
+      swal("Error", "Failed to update!", "error");
     },
   });
 };
@@ -80,11 +80,11 @@ export const deleteVehicle = (vehicleCode) => {
     },
     success: function (response) {
       console.log("deleted successfully:", response);
-      alert("deleted successfully!");
+      swal("Success", "Vehicle deleted successfully!", "success");
     },
     error: function (xhr, status, error) {
       console.error("Error deleting :", xhr, status, error);
-      alert("Failed to delete !");
+      swal("Error", "Failed to delete!", "error");
     },
   });
 };

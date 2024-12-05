@@ -13,11 +13,11 @@ export const saveLogs = async (formData, reloadTable) => {
       },
     });
     console.log("Log saved successfully:", response);
-    alert("Log saved successfully!");
-    reloadTable(); // Call reloadTable after saving
+    swal("Success", "Crop Added successfully!", "success");
+    reloadTable();
   } catch (xhr) {
     console.error("Error saving log:", xhr);
-    alert("Failed to save log!");
+   swal("Error", "Failed to save!", "error");
   }
 };
 
@@ -36,16 +36,16 @@ export const getAllLogs = () => {
           resolve(logsList);
         } else {
           console.warn(`Unexpected status code: ${xhr.status}`);
-          alert("Unexpected response from server.");
+         swal("Warning", "Unexpected response from server.", "warning");
           reject([]);
         }
       },
       error: function (xhr, status, error) {
         console.error("Error retrieving logs:", { xhr, status, error });
         if (xhr.readyState === 4) {
-          alert("Failed to retrieve logs! Server returned an error.");
+         swal("Error", "Failed to retrieve logs! Server returned an error.", "error");
         } else if (xhr.readyState === 0) {
-          alert("Failed to retrieve logs! Network error.");
+        swal("Error", "Failed to retrieve logs! Network error.", "error");
         }
         reject([]);
       },
@@ -69,16 +69,15 @@ export const getOneLog = (logCode) => {
       error: function (xhr, status, error) {
         console.error("Error retrieving log:", { xhr, status, error });
         if (xhr.readyState === 4) {
-          alert("Failed to retrieve log! Server returned an error.");
+         swal("Failed to retrieve log! Server returned an error.");
         } else if (xhr.readyState === 0) {
-          alert("Failed to retrieve log! Network error.");
+        swal("Failed to retrieve log! Network error.");
         }
         reject(error); // Reject with the error
       },
     });
   });
 };
-
 
 export const updateLogs = async (logCode, formData, reloadTable) => {
   try {
@@ -93,11 +92,11 @@ export const updateLogs = async (logCode, formData, reloadTable) => {
       },
     });
     console.log("Log updated successfully:", response);
-    alert("Log updated successfully!");
+   swal("Success", "Log updated successfully!", "success");
     reloadTable(); // Call reloadTable after updating
   } catch (error) {
     console.error("Error updating log:", error);
-    alert("Failed to update log!");
+  swal("Error", "Failed to update log!", "error");
   }
 };
 
@@ -112,10 +111,10 @@ export const deleteLog = async (logCode, reloadTable) => {
       },
     });
     console.log("Log deleted successfully!");
-    alert("Log deleted successfully!");
+   swal("Success", "Log deleted successfully!", "success");
     reloadTable(); // Call reloadTable after deleting
   } catch (xhr) {
     console.error("Error deleting log:", xhr);
-    alert("Failed to delete log!");
+   swal("Error", "Failed to delete log!", "error");
   }
 };

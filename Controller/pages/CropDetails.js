@@ -1,4 +1,10 @@
-import { deleteLog, getAllLogs, getOneLog, saveLogs, updateLogs } from "../../model/cropDetailsModel.js";
+import {
+  deleteLog,
+  getAllLogs,
+  getOneLog,
+  saveLogs,
+  updateLogs,
+} from "../../model/cropDetailsModel.js";
 import { getAllCrops } from "../../model/cropsModel.js";
 import { getAll } from "../../model/fieldModel.js";
 import { getAllStaff } from "../../model/staffModel.js";
@@ -51,16 +57,18 @@ $(document).ready(function () {
     try {
       if (editingLogCode) {
         await updateLogs(editingLogCode, formData);
-        alert("Log updated successfully!");
+        reloadTable();
+        swal("Success", "Log updated successfully!", "success");
       } else {
         await saveLogs(formData);
-        alert("Log added successfully!");
+        reloadTable();
+        swal("Success", "Log added successfully!", "success");
       }
       resetForm();
       reloadTable();
     } catch (error) {
       console.error("Error saving or updating log:", error);
-      alert("Failed to save or update log!");
+      swal("Error", "Failed to save or update log!", "error");
     }
   });
 
@@ -129,12 +137,12 @@ $(document).ready(function () {
       })
       .catch((error) => {
         console.error("Error reloading table:", error);
-        alert("Failed to reload table!");
+        swal("Error", "Failed to reload table!", "error");
       });
   }
-    // <td>${logData.field ? logData.field.fieldName : "Unassigned"}</td>
-    //     <td>${logData.crop ? logData.crop.cropCommonName : "Unassigned"}</td>
-    //     <td>${logData.staff ? logData.staff.staffId : "Unassigned"}</td>
+  // <td>${logData.field ? logData.field.fieldName : "Unassigned"}</td>
+  //     <td>${logData.crop ? logData.crop.cropCommonName : "Unassigned"}</td>
+  //     <td>${logData.staff ? logData.staff.staffId : "Unassigned"}</td>
   function loadTableRow(logData) {
     const rowHtml = `
       <tr>
@@ -144,11 +152,7 @@ $(document).ready(function () {
         <td>${logData.logDetails}</td>
                 <td><img src="${base64ToImageURL(
                   logData.observedImage
-                )}" class="img-thumbnail" style="max-width: 50px;" /></td>
-    
-     
-
-       
+                )}" class="img-thumbnail" style="max-width: 50px;" /></td>       
         <td>
           <button class="btn btn-outline-primary btn-sm editBtn" data-id="${
             logData.logCode
@@ -173,11 +177,12 @@ $(document).ready(function () {
     const logCode = $(this).data("id");
     try {
       await deleteLog(logCode);
-      alert(" deleted successfully!");
+      reloadTable();
+      swal("Success", "Log deleted successfully!", "success");
       reloadTable();
     } catch (error) {
       console.error("Error deleting log:", error);
-      alert("Failed to delete log!");
+      swal("Error", "Failed to delete log!", "error");
     }
   });
 
@@ -207,9 +212,30 @@ $(document).ready(function () {
       addLogsModal.show();
     } catch (error) {
       console.error("Error fetching log data:", error);
-      alert("Failed to retrieve log!");
+      swal("Error", "Failed to fetch log data!", "error");
     }
   });
+
+    // $(document).on("click", ".editBtn", async function () {
+    //  const logCode = $(this).data("id");
+    //   try {
+    //     const log = await getAllLogs().then((logs) =>
+    //       logs.find((log) => log.logCode === logCode)
+    //     );
+    //     if (log) {
+    //       $("#logCode").val(log.logCode);
+    //       $("#logDetails").val(log.logDetails || "");
+    //        $("#logDate").val(log.logDate || "");
+    //       $("#preview1").attr("src", base64ToImageURL(log.observedImg)).show();
+    //       const addFieldModal = new bootstrap.Modal($("#addFieldModal")[0]);
+    //       addFieldModal.show();
+    //       editingFieldCode = code;
+    //     }
+    //   } catch (error) {
+    //     console.error("Error fetching field data:", error);
+    //     swal("Error", "Failed to load field data. Please try again.", "error");
+    //   }
+    // });
   // In the document ready function, added click event for the 'View' button
   $(document).on("click", ".viewBtn", async function () {
     const logCode = $(this).data("id");
@@ -220,24 +246,24 @@ $(document).ready(function () {
       viewLogsModal.show(); // Show the modal
     } catch (error) {
       console.error("Error fetching log data:", error);
-      alert("Failed to retrieve log details!");
+      swal("Error", "Failed to fetch log data!", "error");
     }
   });
 
-  // function populateFormWithLogData(log) {
-  //   $("#logCode").val(log.logCode);
-  //   $("#logDetails").val(log.logDetails || "");
-  //   $("#logDate").val(log.logDate || "");
-  //   $("#field").val(log.field?.code || "");
-  //   $("#crop").val(log.crop?.cropCode || "");
-  //   $("#staffCode").val(log.staff?.staffId || "");
-
-  //   if (log.observedImg) {
-  //     $("#o_image_preview").attr("src", log.observedImg).show(); // Assuming there's an image preview element
-  //   } else {
-  //     $("#o_image_preview").hide();
-  //   }
-  // }
+  function populateFormWithLogData(log) {
+    $("#logCode").val(log.logCode);
+    $("#logDetails").val(log.logDetails || "");
+    $("#logDate").val(log.logDate || "");
+    $("#field").val(log.field?.code || "");
+    $("#crop").val(log.crop?.cropCode || "");
+    $("#staffCode").val(log.staff?.staffId || "");
+ $("#image1").attr("src", base64ToImageURL(log.observedImg)).show();
+    // if (log.observedImg) {
+    //   $("#image1").attr("src", log.observedImg).show(); // Assuming there's an image preview element
+    // } else {
+    //   $("#image1").hide();
+    // }
+  }
   // Function to populate the "View Log" modal with log data
   function populateViewModalWithLogData(log) {
     $("#viewLogCode").text(log.logCode);
@@ -275,7 +301,7 @@ $(document).ready(function () {
       })
       .catch((error) => {
         console.error("Error searching logs:", error);
-        alert("Failed to search logs!");
+        swal("Error", "Failed to search logs!", "error");
       });
   }
 

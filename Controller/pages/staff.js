@@ -21,42 +21,72 @@ $(document).ready(function () {
   $("#addStaffForm").submit(async function (event) {
     event.preventDefault();
 
-    const staffData = {
-      id: "S00",
-      firstName: $("#fristName").val(),
-      lastName: $("#lastName").val(),
-      designation: $("#designation").val(),
-      gender: $("#gender").val(),
-      joinedDate: $("#joinedDate").val(),
-      DOB: $("#dob").val(),
-      addressLine1: $("#line01").val(),
-      addressLine2: $("#line02").val(),
-      addressLine3: $("#line03").val(),
-      addressLine4: $("#line04").val(),
-      addressLine5: $("#line05").val(),
-      contactNo: $("#contactNo").val(),
-      email: $("#email").val(),
-      role: $("#role").val(),
-      // field: $("#fieldCode").val(),
-      // vehicles: $("#vehicle").val(),
-    };
+    // const staffData = {
+    //   id: "S00",
+    //   firstName: $("#fristName").val(),
+    //   lastName: $("#lastName").val(),
+    //   designation: $("#designation").val(),
+    //   gender: $("#gender").val(),
+    //   joinedDate: $("#joinedDate").val(),
+    //   DOB: $("#dob").val(),
+    //   addressLine1: $("#line01").val(),
+    //   addressLine2: $("#line02").val(),
+    //   addressLine3: $("#line03").val(),
+    //   addressLine4: $("#line04").val(),
+    //   addressLine5: $("#line05").val(),
+    //   contactNo: $("#contactNo").val(),
+    //   email: $("#email").val(),
+    //   role: $("#role").val(),
+    //   // field: $("#fieldCode").val(),
+    //   // vehicles: $("#vehicle").val(),
+    // };
+const staffData = {
+  id: editingStaffCode ? editingStaffCode : "S00",
+  firstName: $("#fristName").val(),
+  lastName: $("#lastName").val(),
+  designation: $("#designation").val(),
+  gender: $("#gender").val(),
+  joinedDate: editingStaffCode ? $("#joinedDate").val() : new Date().toISOString(), // Set current date only for new entries
+  DOB: $("#dob").val(),
+  addressLine1: $("#line01").val(),
+  addressLine2: $("#line02").val(),
+  addressLine3: $("#line03").val(),
+  addressLine4: $("#line04").val(),
+  addressLine5: $("#line05").val(),
+  contactNo: $("#contactNo").val(),
+  email: $("#email").val(),
+  role: $("#role").val(),
+};
 
     try {
       if (editingStaffCode) {
+        reloadTable();
         await update(editingStaffCode, staffData);
-        alert("updated successfully!");
+        swal({
+          icon: "success",
+          title: "Success",
+          text: "Staff updated successfully!",
+        });
       } else {
+        reloadTable();
         console.log(staffData);
         await save(staffData);
-
-        alert("added successfully!");
+        swal({
+          icon: "success",
+          title: "Success",
+          text: "Staff added successfully!",
+        });
       }
       $("#addStaffForm")[0].reset();
       bootstrap.Modal.getInstance($("#addStaffModal")[0]).hide();
       reloadTable();
     } catch (error) {
       console.error("Error saving or updating :", error);
-      alert("Failed to save or update !");
+      swal({
+        icon: "error",
+        title: "Error",
+        text: "Failed to save or update staff!",
+      });
     }
   });
   async function reloadTable() {
@@ -68,6 +98,11 @@ $(document).ready(function () {
       });
     } catch (error) {
       console.error("Error loading :", error);
+      swal({
+        icon: "error",
+        title: "Error",
+        text: "Failed to load staff data!",
+      });
     }
   }
   function loadTable(staffData) {
@@ -101,11 +136,19 @@ $(document).ready(function () {
     const id = $(this).data("id");
     try {
       await deleteStaff(id);
-      alert("Staff Deleted");
       reloadTable();
+      swal({
+        icon: "success",
+        title: "Success",
+        text: "Staff deleted successfully!",
+      });
     } catch (error) {
       console.error("Error deleting :", error);
-      alert("Failed to delete !");
+      swal({
+        icon: "error",
+        title: "Error",
+        text: "Failed to delete staff!",
+      });
     }
   });
 
@@ -139,6 +182,11 @@ $(document).ready(function () {
       }
     } catch (error) {
       console.error("Error fetching data:", error);
+      swal({
+        icon: "error",
+        title: "Error",
+        text: "Error fetching data!",
+      });
     }
   });
 
@@ -166,7 +214,11 @@ $(document).ready(function () {
       })
       .catch((error) => {
         console.error("Error searching:", error);
-        alert("Failed to search!");
+        swal({
+          icon: "error",
+          title: "Error",
+          text: "Failed to search staff!",
+        });
       });
   }
 

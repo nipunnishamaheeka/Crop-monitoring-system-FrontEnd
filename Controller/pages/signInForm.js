@@ -25,7 +25,7 @@ $(document).ready(function () {
     const termsChecked = $("#termsCheck").prop("checked");
 
     if (!termsChecked) {
-      alert("Please accept the terms and conditions.");
+      swal("Error", "Please accept the terms and conditions.", "error");
       return;
     }
 
@@ -39,7 +39,7 @@ $(document).ready(function () {
       })
       .catch((error) => {
         console.error("Login failed:", error);
-        alert("Invalid email or password.");
+        swal("Error", "Invalid email or password.", "error");
       });
   }); 
 });

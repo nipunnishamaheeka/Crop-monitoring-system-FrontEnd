@@ -18,6 +18,29 @@ $(document).ready(function () {
     editingCropCode = null;
   });
 
+ const cropDetails = {
+   Rice: { scientificName: "Oryza sativa", category: "Cereal" },
+   Cowpea: { scientificName: "Vigna unguiculata", category: "Legume" },
+   GreenGram: { scientificName: "Vigna radiata", category: "Legume" },
+   Chickpea: { scientificName: "Cicer arietinum", category: "Legume" },
+   Sweetpotato: { scientificName: "Ipomoea batatas", category: "Vegetable" },
+   Reddish: { scientificName: "Raphanus sativus", category: "Vegetable" },
+   Cassava: { scientificName: "Manihot esculenta", category: "Vegetable" },
+ };
+
+ // Handle change event for Common Name dropdown
+ $("#cropsName").change(function () {
+   const selectedCommonName = $(this).val();
+   if (selectedCommonName && cropDetails[selectedCommonName]) {
+     const { scientificName, category } = cropDetails[selectedCommonName];
+     $("#scientificName").val(scientificName);
+     $("#category").val(category);
+   } else {
+     $("#scientificName").val("");
+     $("#category").val("");
+   }
+ });
+
   function previewImage(event, previewId) {
     const file = event.target.files[0];
     if (file) {
@@ -49,16 +72,16 @@ $(document).ready(function () {
     try {
       if (editingCropCode) {
         await updateCrops(editingCropCode, cropData);
-        alert("Crop updated successfully!");
+        swal("Success", "Crop updated successfully!", "success");
       } else {
         await saveCrops(cropData);
-        alert("Crop added successfully!");
+        swal("Success", "Crop added successfully!", "success");
       }
       resetForm();
       reloadTable();
     } catch (error) {
       console.error("Error saving or updating crop:", error);
-      alert("Failed to save or update crop!");
+      swal("Error", "Failed to save or update crop!", "error");
     }
   });
 
@@ -93,31 +116,32 @@ $(document).ready(function () {
     }
   }
 
-  function loadTableRow(cropData) {
-    const rowHtml = `
-      <tr>
-        <td><input type="checkbox" /></td>
-        <td>${cropData.cropCode}</td>
-        <td>${cropData.field ? cropData.field.fieldName : "Unassigned"}</td>
-        <td>${cropData.cropCommonName}</td>
-        <td>${cropData.cropScientificName}</td>
-        <td><img src="${base64ToImageURL(
-          cropData.cropImage
-        )}" class="img-thumbnail" style="max-width: 50px;" /></td>
-        <td>${cropData.category}</td>
-        <td>${cropData.cropSeason}</td>
-        <td>
-          <button class="btn btn-outline-primary btn-sm editBtn" data-id="${
-            cropData.cropCode
-          }">Edit</button>
-          <button class="btn btn-outline-danger btn-sm removeBtn" data-id="${
-            cropData.cropCode
-          }">Delete</button>
-        </td>
-      </tr>
-    `;
-    $("tbody.tableRow").append(rowHtml);
-  }
+ function loadTableRow(cropData) {
+   const rowHtml = `
+    <tr>
+      <td><input type="checkbox" /></td>
+      <td>${cropData.cropCode}</td>
+      <td>${cropData.field ? cropData.field.fieldName : "Unassigned"}</td>
+      <td>${cropData.cropCommonName}</td>
+      <td>${cropData.cropScientificName}</td>
+      <td><img src="${base64ToImageURL(
+        cropData.cropImage
+      )}" class="img-thumbnail" style="max-width: 50px;" /></td>
+      <td>${cropData.category}</td>
+      <td>${cropData.cropSeason}</td> <!-- Display season -->
+      <td>
+        <button class="btn btn-outline-primary btn-sm editBtn" data-id="${
+          cropData.cropCode
+        }">Edit</button>
+        <button class="btn btn-outline-danger btn-sm removeBtn" data-id="${
+          cropData.cropCode
+        }">Delete</button>
+      </td>
+    </tr>
+  `;
+   $("tbody.tableRow").append(rowHtml);
+ }
+
 
   function base64ToImageURL(base64Data) {
     return `data:image/png;base64,${base64Data}`;
@@ -127,11 +151,11 @@ $(document).ready(function () {
     const cropCode = $(this).data("id");
     try {
       await deleteCrops(cropCode);
-      alert("Crop deleted successfully!");
+      swal("Success", "Crop deleted successfully!", "success");
       reloadTable();
     } catch (error) {
       console.error("Error deleting crop:", error);
-      alert("Failed to delete crop!");
+      swal("Error", "Failed to delete crop!", "error");
     }
   });
 
@@ -152,15 +176,17 @@ $(document).ready(function () {
     }
   });
 
-  function populateFormWithCropData(crop) {
-    $("#cropCode").val(crop.cropCode);
-    $("#fieldCode").val(crop.field ? crop.field.code : "");
-    $("#category").val(crop.category);
-    $("#cropsName").val(crop.cropCommonName);
-    $("#scientificName").val(crop.cropScientificName);
-    $("#season").val(crop.cropSeason);
-    $("#preview1").attr("src", crop.cropImage).show();
-  }
+function populateFormWithCropData(crop) {
+  $("#cropCode").val(crop.cropCode);
+  $("#fieldCode").val(crop.field ? crop.field.code : "");
+  $("#category").val(crop.category);
+  $("#cropsName").val(crop.cropCommonName);
+  $("#scientificName").val(crop.cropScientificName);
+  $("#season").val(crop.cropSeason); // Set the season dropdown value
+  $("#preview1").attr("src", crop.cropImage).show();
+}
+
+
   function searchCrops(query) {
     getAllCrops()
       .then((crops) => {
@@ -174,9 +200,10 @@ $(document).ready(function () {
       })
       .catch((error) => {
         console.error("Error searching crops:", error);
-        alert("Failed to search crops!");
+        swal("Error", "Failed to search crops!", "error");
       });
   }
+
   $("#searchInput").on("input", function () {
     const query = $(this).val().trim();
     query ? searchCrops(query) : reloadTable();
@@ -186,5 +213,6 @@ $(document).ready(function () {
     const query = $("#searchInput").val().trim();
     query ? searchCrops(query) : reloadTable();
   });
+
   reloadTable();
 });

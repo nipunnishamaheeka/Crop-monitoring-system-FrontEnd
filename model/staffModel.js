@@ -13,13 +13,13 @@ export const save = (staffData) => {
     },
     success: function (response) {
       console.log("Saved successfully:", response);
-      alert("Saved successfully!");
+      swal("Success", "Staff Added successfully!", "success");
       $("#addStaffForm")[0].reset();
       bootstrap.Modal.getInstance($("#addStaffModal")[0]).hide();
     },
     error: function (xhr, status, error) {
       console.error("Error saving:", xhr, status, error);
-      alert("Failed to save!");
+      swal("Error", "Failed to save!", "error");
     },
   });
 };
@@ -39,7 +39,7 @@ export const getAllStaff = () => {
       },
       error: function (xhr, status, error) {
         console.error("Error retrieving :", xhr, status, error);
-        alert("Failed to retrieve !");
+          swal("Error", "Failed to retrieve!", "error");
         reject([]);
       },
     });
@@ -51,7 +51,11 @@ export const update = async (staffId, updatedStaffData) => {
     const authToken = getCookie("authToken");
 
     if (!authToken) {
-      alert("Authorization token is missing. Please log in again.");
+       swal(
+         "Error",
+         "Authorization token is missing. Please log in again.",
+         "error"
+       );
       return;
     }
 
@@ -66,11 +70,9 @@ export const update = async (staffId, updatedStaffData) => {
     });
 
     if (response && response.success) {
-      // Assuming the response includes a 'success' field for validation
       console.log("Staff updated successfully:", response);
-      alert("Staff updated successfully!");
+      swal("Success", "Staff updated successfully!", "success");
 
-      // Reset the form, hide the modal, and refresh the table
       $("#updateStaffForm")[0].reset();
       $("#updateStaffModal").modal("hide");
       reloadTable();
@@ -98,11 +100,12 @@ export const deleteStaff = (id) => {
     },
     success: function (response) {
       console.log("deleted successfully:", response);
-      alert("deleted successfully!");
+      
+      swal("Success", "deleted successfully!", "success");
     },
     error: function (xhr, status, error) {
       console.error("Error deleting :", xhr, status, error);
-      alert("Failed to delete !");
+       swal("Error", "Failed to deleting!", "error");
     },
   });
 };

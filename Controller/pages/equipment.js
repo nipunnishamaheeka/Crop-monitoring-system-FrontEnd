@@ -11,6 +11,7 @@ $(document).ready(function () {
   let editingEquipmentCode = null;
   loadFieldData();
   loadStaffData();
+
   $("#addEquipmentPopup").click(function () {
     const addEquipmentModal = new bootstrap.Modal($("#addEquipmentModal")[0]);
     addEquipmentModal.show();
@@ -20,7 +21,6 @@ $(document).ready(function () {
   $("#addEquipmentForm").submit(async function (event) {
     event.preventDefault();
 
-    // Check the status based on the checkbox
     const status = $("#equipmentStatus").prop("checked")
       ? "AVAILABLE"
       : "UNAVAILABLE";
@@ -36,20 +36,19 @@ $(document).ready(function () {
 
     try {
       if (editingEquipmentCode) {
+        reloadTable();
         await update(editingEquipmentCode, equipmentData);
-        alert("Updated successfully!");
-        reloadTable();
+        swal("Success", "Equipment updated successfully!", "success");
       } else {
-        reloadTable();
         await save(equipmentData);
         reloadTable();
-        alert("Added successfully!");
+        swal("Success", "Equipment added successfully!", "success");
       }
       $("#addEquipmentForm")[0].reset();
       bootstrap.Modal.getInstance($("#addEquipmentModal")[0]).hide();
     } catch (error) {
-      console.error("Error saving or updating:", error);
-      alert("Failed to save or update!");
+      console.error("Error saving or updating equipment:", error);
+      swal("Error", "Failed to save or update equipment.", "error");
     }
   });
 
@@ -67,8 +66,10 @@ $(document).ready(function () {
       window.fieldData = fields;
     } catch (error) {
       console.error("Error loading field data:", error);
+      swal("Error", "Failed to load field data.", "error");
     }
   }
+
   async function loadStaffData() {
     try {
       const staffs = await getAllStaff();
@@ -83,8 +84,10 @@ $(document).ready(function () {
       window.staffData = staffs;
     } catch (error) {
       console.error("Error loading staff data:", error);
+      swal("Error", "Failed to load staff data.", "error");
     }
   }
+
   async function reloadTable() {
     try {
       const equipments = await getAllEquipments();
@@ -94,8 +97,10 @@ $(document).ready(function () {
       });
     } catch (error) {
       console.error("Error loading equipment data:", error);
+      swal("Error", "Failed to load equipment data.", "error");
     }
   }
+
   function loadTable(equipmentData) {
     const rowHtml = `
     <tr>
@@ -120,17 +125,20 @@ $(document).ready(function () {
   }
 
   reloadTable();
+
   $(document).on("click", ".removeBtn", async function () {
     const equipmentId = $(this).data("id");
     try {
+       reloadTable();
       await deleteEquipment(equipmentId);
-      alert("Equipment deleted");
-      reloadTable();
+      swal("Success", "Equipment deleted successfully!", "success");
+     
     } catch (error) {
       console.error("Error deleting equipment:", error);
-      alert("Failed to delete!");
+      swal("Error", "Failed to delete equipment.", "error");
     }
   });
+
   $(document).on("click", ".editBtn", async function () {
     const equipmentId = $(this).data("id");
     try {
@@ -148,6 +156,7 @@ $(document).ready(function () {
 
         const fieldName = equipment.field ? equipment.field.code : "";
         $("#fieldCode").val(fieldName);
+
         const addEquipmentModal = new bootstrap.Modal(
           $("#addEquipmentModal")[0]
         );
@@ -156,9 +165,10 @@ $(document).ready(function () {
       }
     } catch (error) {
       console.error("Error fetching equipment data:", error);
-      alert("Failed to fetch equipment data!");
+      swal("Error", "Failed to fetch equipment data.", "error");
     }
   });
+
   function search(query) {
     getAllEquipments()
       .then((equipments) => {
@@ -182,7 +192,7 @@ $(document).ready(function () {
       })
       .catch((error) => {
         console.error("Error searching equipment:", error);
-        alert("Failed to search!");
+        swal("Error", "Failed to search equipment.", "error");
       });
   }
 
@@ -203,75 +213,5 @@ $(document).ready(function () {
       reloadTable();
     }
   });
+  
 });
-
-// Equipment data from the table
-let equipmentData = [
-  { name: "Plough", count: 8, type: "Agricultural" },
-  { name: "Mamotee", count: 35, type: "Agricultural" },
-  { name: "Shovel", count: 40, type: "Agricultural" },
-  { name: "Irrigation pumps", count: 15, type: "Agricultural" },
-  { name: "Wheelbarrow", count: 20, type: "Agricultural" },
-  { name: "Sprayer", count: 20, type: "Agricultural" },
-  { name: "Axe", count: 10, type: "Agricultural" },
-  { name: "Chain saw", count: 5, type: "Mechanical" },
-  { name: "Combine harvester", count: 4, type: "Agricultural" },
-  { name: "Seeder", count: 20, type: "Agricultural" },
-  { name: "Weeder", count: 20, type: "Agricultural" },
-  { name: "Wheel wrench", count: 15, type: "Mechanical" },
-  { name: "Screw drivers", count: 30, type: "Mechanical" },
-];
-
-// Populate Name dropdown
-function populateDropdown() {
-  const nameDropdown = document.getElementById("equipmentName");
-  nameDropdown.innerHTML = ""; // Clear existing options
-  const defaultOption = document.createElement("option");
-  defaultOption.value = "";
-  defaultOption.textContent = "Select Equipment";
-  nameDropdown.appendChild(defaultOption);
-
-  equipmentData.forEach((equipment) => {
-    if (equipment.count > 0) {
-      const option = document.createElement("option");
-      option.value = equipment.name;
-      option.textContent = `${equipment.name} (${equipment.count})`;
-      nameDropdown.appendChild(option);
-    }
-  });
-}
-
-// Auto-fill Type and update count on form submission
-document.addEventListener("DOMContentLoaded", () => {
-  populateDropdown();
-
-  const nameDropdown = document.getElementById("equipmentName");
-  const typeField = document.getElementById("equipmentType");
-  const form = document.getElementById("addEquipmentForm");
-
-  // Auto-fill Type field
-  nameDropdown.addEventListener("change", (event) => {
-    const selectedName = event.target.value;
-    const selectedEquipment = equipmentData.find(
-      (item) => item.name === selectedName
-    );
-    if (selectedEquipment) {
-      typeField.value = selectedEquipment.type;
-    } else {
-      typeField.value = "";
-    }
-  });
-});
-
-// togel button
-
-document
-  .getElementById("equipmentStatus")
-  .addEventListener("change", function () {
-    const statusLabel = this.nextElementSibling;
-    if (this.checked) {
-      statusLabel.textContent = "Available";
-    } else {
-      statusLabel.textContent = "Unavailable";
-    }
-  });

@@ -10,7 +10,11 @@ export const save = (equipmentData) => {
     },
     success: function (response) {
       console.log(" saved successfully:", response);
-      alert(" saved successfully!");
+      swal({
+        icon: "success",
+        title: "Success",
+        text: "Saved successfully!",
+      });
       console.log("model ekath awda bn ");
       console.log(equipmentData);
 
@@ -19,7 +23,11 @@ export const save = (equipmentData) => {
     },
     error: function (xhr, status, error) {
       console.error("Error saving :", xhr, status, error);
-      alert("Failed to save !");
+      swal({
+        icon: "error",
+        title: "Error",
+        text: "Failed to save!",
+      });
     },
   });
 };
@@ -39,7 +47,11 @@ export const getAllEquipments = () => {
       },
       error: function (xhr, status, error) {
         console.error("Error retrieving :", xhr, status, error);
-        alert("Failed to retrieve !");
+        swal({
+          icon: "error",
+          title: "Error",
+          text: "Failed to retrieve!",
+        });
         reject([]);
       },
     });
@@ -64,7 +76,11 @@ export const update = (equipmentId, updatedEquipmentData) => {
     },
     success: function (response) {
       console.log("Updated successfully:", response);
-      alert("Updated successfully!");
+      swal({
+        icon: "success",
+        title: "Success",
+        text: "Updated successfully!",
+      });
     },
     error: function (xhr, status, error) {
       console.error(
@@ -73,7 +89,11 @@ export const update = (equipmentId, updatedEquipmentData) => {
         status,
         error
       );
-      alert("Failed to update!");
+      swal({
+        icon: "error",
+        title: "Error",
+        text: "Failed to update!",
+      });
     },
   });
 };
@@ -88,11 +108,19 @@ export const deleteEquipment = (equipmentId) => {
     },
     success: function (response) {
       console.log("deleted successfully:", response);
-      alert("deleted successfully!");
+      swal({
+        icon: "success",
+        title: "Success",
+        text: "Deleted successfully!",
+      });
     },
     error: function (xhr, status, error) {
       console.error("Error deleting :", xhr, status, error);
-      alert("Failed to delete !");
+      swal({
+        icon: "error",
+        title: "Error",
+        text: "Failed to delete!",
+      });
     },
   });
 };

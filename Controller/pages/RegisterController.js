@@ -4,7 +4,6 @@ $(document).ready(() => {
   $("#submitRegisterButton").click(function (event) {
     event.preventDefault();
 
-    // Get input values
     const email = $("#emailInput").val().trim();
     const password = $("#passwordInput").val().trim();
     const role = $("#selectRole").val();
@@ -19,32 +18,30 @@ $(document).ready(() => {
           window.location.href = "/pages/signInForm.html";
         })
         .catch(() => {
-          alert("Email already exists or registration failed.");
+          swal("Error", "Email already exists or registration failed.", "error");
         });
     }
   });
 });
-
-// Validation function
 function validateForm(email, password, role) {
   if (!$("#termsCheck").is(":checked")) {
-    alert("Please accept the terms and conditions.");
+    swal("Error", "Please accept the terms and conditions.", "error");
     return false;
   }
 
   const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!email || !emailPattern.test(email)) {
-    alert("Please enter a valid email address.");
+    swal("Error", "Please enter a valid email address.", "error");
     return false;
   }
 
   if (!password || password.length < 8) {
-    alert("Password must be at least 8 characters long.");
+    swal("Error", "Password must be at least 8 characters long.", "error");
     return false;
   }
 
   if (!role || role === "Select Role") {
-    alert("Please select a role.");
+    swal("Error", "Please select a role.", "error");
     return false;
   }
 
@@ -53,8 +50,9 @@ function validateForm(email, password, role) {
 
 function showNotification(type, message) {
   if (type === "error") {
-    alert(`Error: ${message}`);
+    swal("Error", message, "error");
   } else if (type === "success") {
-    alert(`Success: ${message}`);
+    // alert(`Success: ${message}`);
+    swal("Success", message, "success");
   }
 }
