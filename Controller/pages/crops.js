@@ -183,7 +183,8 @@ function populateFormWithCropData(crop) {
   $("#cropsName").val(crop.cropCommonName);
   $("#scientificName").val(crop.cropScientificName);
   $("#season").val(crop.cropSeason); // Set the season dropdown value
-  $("#preview1").attr("src", crop.cropImage).show();
+  
+  $("#preview1").attr("src", base64ToImageURL(crop.cropImage)).show();
 }
 
 

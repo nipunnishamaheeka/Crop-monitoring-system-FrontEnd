@@ -12,51 +12,60 @@ $(document).ready(function () {
   loadStaffData();
   loadVehicles();
 
-  // Open Add Vehicle Modal
   $("#addVehiclePopup").click(function () {
     const addVehicleModal = new bootstrap.Modal($("#addVehicleModal")[0]);
     addVehicleModal.show();
     $("#addVehicleForm")[0].reset();
     editingVehicleCode = null;
   });
+ $("#addVehicleForm").submit(async function (event) {
+   event.preventDefault();
 
-  // Add/Update Vehicle
-  $("#addVehicleForm").submit(async function (event) {
-    event.preventDefault();
+   const licensePlateRegex = /^[A-Z0-9]{1,3}-[A-Z0-9]{1,4}$/; // Example regex for license plate
+   const licensePlateNumber = $("#vehiclePlateNumber").val();
 
-    // Check the status based on the checkbox
-    const status = $("#status").prop("checked") ? "AVAILABLE" : "UNAVAILABLE";
+   // Validate license plate number
+   if (!licensePlateRegex.test(licensePlateNumber)) {
+     swal(
+       "Invalid Input",
+       "Please enter a valid vehicle license plate number.",
+       "error"
+     );
+     return; // Stop the form submission
+   }
 
-    const vehicleData = {
-      v_code: $("#vehicleCode").val(),
-      licensePlateNumber: $("#vehiclePlateNumber").val(),
-      vehicleCategory: $("#vehicleCategory").val(),
-      fuelType: $("#fuelType").val(),
-      status: status, // Save the status as 'AVAILABLE' or 'UNAVAILABLE'
-      staffId: $("#staffCode").val(),
-      remarks: $("#remarks").val(),
-    };
+   const status = $("#status").prop("checked") ? "AVAILABLE" : "UNAVAILABLE";
 
-    try {
-      if (editingVehicleCode) {
-        await update(editingVehicleCode, vehicleData);
-        reloadTable();
-        swal("Success", "Vehicle updated successfully!", "success");
-      } else {
-        await save(vehicleData);
-        reloadTable();
-        swal("Success", "Vehicle added successfully!", "success");
-      }
-      $("#addVehicleForm")[0].reset();
-      bootstrap.Modal.getInstance($("#addVehicleModal")[0]).hide();
-      reloadTable();
-    } catch (error) {
-      console.error("Error saving or updating vehicle:", error);
-      swal("Error", "Failed to save or update vehicle.", "error");
-    }
-  });
+   const vehicleData = {
+     v_code: $("#vehicleCode").val(),
+     licensePlateNumber: licensePlateNumber,
+     vehicleCategory: $("#vehicleCategory").val(),
+     fuelType: $("#fuelType").val(),
+     status: status,
+     staffId: $("#staffCode").val(),
+     remarks: $("#remarks").val(),
+   };
 
-  // Load Staff Data for Dropdown
+   try {
+     if (editingVehicleCode) {
+       await update(editingVehicleCode, vehicleData);
+       reloadTable();
+       swal("Success", "Vehicle updated successfully!", "success");
+     } else {
+       await save(vehicleData);
+       reloadTable();
+       swal("Success", "Vehicle added successfully!", "success");
+     }
+     $("#addVehicleForm")[0].reset();
+     bootstrap.Modal.getInstance($("#addVehicleModal")[0]).hide();
+     reloadTable();
+   } catch (error) {
+     console.error("Error saving or updating vehicle:", error);
+     swal("Error", "Failed to save or update vehicle.", "error");
+   }
+ });
+
+
   async function loadStaffData() {
     try {
       const staffs = await getAllStaff();
@@ -74,7 +83,6 @@ $(document).ready(function () {
     }
   }
 
-  // Reload Vehicles Table
   async function reloadTable() {
     try {
       const vehicles = await getAll();
@@ -85,8 +93,6 @@ $(document).ready(function () {
       swal("Error", "Failed to load vehicle data!", "error");
     }
   }
-
-  // Load a Vehicle in the Table
   function loadTable(vehicleData) {
     const rowHtml = `
       <tr>
@@ -111,7 +117,6 @@ $(document).ready(function () {
     $("tbody.tableRow").append(rowHtml);
   }
 
-  // Load All Vehicles into the Table on Page Load
   async function loadVehicles() {
     try {
       const vehicles = await getAll();
@@ -122,7 +127,6 @@ $(document).ready(function () {
     }
   }
 
-  // Delete Vehicle
   $(document).on("click", ".removeBtn", async function () {
     const vehicleCode = $(this).data("id");
     try {
@@ -135,7 +139,6 @@ $(document).ready(function () {
     }
   });
 
-  // Edit Vehicle
   $(document).on("click", ".editBtn", async function () {
     const vehicleCode = $(this).data("id");
     try {
@@ -161,7 +164,6 @@ $(document).ready(function () {
     }
   });
 
-  // Search Functionality
   function search(query) {
     getAll()
       .then((vehicles) => {
@@ -187,7 +189,6 @@ $(document).ready(function () {
       });
   }
 
-  // Handle Search Input
   $("#searchInput").on("input", function () {
     const query = $(this).val().trim();
     if (query) {
@@ -197,7 +198,6 @@ $(document).ready(function () {
     }
   });
 
-  // Handle Search Button Click
   $("#searchButton").on("click", function () {
     const query = $("#searchInput").val().trim();
     if (query) {
@@ -208,7 +208,6 @@ $(document).ready(function () {
   });
 });
 
-// Vehicle-to-Fuel Mapping (Fuel Type Auto-fill)
 const fuelMapping = {
   Car: "Petrol",
   Van: "Diesel",
@@ -220,14 +219,12 @@ const fuelMapping = {
   Lorry: "Diesel",
 };
 
-// Auto-fill Fuel Type based on Vehicle Category
 document
   .getElementById("vehicleCategory")
   .addEventListener("change", function () {
     const selectedCategory = this.value;
     const fuelTypeInput = document.getElementById("fuelType");
 
-    // Set fuel type or clear if no category is selected
     if (fuelMapping[selectedCategory]) {
       fuelTypeInput.value = fuelMapping[selectedCategory];
     } else {
@@ -235,7 +232,6 @@ document
     }
   });
 
-// togel button
 
 document.getElementById("status").addEventListener("change", function () {
   const statusLabel = this.nextElementSibling;

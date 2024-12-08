@@ -49,7 +49,7 @@ $(document).ready(function () {
     formData.append("cropCode", $("#crop").val());
     formData.append("staffId", $("#staffCode").val());
 
-    const observedImg = $("#o_image")[0].files[0];
+    const observedImg = $("#image1")[0].files[0];
     if (observedImg) {
       formData.append("observedImg", observedImg);
     }
@@ -204,10 +204,11 @@ $(document).ready(function () {
   // });
 
   $(document).on("click", ".editBtn", async function () {
-    const logCode = $(this).data("id"); // Assume the log code is retrieved from the button's `data-id`
+    const logCode = $(this).data("id");
     try {
       const log = await getOneLog(logCode);
-      populateFormWithLogData(log); // Populate the form with the retrieved log data
+      populateFormWithLogData(log);
+      editingLogCode = logCode;
       const addLogsModal = new bootstrap.Modal($("#addLogsModal")[0]);
       addLogsModal.show();
     } catch (error) {
@@ -236,14 +237,13 @@ $(document).ready(function () {
     //     swal("Error", "Failed to load field data. Please try again.", "error");
     //   }
     // });
-  // In the document ready function, added click event for the 'View' button
   $(document).on("click", ".viewBtn", async function () {
     const logCode = $(this).data("id");
     try {
-      const log = await getOneLog(logCode); // Fetch log details by logCode
-      populateViewModalWithLogData(log); // Populate the "View Log" modal with log details
+      const log = await getOneLog(logCode); 
+      populateViewModalWithLogData(log);
       const viewLogsModal = new bootstrap.Modal($("#viewLogsModal")[0]);
-      viewLogsModal.show(); // Show the modal
+      viewLogsModal.show();
     } catch (error) {
       console.error("Error fetching log data:", error);
       swal("Error", "Failed to fetch log data!", "error");
@@ -264,23 +264,27 @@ $(document).ready(function () {
     //   $("#image1").hide();
     // }
   }
-  // Function to populate the "View Log" modal with log data
   function populateViewModalWithLogData(log) {
+    console.log(log.fieldCodes[0]);
     $("#viewLogCode").text(log.logCode);
     $("#viewLogDetails").text(log.logDetails || "No details available");
     $("#viewLogDate").text(log.logDate || "No date available");
-    $("#viewField").text(log.field ? log.field.code : "No field assigned");
+    $("#viewField").text(
+      log.fieldCodes.length > 0 ? log.fieldCodes[0] : "No field assigned"
+    );
     $("#viewCrop").text(
-      log.crop ? log.crop.cropCommonName : "No crop assigned"
+      log.cropCodes.length > 0
+        ? log.cropCodes[0]
+        : "No crop assigned"
     );
     $("#viewStaff").text(
-      log.staff
-        ? `${log.staff.firstName} ${log.staff.lastName}`
+      log.staffIds.length > 0
+        ? log.staffIds[0]
         : "No staff assigned"
     );
 
-    if (log.observedImg) {
-      $("#viewObservedImg").attr("src", log.observedImg).show();
+    if (log.observedImage) {
+      $("#viewObservedImg").attr("src", log.observedImage).show();
     } else {
       $("#viewObservedImg").hide();
     }

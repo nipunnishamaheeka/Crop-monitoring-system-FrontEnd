@@ -1,4 +1,3 @@
-// In LoginService.js
 export function register(email, password, role) {
   const raw = {
     email: email,
@@ -6,22 +5,22 @@ export function register(email, password, role) {
     role: role,
   };
   console.log(raw);
-  // return new Promise((resolve, reject) => {
-  $.ajax({
-    url: "http://localhost:5055/cropcontroller/api/v1/auth/signup",
-    type: "POST",
-    contentType: "application/json",
-    data: JSON.stringify(raw),
-    success: function (result) {
-      console.log(result);
-      resolve(result); // resolving with the response result
-    },
-    error: function (xhr, status, error) {
-      console.error("Error saving :", xhr, status, error);
-      swal("Error", "Failed to save!", "error");
-    },
+  return new Promise((resolve, reject) => {
+    $.ajax({
+      url: "http://localhost:5055/cropcontroller/api/v1/auth/signup",
+      type: "POST",
+      contentType: "application/json",
+      data: JSON.stringify(raw),
+      success: function (result) {
+        console.log("Success response:", result);
+        resolve(result);
+      },
+      error: function (xhr, status, error) {
+        console.error("Error saving:", xhr, status, error);
+        reject(error);
+      },
+    });
   });
-  // });
 }
 
 export function login(email, password) {
